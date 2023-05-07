@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.game.Actor;
+import com.github.game.Hunter;
 import com.github.game.Planet;
 import com.github.game.Star;
 
@@ -51,15 +52,17 @@ public class GameScreen implements Screen {
         // Create a perspective camera with some sensible defaults
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 15f, 10f);
-        camera.lookAt(5f, 2, 0);
+        camera.lookAt(0f, 2, 0);
         camera.near = 1f;
         camera.far = 300f;
         camera.update();
 
         actors = new Array<>();
 
-        actors.add(new Star(game, -2, -2, 0));
-        actors.add(new Planet(game, 2, -2, 0));
+        actors.add(new Star(game, -4, -2, 0));
+        actors.add(new Planet(game, 4, -2, 0));
+        actors.add(new Hunter(game, 12, 0, 0));
+
 
 //        cameraController = new CameraInputController(camera);
 //        Gdx.input.setInputProcessor(cameraController);
