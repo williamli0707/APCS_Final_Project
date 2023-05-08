@@ -26,4 +26,9 @@ public class Star implements Actor {
 	public ModelInstance getInstance() {
 		return instance;
 	}
+
+	@Override
+	public Location getLocation() {
+		return null;
+	}
 }

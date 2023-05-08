@@ -21,4 +21,8 @@ public abstract class Troop implements Actor {
         this.y = y;
         this.z = z;
     }
+
+    public Location getLocation() {
+        return new Location(x, y, z);
+    }
 }
