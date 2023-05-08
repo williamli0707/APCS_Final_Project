@@ -22,8 +22,8 @@ public class Main extends Game {
 		spriteBatch = new SpriteBatch();
 		environment = new Environment();
 		font = new BitmapFont();
-//		this.setScreen(new LoginScreen(this));
-		this.setScreen(new GameScreen(this));
+		this.setScreen(new LoginScreen(this));
+//		this.setScreen(new GameScreen(this));
 	}
 
 	@Override
