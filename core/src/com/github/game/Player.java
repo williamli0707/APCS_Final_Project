@@ -8,6 +8,7 @@ public class Player {
 	private Game game;
 	private ArrayList<Troop> troops;
 	private ArrayList<Star> stars;
+	private int resources=0;
 	public Player(Game game) {
 		this.game = game;
 		troops = new ArrayList<>();
@@ -23,5 +24,11 @@ public class Player {
 	}
 	public ArrayList<Star> getStars() {
 		return stars;
+	}
+	public int getResources() {
+		return resources;
+	}
+	public void addResources(int amount){
+		resources+=amount;
 	}
 }
