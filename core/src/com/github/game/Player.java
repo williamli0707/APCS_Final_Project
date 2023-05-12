@@ -1,5 +1,27 @@
 package com.github.game;
 
-public class Player {
+import com.github.Game;
 
+import java.util.ArrayList;
+
+public class Player {
+	private Game game;
+	private ArrayList<Troop> troops;
+	private ArrayList<Star> stars;
+	public Player(Game game) {
+		this.game = game;
+		troops = new ArrayList<>();
+		stars = new ArrayList<>();
+	}
+
+	public void placeTroop(Troop troop, Star star) {
+
+	}
+
+	public ArrayList<Troop> getTroops() {
+		return troops;
+	}
+	public ArrayList<Star> getStars() {
+		return stars;
+	}
 }

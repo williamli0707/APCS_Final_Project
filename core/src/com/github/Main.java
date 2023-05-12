@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.github.game.Star;
 
 public class Main extends com.badlogic.gdx.Game {
 	public Environment environment;
@@ -22,7 +23,7 @@ public class Main extends com.badlogic.gdx.Game {
 		environment = new Environment();
 		font = new BitmapFont();
 //		this.setScreen(new LoginScreen(this));
-		Game game = new Game();
+		Game game = new Game(new Star[] {});
 		this.setScreen(new GameScreen(this, game));
 	}
 
