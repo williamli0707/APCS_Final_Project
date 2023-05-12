@@ -11,12 +11,16 @@ public class Mothership extends Troop {
 		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	private static final float health = 1f, damage = 0f, speed = 5f, range = 5f;
+	private static final float health = 1f, damage = 0f, speed = 5f, range = 1f;
 	public Mothership(Game game, float x, float y, float z, Player p) {
 		super(health, damage, speed, range, game, new Location(x,y,z),p);
 		instance = new ModelInstance(model, x, y, z);
 	}
 
+	@Override
+	public void act(float delta){
+
+	}
 	public ModelInstance getInstance() {
 		return instance;
 	}
