@@ -25,4 +25,10 @@ public class Player {
 	public ArrayList<Star> getStars() {
 		return stars;
 	}
+	public int getResources() {
+		return resources;
+	}
+	public void addResources(int amount){
+		resources+=amount;
+	}
 }
