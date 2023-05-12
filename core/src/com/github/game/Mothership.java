@@ -12,8 +12,8 @@ public class Mothership extends Troop {
 	}
 
 	private static final float health = 1f, damage = 0f, speed = 5f, range = 5f;
-	public Mothership(Game game, float x, float y, float z) {
-		super(health, damage, speed, range, game, new Location(x,y,z));
+	public Mothership(Game game, float x, float y, float z, Player p) {
+		super(health, damage, speed, range, game, new Location(x,y,z),p);
 		instance = new ModelInstance(model, x, y, z);
 	}
 
