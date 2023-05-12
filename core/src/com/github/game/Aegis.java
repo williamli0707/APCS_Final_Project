@@ -14,7 +14,7 @@ public class Aegis extends Troop {
 	private static final float HEALTH = 100.0f, DAMAGE = 50.0f, SPEED = 1.0f, RANGE = 5.0f;
 
 	public Aegis(Game game, float x, float y, float z) {
-		super(HEALTH, DAMAGE, SPEED, RANGE, game, x, y, z);
+		super(HEALTH, DAMAGE, SPEED, RANGE, game, new Location(x,y,z));
 		instance = new ModelInstance(model, x, y, z);
 	}
 

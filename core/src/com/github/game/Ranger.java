@@ -14,8 +14,8 @@ public class Ranger extends Troop {
 
 	private static final float HEALTH = 50.0f, DAMAGE = 35.0f, SPEED = 5.0f, RANGE = 3.0f;
 
-	public Ranger(Game game, float x, float y, float z) {
-		super(HEALTH, DAMAGE, SPEED, RANGE, game, x, y, z);
+	public Ranger(Game game, float x, float y, float z, Player p) {
+		super(HEALTH, DAMAGE, SPEED, RANGE, game, new Location(x,y,z), p);
 		instance = new ModelInstance(model, x, y, z);
 	}
 

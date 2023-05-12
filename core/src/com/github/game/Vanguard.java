@@ -14,8 +14,8 @@ public class Vanguard extends Troop {
 
 	private static final float HEALTH = 1000.0f, DAMAGE = 10.0f, SPEED = 0.5f, RANGE = 15.0f;
 
-	public Vanguard(Game game, float x, float y, float z) {
-		super(HEALTH, DAMAGE, SPEED, RANGE, game, x, y, z);
+	public Vanguard(Game game, float x, float y, float z, Player p) {
+		super(HEALTH, DAMAGE, SPEED, RANGE, game, new Location(x,y,z), p);
 		instance = new ModelInstance(model, x, y, z);
 	}
 

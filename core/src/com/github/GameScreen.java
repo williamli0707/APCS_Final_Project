@@ -50,7 +50,7 @@ public class GameScreen implements Screen {
 
         actors.add(new Star(game, -4, -2, 0));
         actors.add(new Planet(game, 4, -2, 0));
-        actors.add(new Ranger(game, 12, 0, 0));
+        actors.add(new Ranger(game, 12, 0, 0, game.getPlayer1()));
 
 //        cameraController = new CameraInputController(camera);
 //        Gdx.input.setInputProcessor(cameraController);
