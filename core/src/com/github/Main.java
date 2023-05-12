@@ -1,6 +1,5 @@
 package com.github;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
-public class Main extends Game {
+public class Main extends com.badlogic.gdx.Game {
 	public Environment environment;
 	public PerspectiveCamera camera;
 	public CameraInputController cameraController;
@@ -23,7 +22,8 @@ public class Main extends Game {
 		environment = new Environment();
 		font = new BitmapFont();
 //		this.setScreen(new LoginScreen(this));
-		this.setScreen(new GameScreen(this));
+		Game game = new Game();
+		this.setScreen(new GameScreen(this, game));
 	}
 
 	@Override

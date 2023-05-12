@@ -2,6 +2,7 @@ package com.github;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.game.Actor;
-import com.github.game.Hunter;
+import com.github.game.Ranger;
 import com.github.game.Planet;
 import com.github.game.Star;
 
@@ -23,11 +24,13 @@ public class GameScreen implements Screen {
     private ModelBatch modelBatch;
     private Array<Actor> actors;
     private Viewport viewport;
-    final Main game;
+    final Main main;
+    final Game game;
 
-    public GameScreen(Main game) {
+    public GameScreen(Main main, Game game) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
+        this.main = main;
         this.game = game;
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
@@ -47,11 +50,12 @@ public class GameScreen implements Screen {
 
         actors.add(new Star(game, -4, -2, 0));
         actors.add(new Planet(game, 4, -2, 0));
-        actors.add(new Hunter(game, 12, 0, 0));
+        actors.add(new Ranger(game, 12, 0, 0));
 
 //        cameraController = new CameraInputController(camera);
 //        Gdx.input.setInputProcessor(cameraController);
         viewport = new ScreenViewport(camera);
+        viewport.setCamera(camera);
     }
 
     @Override
@@ -59,20 +63,19 @@ public class GameScreen implements Screen {
 //        cameraController.update();
 
         // Clear the stuff that is left over from the previous render cycle
-//        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         // Let our ModelBatch take care of efficient rendering of our ModelInstance
         modelBatch.begin(camera);
-//        modelBatch.render(instance, environment);
         for (Actor actor: actors) modelBatch.render(actor.getInstance(), environment);
-
         modelBatch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        camera.update();
+        viewport.update(width, height, false);
     }
 
     @Override

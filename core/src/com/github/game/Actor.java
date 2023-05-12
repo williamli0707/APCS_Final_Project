@@ -7,4 +7,5 @@ public interface Actor {
 	ModelInstance modelInstance = null;
     public ModelInstance getInstance();
     public Location getLocation();
+    public void act(float delta);
 }

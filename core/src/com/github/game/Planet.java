@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.utils.JsonReader;
-import com.github.Main;
+import com.github.Game;
 
 public class Planet implements Actor {
 
     static Model model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("planet.g3dj"));
-    private Main game;
+    private Game game;
     private float x, y, z;
     ModelInstance instance;
 
-    public Planet(Main game, float x, float y, float z) {
+    public Planet(Game game, float x, float y, float z) {
         this.game = game;
         this.x = x;
         this.y = y;
@@ -30,5 +30,9 @@ public class Planet implements Actor {
     @Override
     public Location getLocation() {
         return null;
+    }
+
+    public void act(float delta) {
+
     }
 }
