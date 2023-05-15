@@ -28,11 +28,17 @@ public abstract class Troop implements Actor {
         return myLoc;
     }
     public void act(float delta) {
+        double leastDist = 2e9;
+        Location dest = myLoc;
         for(Actor a : game.getActors()){
-            if (a.getPlayer().equals(player))
+            if (a.getPlayer()==player)
                 continue;
             Location tempLoc = a.getLocation();
-            if (tempLoc.Distance(myLoc) <= range){
+            if(myLoc.distance(tempLoc)<leastDist){
+                leastDist=myLoc.distance(tempLoc);
+                dest = tempLoc;
+            }
+            if (tempLoc.distance(myLoc) <= range){
                 if (a instanceof Troop){
                     Troop fighter = (Troop)a;
                     fighter.setHealth(fighter.getHealth() - damage);
@@ -44,10 +50,14 @@ public abstract class Troop implements Actor {
                 }
             }
         }
+        move(dest, delta);
     }
 
-    public void move(Location newLoc) {
-        myLoc = newLoc;
+    private void move(Location newLoc, float delta) {
+        double dist = myLoc.distance(newLoc);
+        instance.transform.trn((float)((newLoc.getX()-myLoc.getX())/dist) * speed * delta,
+                0,
+                (float)((newLoc.getZ()-myLoc.getZ())/dist) * speed * delta);
     }
 
     public float getHealth(){

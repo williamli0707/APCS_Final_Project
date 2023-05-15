@@ -11,7 +11,7 @@ public class Location {
     public double getX(){return x;}
 
     public double getZ(){return z;}
-    public double Distance(Location other){
+    public double distance(Location other){
         double tempX = other.getX();
         double tempZ = other.getZ();
         return Math.sqrt((tempX*tempX) + (tempZ*tempZ));
