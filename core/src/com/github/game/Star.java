@@ -11,16 +11,15 @@ public class Star implements Actor {
 
 	static Model model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star.g3dj"));
 	private Game game;
-	private float x, y, z;
+	private float x, z;
 	private Player player=null;
 	ModelInstance instance;
 
-	public Star(Game game, float x, float y, float z) {
+	public Star(Game game, float x, float z) {
 		this.game = game;
 		this.x = x;
-		this.y = y;
 		this.z = z;
-		instance = new ModelInstance(model, x, y, z);
+		instance = new ModelInstance(model, x,0f, z);
 	}
 
 	@Override
@@ -30,14 +29,39 @@ public class Star implements Actor {
 
 	@Override
 	public Location getLocation() {
-		return new Location(x,y,z);
+		return new Location(x,0,z);
 	}
 	public Player getPlayer(){
 		return player;
 	}
 	public void act(float delta) {
-	if (player!=null){
-		player.addResources(5);
+		if (player!=null){
+			player.addResources(5);
+		}
 	}
+	public void getConquered(Mothership mothership){
+		player=mothership.getPlayer();
+	}
+	public boolean canSpawn() {
+		for (Troop troop: player.getTroops()){
+			if (troop.getLocation().getX()==x && troop.getLocation().getZ()==z){
+				return false;
+			}
+		}
+		return true;
+	}
+	public void spawn(Troop troop){
+
+		if (troop.getHealth()==50.0){
+			troop=new Ranger(game, x, 0, z, player);
+		}
+		else if (troop.getHealth()==1000.0f){
+			troop=new Vanguard(game, x, 0, z, player);
+		}
+		else{
+			troop=new Aegis(game,x, 0,z, player);
+		}
+		player.addTroop(troop);
+
 	}
 }

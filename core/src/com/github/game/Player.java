@@ -16,10 +16,24 @@ public class Player {
 	}
 
 	public void placeTroop(Troop troop, Star star) {
+		if (!stars.contains(star)){
+			receiveMessage("Conquer the star first!");
+			return;
+		}
+		if (!star.canSpawn()){
+			receiveMessage("No space, can't spawn there!");
+			return;
+		}
+		star.spawn(troop);
+	}
+	public void receiveMessage(String string){
 
 	}
-
 	public ArrayList<Troop> getTroops() {
+		return troops;
+	}
+	public ArrayList<Troop> addTroop(Troop troop) {
+		troops.add(troop);
 		return troops;
 	}
 	public ArrayList<Star> getStars() {
