@@ -40,7 +40,9 @@ public class Main extends com.badlogic.gdx.Game {
 	}
 
 	@Override
-	public void resize(int width, int height) { }
+	public void resize(int width, int height) {
+		super.resize(width, height);
+	}
 
 	@Override
 	public void pause() { }

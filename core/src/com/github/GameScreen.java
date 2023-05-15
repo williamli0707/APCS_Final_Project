@@ -90,6 +90,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
+
     }
 
     @Override
