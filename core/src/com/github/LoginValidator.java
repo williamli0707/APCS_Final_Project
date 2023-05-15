@@ -9,7 +9,10 @@ import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.*;
 
 public class LoginValidator extends VisWindow {
-    public LoginValidator () {
+
+    private VisTable buttonTable;
+
+    public LoginValidator (int width, int height) {
         super("Login");
 
         TableUtils.setSpacingDefaults(this);
@@ -26,9 +29,9 @@ public class LoginValidator extends VisWindow {
         VisLabel errorLabel = new VisLabel();
         errorLabel.setColor(Color.RED);
 
-        VisTable buttonTable = new VisTable(true);
+        buttonTable = new VisTable(true);
         buttonTable.add(errorLabel).expand().fill();
-        buttonTable.add(cancelButton);
+//        buttonTable.add(cancelButton);
         buttonTable.add(acceptButton);
 
         add(new VisLabel("Username: "));
@@ -47,19 +50,23 @@ public class LoginValidator extends VisWindow {
 
         acceptButton.addListener(new ChangeListener() {
             @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                Dialogs.showOKDialog(getStage(), "message", "sucess!");
+            public void changed(ChangeEvent event, Actor actor) {
+                Dialogs.showOKDialog(getStage(), "message", "success!");
             }
         });
         cancelButton.addListener(new ChangeListener() {
             @Override
-            public void changed (ChangeEvent event, Actor actor) {
+            public void changed(ChangeEvent event, Actor actor) {
                 Dialogs.showOKDialog(getStage(), "message", "you can't escape this!");
             }
         });
 
         pack();
         setSize(getWidth() + 60, getHeight());
-        setPosition(548, 85);
+        setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
+    }
+
+    public void resize(int width, int height) {
+        setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
     }
 }
