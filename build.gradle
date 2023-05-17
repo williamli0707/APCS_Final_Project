@@ -25,6 +25,7 @@ allprojects {
         ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.2.1'
+        gltfVersion = '-SNAPSHOT'
     }
 
     repositories {
@@ -58,6 +59,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.kotcrab.vis:vis-ui:1.5.1"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
-        
+        api "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
     }
 }

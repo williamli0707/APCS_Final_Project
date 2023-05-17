@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("APCS Final Project");
 		config.setWindowedMode(1280, 720);
+		config.setBackBufferConfig(8,8,8,8,16,0, 3);
 		new Lwjgl3Application(new Main(), config);
 	}
 }

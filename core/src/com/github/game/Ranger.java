@@ -9,7 +9,8 @@ import com.github.Game;
 public class Ranger extends Troop {
 
 	static {
-		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
+		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("gltfTest/Ranger.g3dj"));
+//		SceneAsset sceneAsset = new GLBLoader().load(Gdx.files.internal("gltfTest/BlenderModel.glb"));;
 	}
 
 	private static final float HEALTH = 50.0f, DAMAGE = 35.0f, SPEED = 5.0f, RANGE = 3.0f;
