@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
-import com.badlogic.gdx.utils.JsonReader;
+import com.github.game.Mothership;
+import com.github.game.Player;
 import com.github.game.Star;
-import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -24,7 +23,7 @@ public class GLTFTestScreen implements Screen, InputProcessor {
     private SceneManager sceneManager;
     private SceneAsset sceneAsset, sceneAsset1;
     private Scene scene, scene1;
-    private PerspectiveCamera camera;
+    public PerspectiveCamera camera;
     private Cubemap diffuseCubemap;
     private Cubemap environmentCubemap;
     private Cubemap specularCubemap;
@@ -33,29 +32,28 @@ public class GLTFTestScreen implements Screen, InputProcessor {
     private DirectionalLightEx light;
 
     private ModelBatch batch;
+    private SpriteBatch spriteBatch;
     private Star star;
     private ModelInstance test;
     private boolean loaded2 = false;
+    Texture background;
+    private Mothership mothership;
 
     public GLTFTestScreen() {
-
-        // create scene
-//        sceneAsset = new GLBLoader().load(Gdx.files.internal("gltfTest/BlenderModel.glb"));
-        sceneAsset = new GLBLoader().load(Gdx.files.internal("gltfTest/vanguard/vanguard.glb"));
-        scene = new Scene(sceneAsset.scene);
         sceneManager = new SceneManager();
-        sceneManager.addScene(scene);
-        scene.modelInstance.transform.trn(0, 0, 6);
-
-        Model testModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("gltfTest/BlenderModel.g3dj"));
-        test = new ModelInstance(testModel, 6, 0, 6);
+        // create scene
+        Game game = new Game(new Star[] {});
 
         camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(3f, 5f, 15);
-        camera.lookAt(3f, 0, 0);
+        camera.position.set(0f, 5f, -5);
+        camera.lookAt(0f, 0, 0);
         camera.near = 1f;
         camera.far = 100f;
         sceneManager.setCamera(camera);
+
+        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);
+        Gdx.input.setInputProcessor(mothership);
+        sceneManager.addScene(mothership.getScene());
 
         // setup light
         light = new DirectionalLightEx();
@@ -84,7 +82,9 @@ public class GLTFTestScreen implements Screen, InputProcessor {
         sceneManager.setSkyBox(skybox);
 
         batch = new ModelBatch();
-        star = new Star(null, -5, -5);
+        spriteBatch = new SpriteBatch();
+        star = new Star(null, 0, 6);
+        background = new Texture(Gdx.files.internal("space.jpeg"));
     }
 
     @Override
@@ -95,11 +95,12 @@ public class GLTFTestScreen implements Screen, InputProcessor {
         sceneManager.update(delta);
         sceneManager.render();
 
-//        scene.modelInstance.transform.trn(0, 0, -0.1f * delta);
+//        camera.translate(0, 0, (float) 0.1 * delta);
+
+        mothership.act(delta);
 
         batch.begin(camera);
-//        batch.render(star.getInstance(), sceneManager.environment);
-        batch.render(test, sceneManager.environment);
+        batch.render(star.getInstance(), sceneManager.environment);
         batch.end();
     }
 
@@ -151,14 +152,7 @@ public class GLTFTestScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyTyped(char character) {
-        System.out.println("key typed: " + character);
-
-        sceneAsset1 = new GLBLoader().load(Gdx.files.internal("gltfTest/BlenderModel.glb"));
-        scene = new Scene(sceneAsset1.scene);
-        sceneManager.addScene(scene);
-        loaded2 = true;
-
-        return true;
+        return false;
     }
 
     @Override

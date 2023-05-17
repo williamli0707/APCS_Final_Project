@@ -3,27 +3,30 @@ package com.github;
 import com.github.game.Actor;
 import com.github.game.Player;
 import com.github.game.Star;
+import com.github.game.Troop;
 
 import java.util.ArrayList;
 
 public class Game {
 	ArrayList<Actor> actors;
 	Star[] stars;
-	Player player1, player2;
+	Player player, enemy;
 
 	public Game(Star[] stars) {
 		actors = new ArrayList<>();
 		this.stars = stars.clone();
-		player1 = new Player(this);
-		player2 = new Player(this);
+		player = new Player(this);
+		enemy = new Player(this);
 	}
 
 	public void addActor(Actor actor) {
 		actors.add(actor);
 	}
 
-	public void addActor(Actor actor, int player) {
-
+	public void addTroop(Troop troop, int p) {
+		addActor(troop);
+		if(p == 1) player.addTroop(troop);
+		else enemy.addTroop(troop);
 	}
 
 	public ArrayList<Actor> getActors() {
@@ -31,11 +34,11 @@ public class Game {
 	}
 
 	public Player getPlayer1() {
-		return player1;
+		return player;
 	}
 
-	public Player getPlayer2() {
-		return player2;
+	public Player getEnemy() {
+		return enemy;
 	}
 
 	public Star[] getStars() {
