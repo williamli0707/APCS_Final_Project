@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
-import com.github.GLTFTestScreen;
 import com.github.Game;
+import com.github.GameScreen;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
@@ -20,9 +20,9 @@ public class Mothership extends Troop implements InputProcessor {
 	private static final float health = 1f, damage = 0f, speed = 5f, range = 2f;
 	private static SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;
-	private GLTFTestScreen screen;
+	private GameScreen screen;
 	private Vector3 vel, loc;
-	public Mothership(Game game, float x, float y, float z, Player p, GLTFTestScreen screen) {
+	public Mothership(Game game, float x, float y, float z, Player p, GameScreen screen) {
 		super(health, damage, speed, range, game, new Vector3(x,y,z),p);
 		vel = new Vector3(0, 0, 0);
 		loc = new Vector3(x, y, z);

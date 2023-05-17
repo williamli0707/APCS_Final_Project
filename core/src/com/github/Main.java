@@ -22,11 +22,11 @@ public class Main extends com.badlogic.gdx.Game {
 		spriteBatch = new SpriteBatch();
 		environment = new Environment();
 		font = new BitmapFont();
-		GLTFTestScreen screen = new GLTFTestScreen();
+//		GLTFTestScreen screen = new GLTFTestScreen();
 
 //		this.setScreen(new LoginScreen(this));
 		Game game = new Game(new Star[] {});
-//		this.setScreen(new GameScreen(this, game));
+		this.setScreen(new GameScreen(this, game));
 		this.setScreen(screen);
 //		Gdx.input.setInputProcessor(screen);
 	}

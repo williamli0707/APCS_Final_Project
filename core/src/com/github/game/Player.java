@@ -9,6 +9,8 @@ public class Player {
 	private ArrayList<Troop> troops;
 	private ArrayList<Star> stars;
 	private int resources;
+
+	private Mothership mothership;
 	public Player(Game game) {
 		this.game = game;
 		troops = new ArrayList<>();
@@ -29,6 +31,7 @@ public class Player {
 	public void receiveMessage(String string){
 
 	}
+
 	public ArrayList<Troop> getTroops() {
 		return troops;
 	}
