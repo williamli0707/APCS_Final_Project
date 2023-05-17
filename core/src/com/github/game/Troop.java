@@ -78,7 +78,7 @@ public abstract class Troop implements Actor {
         return speed;
     }
 
-
+    public Game getGame(){return game;}
     public Player getPlayer(){return player;}
     public double getRange(){
         return range;
