@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.github.Game;
 
@@ -28,7 +29,7 @@ public class Planet implements Actor {
     }
 
     @Override
-    public Location getLocation() {
+    public Vector3 getLocation() {
         return null;
     }
 

@@ -2,6 +2,7 @@ package com.github.game;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Vector3;
 import com.github.Game;
 
 public abstract class Troop implements Actor {
@@ -11,10 +12,10 @@ public abstract class Troop implements Actor {
     static Model model;
     ModelInstance instance;
 
-    private Location myLoc;
+    private Vector3 myLoc;
     private Game game;
 
-    public Troop(float health, float damage, float speed, double range, Game game, Location loc, Player p) {
+    public Troop(float health, float damage, float speed, double range, Game game, Vector3 loc, Player p) {
         this.health = health;
         this.damage = damage;
         this.speed = speed;
@@ -24,21 +25,21 @@ public abstract class Troop implements Actor {
         player = p;
     }
 
-    public Location getLocation() {
+    public Vector3 getLocation() {
         return myLoc;
     }
     public void act(float delta) {
         double leastDist = 2e9;
-        Location dest = myLoc;
+        Vector3 dest = myLoc;
         for(Actor a : game.getActors()){
             if (a.getPlayer()==player)
                 continue;
-            Location tempLoc = a.getLocation();
-            if(myLoc.distance(tempLoc)<leastDist){
-                leastDist=myLoc.distance(tempLoc);
+            Vector3 tempLoc = a.getLocation();
+            if(myLoc.dst(tempLoc)<leastDist){
+                leastDist=myLoc.dst(tempLoc);
                 dest = tempLoc;
             }
-            if (tempLoc.distance(myLoc) <= range){
+            if (tempLoc.dst(myLoc) <= range){
                 if (a instanceof Troop){
                     Troop fighter = (Troop)a;
                     fighter.setHealth(fighter.getHealth() - damage);
@@ -53,11 +54,9 @@ public abstract class Troop implements Actor {
         move(dest, delta);
     }
 
-    private void move(Location newLoc, float delta) {
-        double dist = myLoc.distance(newLoc);
-        instance.transform.trn((float)((newLoc.getX()-myLoc.getX())/dist) * speed * delta,
-                0,
-                (float)((newLoc.getZ()-myLoc.getZ())/dist) * speed * delta);
+    private void move(Vector3 newLoc, float delta) {
+        Vector3 move = newLoc.sub(myLoc).nor();
+        instance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
     }
 
     public float getHealth(){
