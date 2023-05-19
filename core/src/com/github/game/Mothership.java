@@ -72,7 +72,6 @@ public class Mothership extends Troop {
 		if(keycode == 47) vel.z -= speed;
 		if(keycode == 29) vel.x += speed;
 		if(keycode == 32) vel.x -= speed;
-		System.out.println(vel);
 	}
 
 	public void keyUp(int keycode) {
