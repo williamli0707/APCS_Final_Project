@@ -26,6 +26,10 @@ public abstract class Troop implements Actor {
         player = p;
     }
 
+    public float getCost() {
+        return cost;
+    }
+
     public Vector3 getLocation() {
         return myLoc;
     }

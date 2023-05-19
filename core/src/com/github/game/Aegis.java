@@ -12,7 +12,7 @@ public class Aegis extends Troop {
 		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	private static final float HEALTH = 100.0f, DAMAGE = 50.0f, SPEED = 1.0f, RANGE = 5.0f, COST = 1000;
+	public static final float HEALTH = 100.0f, DAMAGE = 50.0f, SPEED = 1.0f, RANGE = 5.0f, COST = 1000;
 
 	public Aegis(SinglePlayerGame game, float x, float y, float z, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, new Vector3(x,y,z),p);

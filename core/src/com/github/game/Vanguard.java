@@ -13,7 +13,7 @@ public class Vanguard extends Troop {
 		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	private static final float HEALTH = 1000.0f, DAMAGE = 10.0f, SPEED = 0.5f, RANGE = 15.0f, COST = 400;
+	public static final float HEALTH = 1000.0f, DAMAGE = 10.0f, SPEED = 0.5f, RANGE = 15.0f, COST = 400;
 	public Vanguard(SinglePlayerGame game, float x, float y, float z, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, new Vector3(x,y,z), p);
 		instance = new ModelInstance(model, x, y, z);

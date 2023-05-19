@@ -16,11 +16,12 @@ public class Mothership extends Troop {
 		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	private static final float health = 1f, damage = 0f, speed = 5f, range = 2f;
+	public static final float health = 1f, damage = 0f, speed = 5f, range = 2f;
 	private static SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;
 	private GameScreen screen;
 	private Vector3 vel, loc;
+
 	private int tick = 0;
 	public Mothership(SinglePlayerGame game, float x, float y, float z, Player p, GameScreen screen) {
 		super(health, damage, speed, range, 0, game, new Vector3(x,y,z),p);

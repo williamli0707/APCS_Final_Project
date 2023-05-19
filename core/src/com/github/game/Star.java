@@ -40,6 +40,12 @@ public class Star implements Actor {
 			player.addResources(5);
 		}
 	}
+
+	/**
+	 * Called from the mothership class to when the mothership is located on the star's position. The star now
+	 * belongs to a player.
+	 * @param mothership The mothership that conquers this star.
+	 */
 	public void getConquered(Mothership mothership){
 		player=mothership.getPlayer();
 	}
@@ -51,6 +57,12 @@ public class Star implements Actor {
 		}
 		return true;
 	}
+
+	/**
+	 * Called from the player class to spawn a troop. Identifies which troop is being created and adds it to the
+	 * player's list of troops.
+	 * @param troop The troop to spawn.
+	 */
 	public void spawn(Troop troop){
 
 		if (troop.getHealth()==50.0){

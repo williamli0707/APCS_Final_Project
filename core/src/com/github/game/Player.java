@@ -20,6 +20,11 @@ public class Player {
 	}
 
 	public void placeTroop(int type, Vector3 loc) {
+		assert type == 1 || type == 2 || type == 3;
+		float cost = type == 1 ? Ranger.COST : type == 2 ? Vanguard.COST : Aegis.COST;
+		if(getResources() < cost) {
+			receiveMessage("You do not have enough resources! ");
+		}
 		//1 = ranger, 2 = vanguard, 3 = aegis
 		for(Star a: game.getStars()) {
 			if(a.getLocation().dst(loc) <= 5 && a.getPlayer() == null) {
