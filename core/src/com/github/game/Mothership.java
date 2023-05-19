@@ -1,8 +1,10 @@
 package com.github.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.github.GameScreen;
@@ -21,6 +23,7 @@ public class Mothership extends Troop {
 	private Scene scene;
 	private GameScreen screen;
 	private Vector3 vel, loc;
+	private Vector2 lastTouch;
 
 	private int tick = 0;
 	public Mothership(SinglePlayerGame game, float x, float y, float z, Player p, GameScreen screen) {
@@ -30,6 +33,7 @@ public class Mothership extends Troop {
 		loc = new Vector3(x, y, z);
 //		instance = new ModelInstance(model, x, y, z);
 		scene = new Scene(asset.scene);
+		lastTouch = new Vector2(0, 0);
 		this.screen = screen;
 	}
 
@@ -82,10 +86,18 @@ public class Mothership extends Troop {
 //		System.out.println("keyTyped");
 		if(character == 'p') System.out.println(loc);
 	}
+
+	public void touchDown(int screenX, int screenY, int pointer, int button) {
+		if(button == Input.Buttons.LEFT) {
+			lastTouch.set(screenX, screenY);
+		}
+	}
+
 	public void touchDragged(int screenX, int screenY, int pointer) {
-		float anglex = screenX / 1000f, angley = screenY / 1000f;
-		screen.camera.rotateAround(loc, Vector3.Y, angley);
-		screen.camera.rotateAround(loc, Vector3.Z, anglex);
-		screen.camera.rotateAround(loc, Vector3.X, anglex);
+		float anglex = (lastTouch.x - screenX) / 50f, angley = (lastTouch.y - screenY) / 50f;
+		screen.camera.rotateAround(loc, Vector3.Y, anglex);
+		screen.camera.rotateAround(loc, Vector3.Z, angley);
+		screen.camera.rotateAround(loc, Vector3.X, angley);
+		lastTouch.set(screenX, screenY);
 	}
 }
