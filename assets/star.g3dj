@@ -16661,14 +16661,14 @@
 			"id": "Image", 
 			"ambient": [ 0.050876,  0.050876,  0.050876], 
 			"diffuse": [ 0.800000,  0.800000,  0.800000], 
-			"emissive": [ 0.800000,  0.800000,  0.800000], 
+			"emissive": [ 0.500000,  0.500000,  0.500000],
 			"opacity":  1.000000, 
 			"specular": [ 0.800000,  0.800000,  0.800000], 
 			"shininess":  25.000000, 
 			"textures": [
 				{
 					"id": "base_color_texture", 
-					"filename": "star-texture.png", 
+					"filename": "star-texture.png",
 					"type": "DIFFUSE"
 				}, 
 				{
@@ -16684,7 +16684,6 @@
 			"id": "Sphere", 
 			"rotation": [-0.707107,  0.000000,  0.000000,  0.707107], 
 			"scale": [ 3.000000,  3.000000,  3.000000], 
-			"translation": [ 0.000000,  4.000000,  0.000000], 
 			"parts": [
 				{
 					"meshpartid": "Icosphere.004_part1", 

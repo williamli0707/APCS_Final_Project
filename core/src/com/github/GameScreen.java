@@ -92,19 +92,21 @@ public class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
+        sceneManager.update(delta);
+        sceneManager.render();
+
+        lineRenderer.begin(camera.combined, GL30.GL_LINES);
+        grid(-100, 100, -100, 100);
+        lineRenderer.end();
+
         batch.begin(camera);
         for(Star star: game.getStars()) batch.render(star.getInstance(), sceneManager.environment);
         batch.end();
 
-        sceneManager.update(delta);
-        sceneManager.render();
 
         game.act(delta);
 
         camera.update();
-        lineRenderer.begin(camera.combined, GL30.GL_LINES);
-        grid(-100, 100, -100, 100);
-        lineRenderer.end();
     }
 
     @Override
