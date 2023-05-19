@@ -65,6 +65,8 @@ public class GameScreen implements Screen, InputProcessor {
 //        environmentCubemap = iblBuilder.buildEnvMap(256);
         environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
                 "skybox-textures/space_", ".jpeg", EnvironmentUtil.FACE_NAMES_NEG_POS);
+//        environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
+//                "skybox-textures/environment_", ".png", EnvironmentUtil.FACE_NAMES_NEG_POS);
 //        diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
@@ -81,6 +83,7 @@ public class GameScreen implements Screen, InputProcessor {
         // setup skybox
         skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
+
 
         batch = new ModelBatch();
     }
