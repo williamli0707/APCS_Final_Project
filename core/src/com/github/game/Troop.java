@@ -26,10 +26,18 @@ public abstract class Troop implements Actor {
         player = p;
     }
 
+    /**
+     * allows for other methods to access the cost of the troop
+     * @return the cost of the troop
+     */
     public float getCost() {
         return cost;
     }
 
+    /**
+     * is called to give the location of the troop
+     * @return a Vector3 with the location
+     */
     public Vector3 getLocation() {
         return myLoc;
     }
@@ -64,16 +72,32 @@ public abstract class Troop implements Actor {
         instance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
     }
 
+    /**
+     * returns the health of the troop
+     * @return health of the troop
+     */
     public float getHealth(){
         return health;
     }
 
+    /**
+     *sets a new health for the troop
+     * @param newHealth the new value that health is set to
+     */
     public void setHealth(float newHealth){health = newHealth;}
 
-    public void death(){
+    /**
+     * removes the troop from the game
+     */
+    public void death() {
         game.getActors().remove(this);
+        getPlayer().getTroops().remove(this);
     }
 
+    /**
+     * returns the damage that the troop deals
+     * @return the value of the damage that the troop deals
+     */
     public float getDamage(){
         return damage;
     }

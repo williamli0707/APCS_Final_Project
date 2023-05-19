@@ -49,6 +49,11 @@ public class Star implements Actor {
 	public void getConquered(Mothership mothership){
 		player=mothership.getPlayer();
 	}
+
+	/**
+	 * Checks if the location is available for spawning
+	 * @return true if the location is available and false if not
+	 */
 	public boolean canSpawn() {
 		for (Troop troop: player.getTroops()){
 			if (troop.getLocation().x == x && troop.getLocation().z == z){
