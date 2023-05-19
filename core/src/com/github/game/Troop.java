@@ -3,23 +3,24 @@ package com.github.game;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
-import com.github.Game;
+import com.github.SinglePlayerGame;
 
 public abstract class Troop implements Actor {
-    private float health, damage, speed;
+    private float health, damage, speed, cost;
     private Player player;
     private double range;
     static Model model;
     ModelInstance instance;
 
     private Vector3 myLoc;
-    private Game game;
+    private SinglePlayerGame game;
 
-    public Troop(float health, float damage, float speed, double range, Game game, Vector3 loc, Player p) {
+    public Troop(float health, float damage, float speed, double range, float cost, SinglePlayerGame game, Vector3 loc, Player p) {
         this.health = health;
         this.damage = damage;
         this.speed = speed;
         this.range = range;
+        this.cost = cost;
         this.game = game;
         myLoc = loc;
         player = p;
@@ -77,7 +78,7 @@ public abstract class Troop implements Actor {
         return speed;
     }
 
-    public Game getGame(){return game;}
+    public SinglePlayerGame getGame(){return game;}
     public Player getPlayer(){return player;}
     public double getRange(){
         return range;

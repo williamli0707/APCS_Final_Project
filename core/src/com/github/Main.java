@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.github.game.Star;
 
 public class Main extends com.badlogic.gdx.Game {
 	public Environment environment;
@@ -25,7 +24,7 @@ public class Main extends com.badlogic.gdx.Game {
 //		GLTFTestScreen screen = new GLTFTestScreen();
 
 //		this.setScreen(new LoginScreen(this));
-		Game game = new Game(new Star[] {});
+		SinglePlayerGame game = new SinglePlayerGame();
 		this.setScreen(new GameScreen(this, game));
 		this.setScreen(screen);
 //		Gdx.input.setInputProcessor(screen);

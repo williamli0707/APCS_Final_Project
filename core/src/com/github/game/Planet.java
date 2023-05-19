@@ -6,16 +6,16 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
-import com.github.Game;
+import com.github.SinglePlayerGame;
 
 public class Planet implements Actor {
 
     static Model model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("planet.g3dj"));
-    private Game game;
+    private SinglePlayerGame game;
     private float x, y, z;
     ModelInstance instance;
 
-    public Planet(Game game, float x, float y, float z) {
+    public Planet(SinglePlayerGame game, float x, float y, float z) {
         this.game = game;
         this.x = x;
         this.y = y;

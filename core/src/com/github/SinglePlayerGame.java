@@ -7,26 +7,33 @@ import com.github.game.Troop;
 
 import java.util.ArrayList;
 
-public class Game {
+public class SinglePlayerGame {
 	ArrayList<Actor> actors;
 	Star[] stars;
 	Player player, enemy;
+	private static int NUM_STARS = 10;
 
-	public Game(Star[] stars) {
+	public SinglePlayerGame() {
 		actors = new ArrayList<>();
-		this.stars = stars.clone();
+		stars = new Star[NUM_STARS];
 		player = new Player(this);
-		enemy = new Player(this);
+//		enemy = new Player(this);
+		genStars();
+	}
+
+	public void genStars() {
+		for(int i = 0; i < NUM_STARS; i++) {
+			float x = (float) (Math.random() * 200 - 100), y = (float) (Math.random() * 200 - 100);
+			stars[i] = new Star(this, x, y);
+		}
 	}
 
 	public void addActor(Actor actor) {
 		actors.add(actor);
 	}
 
-	public void addTroop(Troop troop, int p) {
+	public void addTroop(Troop troop) {
 		addActor(troop);
-		if(p == 1) player.addTroop(troop);
-		else enemy.addTroop(troop);
 	}
 
 	public ArrayList<Actor> getActors() {

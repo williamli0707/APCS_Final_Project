@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
-import com.github.Game;
+import com.github.SinglePlayerGame;
 import com.github.GameScreen;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
@@ -22,8 +22,8 @@ public class Mothership extends Troop implements InputProcessor {
 	private Scene scene;
 	private GameScreen screen;
 	private Vector3 vel, loc;
-	public Mothership(Game game, float x, float y, float z, Player p, GameScreen screen) {
-		super(health, damage, speed, range, game, new Vector3(x,y,z),p);
+	public Mothership(SinglePlayerGame game, float x, float y, float z, Player p, GameScreen screen) {
+		super(health, damage, speed, range, 0, game, new Vector3(x,y,z),p);
 		vel = new Vector3(0, 0, 0);
 		loc = new Vector3(x, y, z);
 //		instance = new ModelInstance(model, x, y, z);
