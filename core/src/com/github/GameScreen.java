@@ -1,13 +1,13 @@
 package com.github;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.github.game.Mothership;
-import com.github.game.Player;
 import com.github.game.Star;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
@@ -17,8 +17,8 @@ import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
-public class GameScreen implements Screen {
-    private SceneManager sceneManager;
+public class GameScreen implements Screen, InputProcessor {
+    public SceneManager sceneManager;
     public PerspectiveCamera camera;
     private Cubemap environmentCubemap;
     private Cubemap specularCubemap;
@@ -30,17 +30,18 @@ public class GameScreen implements Screen {
     Texture background;
     private Mothership mothership;
     final Main main;
-    final SinglePlayerGame game;
+    private SinglePlayerGame game;
 
     private static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 
-    public GameScreen(Main main, SinglePlayerGame game) {
+    public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
-        this.game = game;
 
         sceneManager = new SceneManager();
+
+        this.game = new SinglePlayerGame(this);
         // create scene
         camera = new PerspectiveCamera(70f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 3f, -5);
@@ -49,9 +50,8 @@ public class GameScreen implements Screen {
         camera.far = 100f;
         sceneManager.setCamera(camera);
 
-        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);
-        Gdx.input.setInputProcessor(mothership);
-        sceneManager.addScene(mothership.getScene());
+//        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);
+//        sceneManager.addScene(mothership.getScene());
 
         // setup light
         light = new DirectionalLightEx();
@@ -95,7 +95,7 @@ public class GameScreen implements Screen {
         sceneManager.update(delta);
         sceneManager.render();
 
-        mothership.act(delta);
+        game.act(delta);
 
         camera.update();
         lineRenderer.begin(camera.combined, GL30.GL_LINES);
@@ -158,5 +158,47 @@ public class GameScreen implements Screen {
     }
 
 
+    @Override
+    public boolean keyDown(int keycode) {
+        game.getPlayer().getMothership().keyDown(keycode);
+        return true;
+    }
 
+    @Override
+    public boolean keyUp(int keycode) {
+        game.getPlayer().getMothership().keyUp(keycode);
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        game.getPlayer().getMothership().keyTyped(character);
+        return true;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        game.getPlayer().getMothership().touchDragged(screenX, screenY, pointer);
+        return true;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
+    }
 }

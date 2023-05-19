@@ -10,13 +10,17 @@ import java.util.ArrayList;
 public class SinglePlayerGame {
 	ArrayList<Actor> actors;
 	Star[] stars;
-	Player player, enemy;
+	Player player;
+
+	public GameScreen screen;
 	private static int NUM_STARS = 10;
 
-	public SinglePlayerGame() {
+	public SinglePlayerGame(GameScreen screen) {
 		actors = new ArrayList<>();
 		stars = new Star[NUM_STARS];
+		this.screen = screen;
 		player = new Player(this);
+		screen.sceneManager.addScene(player.getMothership().getScene());
 //		enemy = new Player(this);
 		genStars();
 	}
@@ -40,15 +44,18 @@ public class SinglePlayerGame {
 		return actors;
 	}
 
-	public Player getPlayer1() {
+	public Player getPlayer() {
 		return player;
-	}
-
-	public Player getEnemy() {
-		return enemy;
 	}
 
 	public Star[] getStars() {
 		return stars;
+	}
+
+	public void act(float delta) {
+		player.getMothership().act(delta);
+		for(Actor actor : actors) {
+			actor.act(delta);
+		}
 	}
 }

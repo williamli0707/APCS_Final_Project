@@ -16,6 +16,7 @@ public class Player {
 		this.game = game;
 		troops = new ArrayList<>();
 		stars = new ArrayList<>();
+		mothership = new Mothership(game, 0, 0, 0, this, game.screen);
 	}
 
 	public void placeTroop(int type, Vector3 loc) {
@@ -49,6 +50,7 @@ public class Player {
 	public ArrayList<Star> getStars() {
 		return stars;
 	}
+	public Mothership getMothership() {return mothership;}
 	public int getResources() {
 		return resources;
 	}
