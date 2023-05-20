@@ -41,6 +41,9 @@ public abstract class Troop implements Actor {
     public Vector3 getLocation() {
         return myLoc;
     }
+    /**
+     * Called each render frame to determine how a troop acts
+     */
     public void act(float delta) {
         double leastDist = 2e9;
         Vector3 dest = myLoc;
@@ -67,6 +70,9 @@ public abstract class Troop implements Actor {
         move(dest, delta);
     }
 
+    /**
+     * moves the troop
+     */
     private void move(Vector3 newLoc, float delta) {
         Vector3 move = newLoc.sub(myLoc).nor();
         instance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
@@ -102,12 +108,28 @@ public abstract class Troop implements Actor {
         return damage;
     }
 
+    /**
+     * returns the speed
+     * @return float the speed
+     */
     public float getSpeed(){
         return speed;
     }
 
+    /**
+     * returns the game object
+     * @return SinglePlayerGame the game object
+     */
     public SinglePlayerGame getGame(){return game;}
+    /**
+     * returns the player
+     * @return Player the player
+     */
     public Player getPlayer(){return player;}
+    /**
+     * returns the range value
+     * @return double the range
+     */
     public double getRange(){
         return range;
     }
