@@ -48,7 +48,7 @@ public class GameScreen implements Screen, InputProcessor {
         camera.position.set(0f, 3f, -5);
         camera.lookAt(0f, 0, 0);
         camera.near = 1f;
-        camera.far = 100f;
+        camera.far = 50f;
         sceneManager.setCamera(camera);
 
 //        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);

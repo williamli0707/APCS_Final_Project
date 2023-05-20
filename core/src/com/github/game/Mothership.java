@@ -3,10 +3,8 @@ package com.github.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.JsonReader;
 import com.github.GameScreen;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
@@ -15,7 +13,7 @@ import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 public class Mothership extends Troop {
 	static {
-		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
+//		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
 	public static final float health = 1f, damage = 0f, speed = 5f, range = 2f;
@@ -29,7 +27,6 @@ public class Mothership extends Troop {
 	public Mothership(SinglePlayerGame game, float x, float y, float z, Player p, GameScreen screen) {
 		super(health, damage, speed, range, 0, game, new Vector3(x,y,z),p);
 		vel = new Vector3(0, 0, 0);
-		System.out.println("new mothership");
 		loc = new Vector3(x, y, z);
 //		instance = new ModelInstance(model, x, y, z);
 		scene = new Scene(asset.scene);
