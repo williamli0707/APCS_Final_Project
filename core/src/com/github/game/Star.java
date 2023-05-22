@@ -10,7 +10,8 @@ import com.github.SinglePlayerGame;
 
 public class Star implements Actor {
 
-	static Model model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star.g3dj"));
+	static Model hostileModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-hostile.g3dj"));
+	static Model friendlyModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-friendly.g3dj"));
 	private SinglePlayerGame game;
 	private float x, z;
 	private Player player=null;
@@ -20,7 +21,7 @@ public class Star implements Actor {
 		this.game = game;
 		this.x = x;
 		this.z = z;
-		instance = new ModelInstance(model, x,0f, z);
+		instance = new ModelInstance(hostileModel, x,0f, z);
 	}
 
 	@Override
@@ -30,14 +31,19 @@ public class Star implements Actor {
 
 	@Override
 	public Vector3 getLocation() {
-		return new Vector3(x,0,z);
+		return new Vector3(x,0, z);
 	}
 	public Player getPlayer(){
 		return player;
 	}
 	public void act(float delta) {
-		if (player!=null){
+		if (player != null){
 			player.addResources(5);
+		}
+		else {
+			if(Math.random() < 0.016) {
+
+			}
 		}
 	}
 
@@ -47,7 +53,9 @@ public class Star implements Actor {
 	 * @param mothership The mothership that conquers this star.
 	 */
 	public void getConquered(Mothership mothership){
-		player=mothership.getPlayer();
+		System.out.println("conquered");
+		player = mothership.getPlayer();
+		instance = new ModelInstance(friendlyModel, x, 0, z);
 	}
 
 	/**

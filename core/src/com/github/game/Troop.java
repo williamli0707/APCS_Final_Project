@@ -1,16 +1,16 @@
 package com.github.game;
 
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
+import net.mgsx.gltf.scene3d.scene.Scene;
+import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 public abstract class Troop implements Actor {
     private float health, damage, speed, cost;
     private Player player;
     private double range;
-    static Model model;
-    ModelInstance instance;
+    static SceneAsset asset;
+    Scene scene;
 
     private Vector3 myLoc;
     private SinglePlayerGame game;
@@ -69,7 +69,7 @@ public abstract class Troop implements Actor {
 
     private void move(Vector3 newLoc, float delta) {
         Vector3 move = newLoc.sub(myLoc).nor();
-        instance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
+        scene.modelInstance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
     }
 
     /**
@@ -110,5 +110,8 @@ public abstract class Troop implements Actor {
     public Player getPlayer(){return player;}
     public double getRange(){
         return range;
+    }
+    public static void dispose() {
+        asset.dispose();
     }
 }

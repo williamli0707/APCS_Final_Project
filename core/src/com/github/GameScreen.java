@@ -8,8 +8,8 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.github.game.Mothership;
-import com.github.game.Star;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.github.game.*;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -32,6 +32,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Mothership mothership;
     final Main main;
     private SinglePlayerGame game;
+    private ShapeRenderer renderer;
 
     private static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 
@@ -47,8 +48,8 @@ public class GameScreen implements Screen, InputProcessor {
         camera = new PerspectiveCamera(70f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 3f, -5);
         camera.lookAt(0f, 0, 0);
-        camera.near = 1f;
-        camera.far = 50f;
+        camera.near = 0.1f;
+        camera.far = 500f;
         sceneManager.setCamera(camera);
 
 //        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);
@@ -86,6 +87,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 
         batch = new ModelBatch();
+        renderer = new ShapeRenderer();
     }
 
     @Override
@@ -96,6 +98,7 @@ public class GameScreen implements Screen, InputProcessor {
         sceneManager.render();
 
         lineRenderer.begin(camera.combined, GL30.GL_LINES);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
         grid(-100, 100, -100, 100);
         lineRenderer.end();
 
@@ -179,6 +182,15 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
+        if(character == '1') {
+            Ranger a = new Ranger(game, 0, 0, 0, game.getPlayer());
+        }
+        if(character == '2') {
+            Vanguard a = new Vanguard(game, 0, 0, 0, game.getPlayer());
+        }
+        if(character == '3') {
+            Aegis a = new Aegis(game, 0, 0, 0, game.getPlayer());
+        }
         return true;
     }
 
