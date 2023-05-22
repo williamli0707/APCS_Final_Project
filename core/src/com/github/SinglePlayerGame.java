@@ -38,6 +38,7 @@ public class SinglePlayerGame {
 
 	public void addTroop(Troop troop) {
 		addActor(troop);
+		screen.sceneManager.addScene(troop.getScene());
 	}
 
 	public ArrayList<Actor> getActors() {
