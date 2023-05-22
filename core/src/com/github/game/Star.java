@@ -41,7 +41,18 @@ public class Star implements Actor {
 			player.addResources(5);
 		}
 		else {
-			if(Math.random() < 0.016) {
+
+			if(Math.random() < 0.00016) {
+				double randomNum = Math.random();
+				if (randomNum<0.15){
+					game.addTroop(new Aegis(game, x,0,z,null));
+				}
+				else if (randomNum<0.50){
+					game.addTroop(new Ranger(game,x,0,z,null));
+				}
+				else {
+					game.addTroop(new Aegis(game,x, 0, z, null));
+				}
 
 			}
 		}
