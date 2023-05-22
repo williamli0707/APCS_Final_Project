@@ -38,6 +38,7 @@ public class SinglePlayerGame {
 
 	public void addTroop(Troop troop) {
 		addActor(troop);
+		screen.sceneManager.addScene(troop.getScene());
 	}
 
 	public ArrayList<Actor> getActors() {
@@ -56,6 +57,9 @@ public class SinglePlayerGame {
 		player.getMothership().act(delta);
 		for(Actor actor : actors) {
 			actor.act(delta);
+		}
+		for(Star star : stars) {
+			star.act(delta);
 		}
 	}
 }

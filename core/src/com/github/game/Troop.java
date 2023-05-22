@@ -1,5 +1,6 @@
 package com.github.game;
 
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.scene3d.scene.Scene;
@@ -111,6 +112,8 @@ public abstract class Troop implements Actor {
     public double getRange(){
         return range;
     }
+    public ModelInstance getInstance() { return scene.modelInstance; }
+    public Scene getScene(){return scene;}
     public static void dispose() {
         asset.dispose();
     }

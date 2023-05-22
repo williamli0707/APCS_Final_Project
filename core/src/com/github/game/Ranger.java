@@ -1,7 +1,6 @@
 package com.github.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
@@ -27,10 +26,6 @@ public class Ranger extends Troop {
 		game.screen.sceneManager.addScene(scene);
 	}
 
-	public Scene getScene() { return scene; }
-	public ModelInstance getInstance() {
-		return scene.modelInstance;
-	}
 	public static void init() {
 		asset = new GLBLoader().load(Gdx.files.internal("gltfTest/ranger/ranger.glb"));
 	}

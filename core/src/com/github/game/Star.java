@@ -33,27 +33,26 @@ public class Star implements Actor {
 	public Vector3 getLocation() {
 		return new Vector3(x,0, z);
 	}
+
 	public Player getPlayer(){
 		return player;
 	}
+
 	public void act(float delta) {
 		if (player != null){
 			player.addResources(5);
-		}
-		else {
+		} else {
 
 			if(Math.random() < 0.00016) {
 				double randomNum = Math.random();
-				if (randomNum<0.15){
-					game.addTroop(new Aegis(game, x,0,z,null));
+				System.out.println("spawning");
+				if (randomNum < 0.15) {
+					game.addTroop(new Aegis(game, x, 0, z, null));
+				} else if (randomNum < 0.50) {
+					game.addTroop(new Ranger(game, x, 0, z, null));
+				} else {
+					game.addTroop(new Aegis(game, x, 0, z, null));
 				}
-				else if (randomNum<0.50){
-					game.addTroop(new Ranger(game,x,0,z,null));
-				}
-				else {
-					game.addTroop(new Vanguard(game,x, 0, z, null));
-				}
-
 			}
 		}
 	}
@@ -91,11 +90,9 @@ public class Star implements Actor {
 
 		if (troop.getHealth()==50.0){
 			troop=new Ranger(game, x, 0, z, player);
-		}
-		else if (troop.getHealth()==1000.0f){
+		} else if (troop.getHealth()==1000.0f){
 			troop=new Vanguard(game, x, 0, z, player);
-		}
-		else{
+		} else{
 			troop=new Aegis(game,x, 0,z, player);
 		}
 		player.addTroop(troop);
