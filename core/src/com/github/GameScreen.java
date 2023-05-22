@@ -33,6 +33,9 @@ public class GameScreen implements Screen, InputProcessor {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
+        Aegis.init();
+        Vanguard.init();
+        Ranger.init();
 
         sceneManager = new SceneManager();
 

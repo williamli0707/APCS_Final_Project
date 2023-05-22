@@ -58,5 +58,8 @@ public class SinglePlayerGame {
 		for(Actor actor : actors) {
 			actor.act(delta);
 		}
+		for(Star star : stars) {
+			star.act(delta);
+		}
 	}
 }
