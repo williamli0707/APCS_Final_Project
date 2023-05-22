@@ -43,6 +43,8 @@ public class Mothership extends Troop {
 			if (loc.dst(a.getLocation()) <= range){
 				a.getConquered(this);
 			}
+			if (health <= 0)
+				death();
 		}
 		tick++;
 		move(delta);
