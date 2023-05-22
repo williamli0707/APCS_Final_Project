@@ -91,7 +91,7 @@ public class Mothership extends Troop {
 	}
 
 	public void touchDragged(int screenX, int screenY, int pointer) {
-		float anglex = (lastTouch.x - screenX) / 50f;
+		float anglex = (lastTouch.x - screenX) / 30f;
 		angle += anglex;
 		screen.camera.rotateAround(loc, Vector3.Y, anglex);
 		scene.modelInstance.transform.rotate(Vector3.Y, anglex);
