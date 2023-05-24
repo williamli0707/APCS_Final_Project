@@ -13,7 +13,7 @@ public class Ranger extends Troop {
 	public Ranger(SinglePlayerGame game, float x, float y, float z, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, new Vector3(x,y,z), p);
 //		instance = new ModelInstance(model, x, y, z);
-		scene = new Scene(asset.scene);
+		scene = new Scene(assetRanger.scene);
 		scene.modelInstance.transform.trn(x, y, z);
 		game.screen.sceneManager.addScene(scene);
 	}
@@ -21,12 +21,12 @@ public class Ranger extends Troop {
 	public Ranger(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);
 //		instance = new ModelInstance(model, v.x, v.y, v.z);
-		scene = new Scene(asset.scene);
+		scene = new Scene(assetRanger.scene);
 		scene.modelInstance.transform.trn(v);
 		game.screen.sceneManager.addScene(scene);
 	}
 
 	public static void init() {
-		asset = new GLBLoader().load(Gdx.files.internal("gltfTest/ranger/ranger.glb"));
+		assetRanger = new GLBLoader().load(Gdx.files.internal("gltfTest/ranger/ranger.glb"));
 	}
 }

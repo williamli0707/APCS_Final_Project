@@ -1,6 +1,5 @@
 package com.github;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,10 +23,10 @@ public class Main extends com.badlogic.gdx.Game {
 		font = new BitmapFont();
 //		GLTFTestScreen screen = new GLTFTestScreen();
 
-//		this.setScreen(new LoginScreen(this));
-		GameScreen screen = new GameScreen(this);
-		this.setScreen(screen);
-		Gdx.input.setInputProcessor(screen);
+		this.setScreen(new LoginScreen(this));
+//		GameScreen screen = new GameScreen(this);
+//		this.setScreen(screen);
+//		Gdx.input.setInputProcessor(screen);
 	}
 
 	@Override

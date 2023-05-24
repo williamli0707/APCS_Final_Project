@@ -36,7 +36,7 @@ public class Mothership extends Troop {
 	}
 
 	@Override
-	public void act(float delta){
+	public boolean act(float delta){
 		for(Star a : getGame().getStars()){
 			if (a.getPlayer() == getPlayer())
 				continue;
@@ -48,6 +48,7 @@ public class Mothership extends Troop {
 		}
 		tick++;
 		move(delta);
+		return true;
 	}
 
 	private void move(float delta) {
@@ -58,6 +59,7 @@ public class Mothership extends Troop {
 		screen.camera.update();
 		loc.add(displ);
 		vel = orig;
+		Vector2 test = new Vector2(0, 0);
 	}
 	public ModelInstance getInstance() {
 		return scene.modelInstance;
