@@ -9,5 +9,5 @@ public interface Actor {
     public ModelInstance getInstance();
     public Vector3 getLocation();
     public Player getPlayer();
-    public void act(float delta);
+//    public void act(float delta);
 }

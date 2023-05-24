@@ -8,8 +8,10 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.github.game.Mothership;
+import com.github.game.Aegis;
+import com.github.game.Ranger;
 import com.github.game.Star;
+import com.github.game.Vanguard;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -21,24 +23,19 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 public class GameScreen implements Screen, InputProcessor {
     public SceneManager sceneManager;
     public PerspectiveCamera camera;
-    private Cubemap environmentCubemap;
-    private Cubemap specularCubemap;
-    private Texture brdfLUT;
-    private SceneSkybox skybox;
-    private DirectionalLightEx light;
 
-    private ModelBatch batch;
-    Texture background;
-    private Mothership mothership;
+    private final ModelBatch batch;
     final Main main;
-    private SinglePlayerGame game;
-
-    private static ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
+    private final SinglePlayerGame game;
+    private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
 
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
+        Aegis.init();
+        Vanguard.init();
+        Ranger.init();
 
         sceneManager = new SceneManager();
 
@@ -47,15 +44,12 @@ public class GameScreen implements Screen, InputProcessor {
         camera = new PerspectiveCamera(70f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(0f, 3f, -5);
         camera.lookAt(0f, 0, 0);
-        camera.near = 1f;
-        camera.far = 100f;
+        camera.near = 0.1f;
+        camera.far = 500f;
         sceneManager.setCamera(camera);
 
-//        mothership = new Mothership(game, 0, 0, 0, new Player(game), this);
-//        sceneManager.addScene(mothership.getScene());
-
         // setup light
-        light = new DirectionalLightEx();
+        DirectionalLightEx light = new DirectionalLightEx();
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         sceneManager.environment.add(light);
@@ -63,25 +57,21 @@ public class GameScreen implements Screen, InputProcessor {
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
 //        environmentCubemap = iblBuilder.buildEnvMap(256);
-        environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
+        Cubemap environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
                 "skybox-textures/space_", ".png", EnvironmentUtil.FACE_NAMES_NEG_POS);
-//        environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
-//                "skybox-textures/environment_", ".png", EnvironmentUtil.FACE_NAMES_NEG_POS);
-//        diffuseCubemap = iblBuilder.buildIrradianceMap(256);
-        specularCubemap = iblBuilder.buildRadianceMap(10);
+        Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
 
         // This texture is provided by the library, no need to have it in your assets.
-        brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+        Texture brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
 
         sceneManager.setAmbientLight(1f);
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
-//        sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
 //        sceneManager.environment.set(new ColorAttribute(ColorAttribute.Fog, Color.WHITE));
 
         // setup skybox
-        skybox = new SceneSkybox(environmentCubemap);
+        SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
 
 
@@ -96,13 +86,13 @@ public class GameScreen implements Screen, InputProcessor {
         sceneManager.render();
 
         lineRenderer.begin(camera.combined, GL30.GL_LINES);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
         grid(-100, 100, -100, 100);
         lineRenderer.end();
 
         batch.begin(camera);
         for(Star star: game.getStars()) batch.render(star.getInstance(), sceneManager.environment);
         batch.end();
-
 
         game.act(delta);
 
@@ -179,6 +169,15 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
+        if(character == '1') {
+            Ranger a = new Ranger(game, 0, 0, 0, game.getPlayer());
+        }
+        if(character == '2') {
+            Vanguard a = new Vanguard(game, 0, 0, 0, game.getPlayer());
+        }
+        if(character == '3') {
+            Aegis a = new Aegis(game, 0, 0, 0, game.getPlayer());
+        }
         return true;
     }
 
