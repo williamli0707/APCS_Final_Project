@@ -74,7 +74,7 @@ public abstract class Troop implements Actor {
 //            }
 //        }
         if (health <= 0) {
-                        death();
+            death();
             return false;
             //dead
         }
@@ -83,9 +83,6 @@ public abstract class Troop implements Actor {
         return true;
     }
 
-    /**
-     * moves the troop
-     */
     private void move(Vector3 newLoc, float delta) {
         Vector3 move = newLoc.sub(myLoc).nor();
         scene.modelInstance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
@@ -128,28 +125,12 @@ public abstract class Troop implements Actor {
         return damage;
     }
 
-    /**
-     * returns the speed
-     * @return float the speed
-     */
     public float getSpeed(){
         return speed;
     }
 
-    /**
-     * returns the game object
-     * @return SinglePlayerGame the game object
-     */
     public SinglePlayerGame getGame(){return game;}
-    /**
-     * returns the player
-     * @return Player the player
-     */
     public Player getPlayer(){return player;}
-    /**
-     * returns the range value
-     * @return double the range
-     */
     public double getRange(){
         return range;
     }
