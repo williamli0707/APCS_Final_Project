@@ -1,5 +1,6 @@
 package com.github;
 
+import com.github.game.HomeStar;
 import com.github.game.Player;
 import com.github.game.Star;
 import com.github.game.Troop;
@@ -29,7 +30,7 @@ public class SinglePlayerGame {
 	}
 
 	public void genStars() {
-		stars[0] = new Star(this, 0, 0);
+		stars[0] = new HomeStar(this, 0, 0, 1000.0f);
 		stars[0].getConquered(player.getMothership());
 		for(int i = 1; i < NUM_STARS; i++) {
 			float x = (float) (Math.random() * 200 - 100), y = (float) (Math.random() * 200 - 100);
