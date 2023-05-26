@@ -45,7 +45,7 @@ public class Mothership extends Troop {
 			}
 		}
 		move(delta);
-		return true;
+		return checkDeath();
 	}
 
 	private void move(float delta) {

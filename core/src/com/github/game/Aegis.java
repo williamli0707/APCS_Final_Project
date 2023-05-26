@@ -7,7 +7,7 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class Aegis extends Troop {
-	public static final float HEALTH = 100.0f, DAMAGE = 50.0f, SPEED = 1.0f, RANGE = 5.0f, COST = 1000;
+	public static final float HEALTH = 100.0f, DAMAGE = 50.0f, SPEED = 2f, RANGE = 5.0f, COST = 1000;
 
 	public Aegis(SinglePlayerGame game, float x, float y, float z, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, new Vector3(x,y,z),p);
