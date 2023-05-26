@@ -7,6 +7,7 @@ import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.*;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -16,11 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginValidator extends VisWindow {
+    private Main game;
 
-    private VisTable buttonTable;
-
-    public LoginValidator (int width, int height) {
+    public LoginValidator(int width, int height, final Main game) {
         super("Login");
+
+        this.game = game;
 
         TableUtils.setSpacingDefaults(this);
         defaults().padRight(1);
@@ -29,6 +31,7 @@ public class LoginValidator extends VisWindow {
 
         VisTextButton cancelButton = new VisTextButton("cancel");
         VisTextButton acceptButton = new VisTextButton("accept");
+        final VisCheckBox termsCheckbox = new VisCheckBox("create a new account");
 
         final VisValidatableTextField user = new VisValidatableTextField();
         final VisValidatableTextField pass = new VisValidatableTextField();
@@ -36,7 +39,7 @@ public class LoginValidator extends VisWindow {
         VisLabel errorLabel = new VisLabel();
         errorLabel.setColor(Color.RED);
 
-        buttonTable = new VisTable(true);
+        VisTable buttonTable = new VisTable(true);
         buttonTable.add(errorLabel).expand().fill();
 //        buttonTable.add(cancelButton);
         buttonTable.add(acceptButton);
@@ -46,6 +49,8 @@ public class LoginValidator extends VisWindow {
         row();
         add(new VisLabel("Password: "));
         add(pass).expand().fill();
+        row();
+        add(termsCheckbox).colspan(2);
         row();
         add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
@@ -58,16 +63,19 @@ public class LoginValidator extends VisWindow {
         acceptButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int res;
+                JSONObject res;
+                int status;
                 try {
-                    res = login(user.getText(), pass.getText());
+                    res = new JSONObject(login(user.getText(), pass.getText(), termsCheckbox.isChecked()));
+                    status = res.getInt("status");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                if(res == 1) {
+                if (status == 0) {
                     Dialogs.showOKDialog(getStage(), "message", "success!");
-                }
-                else {
+                    PlayerData.init(user.getText(), res.getInt("kills"), res.getInt("stars"), res.getInt("games"));
+                    game.menuScreen();
+                } else {
                     Dialogs.showOKDialog(getStage(), "message", "failed!");
                 }
             }
@@ -84,12 +92,14 @@ public class LoginValidator extends VisWindow {
         setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
     }
 
-    public int login(String username, String password) throws IOException {
-        URL url = new URL("http://192.9.249.213:3000");
+    public String login(String username, String password, boolean signUp) throws IOException {
+//        URL url = new URL("http://192.9.249.213:3000");
+        URL url = new URL("http://localhost:3000");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
 
         Map<String, String> parameters = new HashMap<>();
+        parameters.put("stat", String.valueOf(signUp ? 1 : 0));
         parameters.put("username", username);
         parameters.put("password", password);
 
@@ -99,11 +109,10 @@ public class LoginValidator extends VisWindow {
         out.flush();
         out.close();
 
-        con.setRequestProperty("Content-Type", "application/json");
 
         int status = con.getResponseCode();
 
-        Reader streamReader = null;
+        Reader streamReader;
         if (status > 299) {
             streamReader = new InputStreamReader(con.getErrorStream());
         } else {
@@ -117,14 +126,13 @@ public class LoginValidator extends VisWindow {
             content.append(inputLine);
         }
         in.close();
-        System.out.println(content);
         con.disconnect();
-
-        return -1;
+        System.out.println(content);
+        return content.toString();
     }
 
     public void resize(int width, int height) {
-//        setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
+        setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
     }
 }
 

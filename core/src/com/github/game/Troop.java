@@ -14,9 +14,11 @@ public abstract class Troop implements Actor {
     static SceneAsset assetAegis, assetVanguard, assetRanger;
     Scene scene;
 
-    private Vector3 myLoc;
+    public Vector3 myLoc, dest = new Vector3(1e9f, 1e9f, 1e9f);
+    private Vector2 axis = Vector2.X;
     private SinglePlayerGame game;
-    private Vector2 lastAngle = new Vector2(0, 1); //check all until right axis is found LOL
+    private boolean move = true;
+    private int tick;
 
     public Troop(float health, float damage, float speed, double range, float cost, SinglePlayerGame game, Vector3 loc, Player p) {
         this.health = health;
@@ -25,7 +27,7 @@ public abstract class Troop implements Actor {
         this.range = range;
         this.cost = cost;
         this.game = game;
-        myLoc = loc;
+        myLoc = new Vector3(loc.x, loc.y, loc.z);
         player = p;
         System.out.println("new troop: health = " + health + ", damage = " + damage + ", speed = " + speed);
     }
@@ -45,50 +47,51 @@ public abstract class Troop implements Actor {
     public Vector3 getLocation() {
         return myLoc;
     }
-<<<<<<< HEAD
-    /**
+    /*
      * Called each render frame to determine how a troop acts
      */
-    public void act(float delta) {
-=======
-
-
     public boolean act(float delta) {
->>>>>>> c85f8cb4c66eecd2e1eb7da2b55203c448bc5c51
-        double leastDist = 2e9;
-        Vector3 dest = myLoc;
+        boolean rotate = false;
         for(Star a : game.getStars()){
             if (a.getPlayer()==player) {
                 continue;
             }
-            Vector3 tempLoc = a.getLocation();
-            if(myLoc.dst(tempLoc)<leastDist){
-                leastDist = myLoc.dst(tempLoc);
-                dest = tempLoc;
+            if(myLoc.dst(a.getLocation()) < myLoc.dst(dest)){
+                System.out.println();
+                dest = a.getLocation();
+                rotate = true;
             }
+            if (a.getLocation().dst(myLoc) <= range){
+                if(player == null) move = false;
+//                a.setHealth(a.getHealth() - damage * delta);
+            }
+            else move = true;
         }
-//        for(Troop a: game.getTroops()) {
-//            if (a.getLocation().dst(myLoc) <= range){
-//                a.setHealth(a.getHealth() - damage);
-//                setHealth(health - a.getDamage());
-//            }
-//        }
         if (health <= 0) {
             death();
             return false;
             //dead
         }
-        move(dest, delta);
+        move(delta, rotate);
 //        System.out.println("destination: " + dest);
         return true;
     }
 
-    private void move(Vector3 newLoc, float delta) {
-        Vector3 move = newLoc.sub(myLoc).nor();
+    private void move(float delta, boolean rotate) {
+        Vector3 move = dest.cpy().sub(myLoc).nor();
+        if(rotate && !dest.equals(myLoc)) {
+            scene.modelInstance.transform.rotateTowardTarget(move, Vector3.Y);
+        }
+
+        if(!this.move) return;
+
+//        Vector3 move = Vector3.Zero;
         scene.modelInstance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
-        float angle = lastAngle.angleDeg(new Vector2(move.x, move.z));
-        scene.modelInstance.transform.rotate(Vector3.Y, angle);
-        lastAngle.rotateDeg(angle);
+        myLoc.add(move.x * speed * delta, 0, move.z * speed * delta);
+
+//        System.out.println("moved by " + move.x * speed * d
+
+//        scene.modelInstance.transform.d
     }
 
     /**

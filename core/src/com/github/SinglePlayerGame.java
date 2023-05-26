@@ -24,6 +24,8 @@ public class SinglePlayerGame {
 		screen.sceneManager.addScene(player.getMothership().getScene());
 //		enemy = new Player(this);
 		genStars();
+		getPlayer().getStars().add(stars[0]);
+		troops.add(player.getMothership());
 	}
 
 	public void genStars() {
@@ -70,5 +72,9 @@ public class SinglePlayerGame {
 		for(Star star : stars) {
 			star.act(delta);
 		}
+	}
+
+	public void onGameEnd() {
+		PlayerData.add(0, getPlayer().getStars().size(), 1);
 	}
 }

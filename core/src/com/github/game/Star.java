@@ -42,18 +42,18 @@ public class Star implements Actor {
 		if (player != null){
 			player.addResources(5);
 		} else {
-
-			if(Math.random() < 0.00016) {
-				double randomNum = Math.random();
-				System.out.println("spawning");
-				if (randomNum < 0.15) {
-					game.addTroop(new Aegis(game, x, 0, z, null));
-				} else if (randomNum < 0.50) {
-					game.addTroop(new Ranger(game, x, 0, z, null));
-				} else {
-					game.addTroop(new Vanguard(game, x, 0, z, null));
-				}
-			}
+//
+//			if(Math.random() < 0.00016) {
+//				double randomNum = Math.random();
+//				System.out.println("spawning");
+//				if (randomNum < 0.15) {
+//					game.addTroop(new Aegis(game, x, 0, z, null));
+//				} else if (randomNum < 0.50) {
+//					game.addTroop(new Ranger(game, x, 0, z, null));
+//				} else {
+//					game.addTroop(new Vanguard(game, x, 0, z, null));
+//				}
+//			}
 		}
 	}
 
@@ -65,6 +65,7 @@ public class Star implements Actor {
 	public void getConquered(Mothership mothership){
 		System.out.println("conquered");
 		player = mothership.getPlayer();
+		getPlayer().getStars().add(this);
 		instance = new ModelInstance(friendlyModel, x, 0, z);
 	}
 

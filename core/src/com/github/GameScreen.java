@@ -6,8 +6,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.game.Aegis;
 import com.github.game.Ranger;
 import com.github.game.Star;
@@ -22,41 +25,45 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 public class GameScreen implements Screen, InputProcessor {
     public SceneManager sceneManager;
-    public PerspectiveCamera camera;
+    public Camera camera;
 
     private final ModelBatch batch;
+    private final SpriteBatch spriteBatch;
     final Main main;
     private final SinglePlayerGame game;
+    private FitViewport mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
+    private Texture playerMinimapRegion, minimapRegion;
 
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
+        System.err.println("beginning initialization");
         Aegis.init();
+        System.err.println("Aegis initialization complete");
         Vanguard.init();
+        System.err.println("Vanguard initialization complete");
         Ranger.init();
+        System.err.println("Ranger initialization complete");
 
         sceneManager = new SceneManager();
 
         this.game = new SinglePlayerGame(this);
-        // create scene
         camera = new PerspectiveCamera(70f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         camera.position.set(0f, 3f, -5);
         camera.lookAt(0f, 0, 0);
-        camera.near = 0.1f;
+        camera.near = 1f;
         camera.far = 500f;
         sceneManager.setCamera(camera);
 
-        // setup light
         DirectionalLightEx light = new DirectionalLightEx();
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         sceneManager.environment.add(light);
 
-        // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
-//        environmentCubemap = iblBuilder.buildEnvMap(256);
         Cubemap environmentCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(),
                 "skybox-textures/space_", ".png", EnvironmentUtil.FACE_NAMES_NEG_POS);
         Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
@@ -68,19 +75,27 @@ public class GameScreen implements Screen, InputProcessor {
         sceneManager.setAmbientLight(1f);
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
-//        sceneManager.environment.set(new ColorAttribute(ColorAttribute.Fog, Color.WHITE));
 
-        // setup skybox
         SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
 
-
         batch = new ModelBatch();
+        spriteBatch = new SpriteBatch();
+
+        mapViewport = new FitViewport(800, 800);
+        mapViewport.getCamera().position.set(0, 100, 0);
+        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 260, 20, 200, 200);
+
+        minimapRegion = new Texture(Gdx.files.internal("skybox-textures/space_negy.png"));
+        playerMinimapRegion = new Texture(Gdx.files.internal("player_test.png"));
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        sceneManager.updateViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         sceneManager.update(delta);
         sceneManager.render();
@@ -95,8 +110,17 @@ public class GameScreen implements Screen, InputProcessor {
         batch.end();
 
         game.act(delta);
-
         camera.update();
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+//        mapViewport.update(700, 700, false);
+
+        mapViewport.apply();
+        spriteBatch.setProjectionMatrix(mapViewport.getCamera().combined);
+        spriteBatch.begin();
+        spriteBatch.draw(minimapRegion, 0, 0);
+        Vector3 loc = game.getPlayer().getMothership().getLocation();
+        spriteBatch.draw(playerMinimapRegion, loc.x, loc.z);
+        spriteBatch.end();
     }
 
     @Override
@@ -170,13 +194,13 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
         if(character == '1') {
-            Ranger a = new Ranger(game, 0, 0, 0, game.getPlayer());
+            game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation(), null));
         }
         if(character == '2') {
-            Vanguard a = new Vanguard(game, 0, 0, 0, game.getPlayer());
+            game.addTroop(new Vanguard(game, game.getPlayer().getMothership().getLocation(), null));
         }
         if(character == '3') {
-            Aegis a = new Aegis(game, 0, 0, 0, game.getPlayer());
+            game.addTroop(new Aegis(game, game.getPlayer().getMothership().getLocation(), null));
         }
         return true;
     }
@@ -191,7 +215,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        game.getPlayer().getMothership().touchUp();
+        return true;
     }
 
     @Override

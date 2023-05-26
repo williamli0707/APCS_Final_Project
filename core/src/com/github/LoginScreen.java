@@ -21,7 +21,7 @@ public class LoginScreen implements Screen {
         viewport = new ScreenViewport();
         stage.setViewport(viewport);
         VisUI.load(); //
-        loginValidator = new LoginValidator(1280, 720);
+        loginValidator = new LoginValidator(1280, 720, game);
         stage.addActor(loginValidator);
         Gdx.input.setInputProcessor(stage);
     }
@@ -36,7 +36,7 @@ public class LoginScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         loginValidator.resize(width, height);
-        viewport.update(width, height, false);
+        viewport.update(width, height, true);
     }
 
     @Override

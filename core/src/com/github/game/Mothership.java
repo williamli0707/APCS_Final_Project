@@ -20,15 +20,15 @@ public class Mothership extends Troop {
 	private static SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;
 	private GameScreen screen;
-	private Vector3 vel, loc;
+	private Vector3 vel, curLoc;
 	private Vector2 lastTouch;
 
 	private float angle = 0;
-	private int tick = 0;
+
 	public Mothership(SinglePlayerGame game, float x, float y, float z, Player p, GameScreen screen) {
 		super(health, damage, speed, range, 0, game, new Vector3(x,y,z),p);
 		vel = new Vector3(0, 0, 0);
-		loc = new Vector3(x, y, z);
+		curLoc = new Vector3(x, y, z);
 //		instance = new ModelInstance(model, x, y, z);
 		scene = new Scene(asset.scene);
 		lastTouch = new Vector2(0, 0);
@@ -40,13 +40,10 @@ public class Mothership extends Troop {
 		for(Star a : getGame().getStars()){
 			if (a.getPlayer() == getPlayer())
 				continue;
-			if (loc.dst(a.getLocation()) <= range){
+			if (curLoc.dst(a.getLocation()) <= range){
 				a.getConquered(this);
 			}
-			if (health <= 0)
-				death();
 		}
-		tick++;
 		move(delta);
 		return true;
 	}
@@ -57,10 +54,10 @@ public class Mothership extends Troop {
 		scene.modelInstance.transform.trn(displ);
 		screen.camera.position.add(displ);
 		screen.camera.update();
-		loc.add(displ);
+		curLoc.add(displ);
 		vel = orig;
-		Vector2 test = new Vector2(0, 0);
 	}
+
 	public ModelInstance getInstance() {
 		return scene.modelInstance;
 	}
@@ -85,7 +82,12 @@ public class Mothership extends Troop {
 
 	public void keyTyped(char character) {
 //		System.out.println("keyTyped");
-		if(character == 'p') System.out.println(loc);
+		if(character == 'p') System.out.println(curLoc);
+		if(character == 'l') {
+			for(Troop i: getPlayer().getTroops()) {
+				System.out.println(i.getClass() + " " + i.myLoc + " " + i.dest);
+			}
+		}
 	}
 
 	public void touchDown(int screenX, int screenY, int pointer, int button) {
@@ -94,13 +96,19 @@ public class Mothership extends Troop {
 		}
 	}
 
+	public void touchUp() {
+		System.out.println(curLoc);
+	}
+
 	public void touchDragged(int screenX, int screenY, int pointer) {
 		float anglex = (lastTouch.x - screenX) / 30f;
 		angle += anglex;
-		screen.camera.rotateAround(loc, Vector3.Y, anglex);
+		screen.camera.rotateAround(curLoc, Vector3.Y, anglex);
 		scene.modelInstance.transform.rotate(Vector3.Y, anglex);
-//		screen.camera.rotateAround(loc, Vector3.Z, angley);
-//		screen.camera.rotateAround(loc, Vector3.X, angley);
 		lastTouch.set(screenX, screenY);
+	}
+
+	public Vector3 getLocation() {
+		return curLoc;
 	}
 }

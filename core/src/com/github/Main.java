@@ -1,16 +1,13 @@
 package com.github;
 
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
 public class Main extends com.badlogic.gdx.Game {
 	public Environment environment;
-	public PerspectiveCamera camera;
-	public CameraInputController cameraController;
 	public ModelBatch modelBatch;
 	public SpriteBatch spriteBatch;
 	public BitmapFont font;
@@ -22,11 +19,7 @@ public class Main extends com.badlogic.gdx.Game {
 		environment = new Environment();
 		font = new BitmapFont();
 //		GLTFTestScreen screen = new GLTFTestScreen();
-
-		this.setScreen(new LoginScreen(this));
-//		GameScreen screen = new GameScreen(this);
-//		this.setScreen(screen);
-//		Gdx.input.setInputProcessor(screen);
+		gameScreen();
 	}
 
 	@Override
@@ -51,4 +44,18 @@ public class Main extends com.badlogic.gdx.Game {
 
 	@Override
 	public void resume() { }
+
+	public void loginScreen() {
+		this.setScreen(new LoginScreen(this));
+	}
+
+	public void menuScreen() {
+		this.setScreen(new MainMenuScreen(this));
+	}
+
+	public void gameScreen() {
+		GameScreen screen = new GameScreen(this);
+		this.setScreen(screen);
+		Gdx.input.setInputProcessor(screen);
+	}
 }
