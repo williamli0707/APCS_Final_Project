@@ -16,7 +16,7 @@ public class Mothership extends Troop {
 //		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	public static final float health = 1f, damage = 0f, speed = 5f, range = 2f;
+	public static final float health = 1f, damage = 0f, speed = 2.3f, range = 2f;
 	private static SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;
 	private GameScreen screen;
@@ -97,7 +97,6 @@ public class Mothership extends Troop {
 	}
 
 	public void touchUp() {
-		System.out.println(curLoc);
 	}
 
 	public void touchDragged(int screenX, int screenY, int pointer) {

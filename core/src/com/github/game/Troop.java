@@ -56,14 +56,10 @@ public abstract class Troop implements Actor {
             if (a.getPlayer()==player) {
                 continue;
             }
-            if(myLoc.dst(a.getLocation()) < myLoc.dst(dest)){
-                System.out.println();
-                dest = a.getLocation();
-                rotate = true;
-            }
+
             if (a.getLocation().dst(myLoc) <= range){
-                if(player == null) move = false;
-//                a.setHealth(a.getHealth() - damage * delta);
+                if(player == null)
+                    move = false;
             }
             else move = true;
         }
@@ -72,8 +68,20 @@ public abstract class Troop implements Actor {
             return false;
             //dead
         }
+        for (Troop a : game.getTroops()){
+            if (a.getPlayer()==player)
+                continue;
+            if (a.getLocation().dst(myLoc) <= range){
+                move = false;
+                a.setHealth(a.getHealth() - damage * delta);
+                setHealth(health - a.getDamage() * delta);
+            }
+            else
+                move = true;
+
+        }
         move(delta, rotate);
-//        System.out.println("destination: " + dest);
+
         return true;
     }
 
