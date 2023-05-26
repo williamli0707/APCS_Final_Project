@@ -33,7 +33,7 @@ public class GameScreen implements Screen, InputProcessor {
     private final SinglePlayerGame game;
     private FitViewport mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    private Texture playerMinimapRegion, minimapRegion;
+    private Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
 
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
@@ -84,10 +84,13 @@ public class GameScreen implements Screen, InputProcessor {
 
         mapViewport = new FitViewport(800, 800);
         mapViewport.getCamera().position.set(0, 100, 0);
-        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 200, 20, 200, 200);
+        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 200, 10, 200, 200);
 
         minimapRegion = new Texture(Gdx.files.internal("skybox-textures/space_negy.png"));
-        playerMinimapRegion = new Texture(Gdx.files.internal("player_test.png"));
+        minimapOutline = new Texture(Gdx.files.internal("border.png"));
+        playerMinimapRegion = new Texture(Gdx.files.internal("circle_red.png"));
+        starHostile = new Texture(Gdx.files.internal("circle_red.png"));
+        starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
     }
 
     @Override
@@ -117,9 +120,15 @@ public class GameScreen implements Screen, InputProcessor {
         mapViewport.apply();
         spriteBatch.setProjectionMatrix(mapViewport.getCamera().combined);
         spriteBatch.begin();
-        spriteBatch.draw(minimapRegion, 0, 0);
+        spriteBatch.draw(minimapOutline, -280, -280, 560, 560);
+        spriteBatch.draw(minimapRegion, -250, -250, 500, 500);
         Vector3 loc = game.getPlayer().getMothership().getLocation();
-        spriteBatch.draw(playerMinimapRegion, loc.x, loc.z);
+        spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f, loc.z * 2.5f, 20, 20);
+        for(Star star: game.getStars()) {
+            loc = star.getLocation();
+            if(star.getPlayer() == null) spriteBatch.draw(starHostile, -loc.x * 2.5f, loc.z * 2.5f, 10, 10);
+            else spriteBatch.draw(starFriendly, -loc.x * 2.5f, loc.z * 2.5f,  12, 12);
+        }
         spriteBatch.end();
     }
 
