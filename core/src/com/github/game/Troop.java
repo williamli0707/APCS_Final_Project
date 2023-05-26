@@ -47,7 +47,7 @@ public abstract class Troop implements Actor {
     public Vector3 getLocation() {
         return myLoc;
     }
-    /*
+    /**
      * Called each render frame to determine how a troop acts
      */
     public boolean act(float delta) {
