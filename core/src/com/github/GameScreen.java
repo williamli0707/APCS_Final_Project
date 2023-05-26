@@ -84,7 +84,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         mapViewport = new FitViewport(800, 800);
         mapViewport.getCamera().position.set(0, 100, 0);
-        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 260, 20, 200, 200);
+        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 200, 20, 200, 200);
 
         minimapRegion = new Texture(Gdx.files.internal("skybox-textures/space_negy.png"));
         playerMinimapRegion = new Texture(Gdx.files.internal("player_test.png"));
@@ -93,7 +93,7 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2); // * 2 because ??
 
         sceneManager.updateViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
