@@ -11,11 +11,14 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.game.Aegis;
 import com.github.game.Ranger;
 import com.github.game.Star;
 import com.github.game.Vanguard;
+import com.kotcrab.vis.ui.VisUI;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -35,6 +38,7 @@ public class GameScreen implements Screen, InputProcessor {
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
     private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
+    private Stage stage;
     private float mapFactor = 1;
     private boolean zoomMinimap = false, showMinimap = true, showMap = false;
     private static final int verticalOffset = 100, horizontalOffset = 0;
@@ -44,6 +48,8 @@ public class GameScreen implements Screen, InputProcessor {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
+
+        //initializing - would like a progress bar in the future
         System.err.println("beginning initialization");
         Aegis.init();
         System.err.println("Aegis initialization complete");
@@ -51,7 +57,9 @@ public class GameScreen implements Screen, InputProcessor {
         System.err.println("Vanguard initialization complete");
         Ranger.init();
         System.err.println("Ranger initialization complete");
+        VisUI.load();
 
+        //3D setup
         sceneManager = new SceneManager();
 
         this.game = new SinglePlayerGame(this);
@@ -63,6 +71,10 @@ public class GameScreen implements Screen, InputProcessor {
         camera.far = 500f;
         sceneManager.setCamera(camera);
 
+        batch = new ModelBatch();
+
+
+        //Environment - I understand ~0.5% of this code
         DirectionalLightEx light = new DirectionalLightEx();
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
@@ -84,7 +96,8 @@ public class GameScreen implements Screen, InputProcessor {
         SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
 
-        batch = new ModelBatch();
+
+        //Minimap and Map textures
         spriteBatch = new SpriteBatch();
 
         miniMapViewport = new FitViewport(800, 800);
@@ -100,6 +113,11 @@ public class GameScreen implements Screen, InputProcessor {
         playerMinimapRegion = new Texture(Gdx.files.internal("circle_yellow.png"));
         starHostile = new Texture(Gdx.files.internal("circle_red.png"));
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
+
+
+        //UI
+        stage = new Stage(new ScreenViewport());
+
     }
 
     @Override
@@ -192,6 +210,10 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         //dispose of all resources
+        Ranger.dispose();
+        Vanguard.dispose();
+        Aegis.dispose();
+        VisUI.dispose();
     }
 
     public static void line(float x1, float y1, float z1,

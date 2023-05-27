@@ -24,6 +24,7 @@ public class LoginScreen implements Screen {
         loginValidator = new LoginValidator(1280, 720, game);
         stage.addActor(loginValidator);
         Gdx.input.setInputProcessor(stage);
+        stage.setDebugAll(true);
     }
 
     @Override

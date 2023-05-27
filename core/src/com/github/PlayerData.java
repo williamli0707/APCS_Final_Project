@@ -30,6 +30,7 @@ public class PlayerData {
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put("stat", "2");
+        parameters.put("user", user);
         parameters.put("kills", String.valueOf(kills));
         parameters.put("stars", String.valueOf(stars));
         parameters.put("games", String.valueOf(games));

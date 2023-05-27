@@ -79,16 +79,10 @@ public abstract class Troop implements Actor {
 
     private void move(Vector3 dest, float delta) {
         Vector3 move = dest.cpy().sub(myLoc).nor();
-        if(!dest.equals(myLoc)) {
-            scene.modelInstance.transform.idt().rotateTowardDirection(move, Vector3.Y).trn(myLoc);
-        }
+        if(!dest.equals(myLoc)) scene.modelInstance.transform.idt().rotateTowardDirection(move, Vector3.Y).trn(myLoc);
         if(!this.move) return;
-//        Vector3 move = Vector3.Zero;
         scene.modelInstance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
         myLoc.add(move.x * speed * delta, 0, move.z * speed * delta);
-
-//        System.out.println("moved by " + move.x * speed * d
-
     }
 
     /**

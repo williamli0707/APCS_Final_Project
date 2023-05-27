@@ -19,8 +19,9 @@ public class Main extends com.badlogic.gdx.Game {
 		environment = new Environment();
 		font = new BitmapFont();
 //		GLTFTestScreen screen = new GLTFTestScreen();
-		gameScreen();
+//		gameScreen();
 //		loginScreen();
+		menuScreen();
 	}
 
 	@Override
