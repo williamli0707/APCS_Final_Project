@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.game.Aegis;
@@ -31,9 +32,13 @@ public class GameScreen implements Screen, InputProcessor {
     private final SpriteBatch spriteBatch;
     final Main main;
     private final SinglePlayerGame game;
-    private FitViewport mapViewport;
+    private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    private Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
+    private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
+    private float mapFactor = 1;
+    private boolean zoomMinimap = false, showMinimap = true, showMap = false;
+    private static final int verticalOffset = 100, horizontalOffset = 0;
+    private int mode = 0;
 
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
@@ -82,13 +87,17 @@ public class GameScreen implements Screen, InputProcessor {
         batch = new ModelBatch();
         spriteBatch = new SpriteBatch();
 
+        miniMapViewport = new FitViewport(800, 800);
+        miniMapViewport.getCamera().position.set(0, 100, 0);
+        miniMapViewport.setScreenBounds(Gdx.graphics.getWidth() - 200, 0, 200, 200);
+
         mapViewport = new FitViewport(800, 800);
         mapViewport.getCamera().position.set(0, 100, 0);
-        mapViewport.setScreenBounds(Gdx.graphics.getWidth() - 200, 10, 200, 200);
+        mapViewport.setScreenBounds(Gdx.graphics.getWidth() / 2 - 350, Gdx.graphics.getHeight() / 2 - 350, 700, 700);
 
         minimapRegion = new Texture(Gdx.files.internal("skybox-textures/space_negy.png"));
         minimapOutline = new Texture(Gdx.files.internal("border.png"));
-        playerMinimapRegion = new Texture(Gdx.files.internal("circle_red.png"));
+        playerMinimapRegion = new Texture(Gdx.files.internal("circle_yellow.png"));
         starHostile = new Texture(Gdx.files.internal("circle_red.png"));
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
     }
@@ -114,27 +123,51 @@ public class GameScreen implements Screen, InputProcessor {
 
         game.act(delta);
         camera.update();
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-//        mapViewport.update(700, 700, false);
-
-        mapViewport.apply();
-        spriteBatch.setProjectionMatrix(mapViewport.getCamera().combined);
-        spriteBatch.begin();
-        spriteBatch.draw(minimapOutline, -280, -280, 560, 560);
-        spriteBatch.draw(minimapRegion, -250, -250, 500, 500);
-        Vector3 loc = game.getPlayer().getMothership().getLocation();
-        spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f, loc.z * 2.5f, 20, 20);
-        for(Star star: game.getStars()) {
-            loc = star.getLocation();
-            if(star.getPlayer() == null) spriteBatch.draw(starHostile, -loc.x * 2.5f, loc.z * 2.5f, 10, 10);
-            else spriteBatch.draw(starFriendly, -loc.x * 2.5f, loc.z * 2.5f,  12, 12);
+        if(showMinimap) {
+            if (zoomMinimap) mapFactor += delta * 3f;
+            else mapFactor -= delta * 3f;
+            if (mapFactor > 3) mapFactor = 3;
+            if (mapFactor < 1) mapFactor = 1;
+            miniMapViewport.apply();
+            spriteBatch.setProjectionMatrix(miniMapViewport.getCamera().combined);
+            spriteBatch.begin();
+            spriteBatch.draw(minimapOutline, -(250 * mapFactor) - 30 + horizontalOffset, -(250 * mapFactor) - 30 + verticalOffset, 500 * mapFactor + 60, 500 * mapFactor + 60);
+            spriteBatch.draw(minimapRegion, -(250 * mapFactor) + horizontalOffset, -(250 * mapFactor) + verticalOffset, 500 * mapFactor, 500 * mapFactor);
+            Vector3 loc = game.getPlayer().getMothership().getLocation();
+            spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f * mapFactor + horizontalOffset, loc.z * 2.5f * mapFactor + verticalOffset, 20 * mapFactor, 20 * mapFactor);
+            for (Star star : game.getStars()) {
+                loc = star.getLocation();
+                if (star.getPlayer() == null)
+                    spriteBatch.draw(starHostile, -loc.x * 2.5f * mapFactor + horizontalOffset, loc.z * 2.5f * mapFactor + verticalOffset, 10 * mapFactor, 10 * mapFactor);
+                else
+                    spriteBatch.draw(starFriendly, -loc.x * 2.5f * mapFactor + horizontalOffset, loc.z * 2.5f * mapFactor + verticalOffset, 12 * mapFactor, 12 * mapFactor);
+            }
+            spriteBatch.end();
         }
-        spriteBatch.end();
+        else if(showMap) {
+            mapViewport.apply();
+            spriteBatch.setProjectionMatrix(mapViewport.getCamera().combined);
+            spriteBatch.begin();
+            spriteBatch.draw(minimapOutline, -(250) - 30 + horizontalOffset, -(250) - 30 + verticalOffset, 500 + 60, 500 + 60);
+            spriteBatch.draw(minimapRegion, -(250) + horizontalOffset, -(250) + verticalOffset, 500, 500);
+            Vector3 loc = game.getPlayer().getMothership().getLocation();
+            spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 20, 20);
+            for (Star star : game.getStars()) {
+                loc = star.getLocation();
+                if (star.getPlayer() == null)
+                    spriteBatch.draw(starHostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10, 10);
+                else
+                    spriteBatch.draw(starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 12, 12);
+            }
+            spriteBatch.end();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
         sceneManager.updateViewport(width, height);
+        miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
+        mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
     }
 
     @Override
@@ -190,12 +223,27 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         game.getPlayer().getMothership().keyDown(keycode);
+        if(keycode == 70) {
+            zoomMinimap = true;
+        }
+        if(keycode == 61) {
+            showMinimap = false;
+            showMap = true;
+            mode = 0;
+        }
         return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         game.getPlayer().getMothership().keyUp(keycode);
+        if(keycode == 70) {
+            zoomMinimap = false;
+        }
+        if(keycode == 61) {
+            showMinimap = true;
+            showMap = false;
+        }
         return true;
     }
 
@@ -203,13 +251,29 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
         if(character == '1') {
-            game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation(), null));
+            //TODO add ui changes to notif user that they can spawn troops
+            System.out.println("switched to mode 1");
+            if(mode == 1) mode = 0;
+            else mode = 1;
         }
         if(character == '2') {
-            game.addTroop(new Vanguard(game, game.getPlayer().getMothership().getLocation(), null));
+            System.out.println("switched to mode 2");
+            if(mode == 2) mode = 0;
+            else mode = 2;
         }
         if(character == '3') {
-            game.addTroop(new Aegis(game, game.getPlayer().getMothership().getLocation(), null));
+            System.out.println("switched to mode 3");
+            if(mode == 3) mode = 0;
+            else mode = 3;
+        }
+        if(character == '4') {
+            game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation().cpy(), null));
+        }
+        if(character == '5') {
+            game.addTroop(new Vanguard(game, game.getPlayer().getMothership().getLocation().cpy(), null));
+        }
+        if(character == '6') {
+            game.addTroop(new Aegis(game, game.getPlayer().getMothership().getLocation().cpy(), null));
         }
         return true;
     }
@@ -225,6 +289,15 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         game.getPlayer().getMothership().touchUp();
+        if(showMap && mode != 0) {
+            Vector2 loc = mapViewport.unproject(new Vector2(screenX, screenY));
+            loc.x -= horizontalOffset;
+            loc.x = -loc.x;
+            loc.y -= verticalOffset;
+            loc.scl(0.4f);
+            System.out.println(loc);
+            game.getPlayer().placeTroop(mode, new Vector3(loc.x, 0, loc.y));
+        }
         return true;
     }
 

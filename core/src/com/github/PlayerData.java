@@ -24,7 +24,7 @@ public class PlayerData {
     }
 
     public static void req(int kills, int stars, int games) throws IOException {
-        URL url = new URL("http://localhost:3000");
+        URL url = new URL("http://192.9.249.213:3000");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
 

@@ -10,14 +10,6 @@ public class Ranger extends Troop {
 
 	public static final float HEALTH = 50.0f, DAMAGE = 35.0f, SPEED = 5.0f, RANGE = 3.0f, COST = 150;
 
-	public Ranger(SinglePlayerGame game, float x, float y, float z, Player p) {
-		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, new Vector3(x,y,z), p);
-//		instance = new ModelInstance(model, x, y, z);
-		scene = new Scene(assetRanger.scene);
-		scene.modelInstance.transform.trn(x, y, z);
-		game.screen.sceneManager.addScene(scene);
-	}
-
 	public Ranger(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);
 //		instance = new ModelInstance(model, v.x, v.y, v.z);

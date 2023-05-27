@@ -35,6 +35,10 @@ public class LoginValidator extends VisWindow {
 
         final VisValidatableTextField user = new VisValidatableTextField();
         final VisValidatableTextField pass = new VisValidatableTextField();
+//        user.setDebug(true);
+//        pass.setDebug(true);
+//        cancelButton.setDebug(true);
+//        acceptButton.setDebug(true);
 
         VisLabel errorLabel = new VisLabel();
         errorLabel.setColor(Color.RED);
@@ -93,8 +97,8 @@ public class LoginValidator extends VisWindow {
     }
 
     public String login(String username, String password, boolean signUp) throws IOException {
-//        URL url = new URL("http://192.9.249.213:3000");
-        URL url = new URL("http://localhost:3000");
+        URL url = new URL("http://192.9.249.213:3000");
+//        URL url = new URL("http://localhost:3000");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
 

@@ -20,6 +20,7 @@ public class Main extends com.badlogic.gdx.Game {
 		font = new BitmapFont();
 //		GLTFTestScreen screen = new GLTFTestScreen();
 		gameScreen();
+//		loginScreen();
 	}
 
 	@Override
