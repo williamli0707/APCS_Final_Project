@@ -12,6 +12,7 @@ public class Player {
 	private int resources;
 
 	private Mothership mothership;
+	private HomeStar homeStar;
 
 	public Player(SinglePlayerGame game) {
 		this.game = game;
@@ -34,6 +35,7 @@ public class Player {
 				if(type == 1) t = new Ranger(game, loc, this);
 				else if(type == 2) t = new Vanguard(game, loc, this);
 				else t = new Aegis(game, loc, this);
+				addTroop(t);
 				game.addTroop(t);
 				return;
 			}
@@ -50,9 +52,8 @@ public class Player {
 		return troops;
 	}
 
-	public ArrayList<Troop> addTroop(Troop troop) {
+	public void addTroop(Troop troop) {
 		troops.add(troop);
-		return troops;
 	}
 
 	public ArrayList<Star> getStars() {
@@ -66,6 +67,9 @@ public class Player {
 	}
 
 	public void addResources(int amount){
-		resources+=amount;
+		resources += amount;
 	}
+
+	public void setHomeStar(HomeStar homeStar) {this.homeStar = homeStar;}
+	public HomeStar getHomeStar() {return homeStar;}
 }

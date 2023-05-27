@@ -16,6 +16,7 @@ public class SinglePlayerGame {
 
 	public GameScreen screen;
 	private static int NUM_STARS = 10;
+	public static float HOME_STAR_HEALTH = 1000f;
 
 	public SinglePlayerGame(GameScreen screen) {
 		troops = new HashSet<>();
@@ -30,8 +31,9 @@ public class SinglePlayerGame {
 	}
 
 	public void genStars() {
-		stars[0] = new HomeStar(this, 0, 0, 1000.0f);
+		stars[0] = new HomeStar(this, 0, 0, HOME_STAR_HEALTH);
 		stars[0].getConquered(player.getMothership());
+		player.setHomeStar((HomeStar) stars[0]);
 		for(int i = 1; i < NUM_STARS; i++) {
 			float x = (float) (Math.random() * 200 - 100), y = (float) (Math.random() * 200 - 100);
 			stars[i] = new Star(this, x, y);

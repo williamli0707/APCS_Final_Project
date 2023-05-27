@@ -6,7 +6,7 @@ public class HomeStar extends Star{
     private float health;
     public HomeStar(SinglePlayerGame game, float x, float z, float hp) {
         super(game, x, z);
-        health=hp;
+        health = hp;
     }
 
     public void act(float delta) {

@@ -6,18 +6,19 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.game.Aegis;
-import com.github.game.Ranger;
-import com.github.game.Star;
-import com.github.game.Vanguard;
+import com.github.game.*;
 import com.kotcrab.vis.ui.VisUI;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
@@ -38,10 +39,13 @@ public class GameScreen implements Screen, InputProcessor {
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
     private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
+    private final NinePatch hpBorderPatch, hpBarPatch;
     private Stage stage;
     private float mapFactor = 1;
     private boolean zoomMinimap = false, showMinimap = true, showMap = false;
     private static final int verticalOffset = 100, horizontalOffset = 0;
+    private Label healthText, starHealthText, resourcesText;
+    private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
     private int mode = 0;
 
     public GameScreen(Main main) {
@@ -117,11 +121,44 @@ public class GameScreen implements Screen, InputProcessor {
 
         //UI
         stage = new Stage(new ScreenViewport());
+        healthText = new Label("Health", VisUI.getSkin());
+        starHealthText = new Label("Home Star Health", VisUI.getSkin());
+        resourcesText = new Label("Resources", VisUI.getSkin());
+        healthText.setPosition(Gdx.graphics.getWidth() / 3f, 20, Align.center);
+        starHealthText.setPosition(2 * Gdx.graphics.getWidth() / 3f, 20, Align.center);
+        resourcesText.setPosition(Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 160, Align.center);
+        stage.addActor(healthText);
+        stage.addActor(starHealthText);
+        stage.addActor(resourcesText);
+        hpBorderPatch = new NinePatch(new Texture(Gdx.files.internal("hp_border.png")), 10, 10, 10, 10);
+        hpBarPatch = new NinePatch(new Texture(Gdx.files.internal("hp_bar.png")), 0, 0, 0, 0);
 
+        hpMothershipBorder = new Image(hpBorderPatch);
+        hpMothershipBar = new Image(hpBarPatch);
+        hpMothershipBorder.setWidth(305);
+        hpMothershipBorder.setHeight(30);
+        hpMothershipBar.setWidth(300);
+        hpMothershipBar.setHeight(25);
+        hpMothershipBorder.setPosition(Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        hpMothershipBar.setPosition(Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        stage.addActor(hpMothershipBorder);
+        stage.addActor(hpMothershipBar);
+
+        hpStarBorder = new Image(hpBorderPatch);
+        hpStarBar = new Image(hpBarPatch);
+        hpStarBorder.setWidth(305);
+        hpStarBorder.setHeight(30);
+        hpStarBar.setWidth(300);
+        hpStarBar.setHeight(25);
+        hpStarBorder.setPosition(2 * Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        hpStarBar.setPosition(2 * Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        stage.addActor(hpStarBorder);
+        stage.addActor(hpStarBar);
     }
 
     @Override
     public void render(float delta) {
+        //3D
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2); // * 2 because ??
 
@@ -141,6 +178,18 @@ public class GameScreen implements Screen, InputProcessor {
 
         game.act(delta);
         camera.update();
+
+
+        //UI
+        stage.act(delta);
+
+        hpMothershipBar.setWidth(300 * (Math.max(0, game.getPlayer().getMothership().getHealth()) / Mothership.health));
+        hpStarBar.setWidth(300 * (Math.max(0, ((HomeStar) game.getStars()[0]).getHealth()) / SinglePlayerGame.HOME_STAR_HEALTH));
+
+        stage.draw();
+
+
+        //Maps
         if(showMinimap) {
             if (zoomMinimap) mapFactor += delta * 3f;
             else mapFactor -= delta * 3f;
@@ -171,11 +220,12 @@ public class GameScreen implements Screen, InputProcessor {
             Vector3 loc = game.getPlayer().getMothership().getLocation();
             spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 20, 20);
             for (Star star : game.getStars()) {
+                float fac = star instanceof HomeStar ? 1.5f : 1;
                 loc = star.getLocation();
                 if (star.getPlayer() == null)
-                    spriteBatch.draw(starHostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10, 10);
+                    spriteBatch.draw(starHostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10 * fac, 10 * fac);
                 else
-                    spriteBatch.draw(starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 12, 12);
+                    spriteBatch.draw(starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 12 * fac, 12 * fac);
             }
             spriteBatch.end();
         }
@@ -184,6 +234,12 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void resize(int width, int height) {
         sceneManager.updateViewport(width, height);
+
+        stage.getViewport().update(width, height);
+        healthText.setPosition(width / 3f, 20, Align.center);
+        starHealthText.setPosition(2 * width / 3f, 20, Align.center);
+        resourcesText.setPosition(width - 100, height - 160, Align.center);
+
         miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
         mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
     }

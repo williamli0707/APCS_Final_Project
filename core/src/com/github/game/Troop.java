@@ -53,6 +53,7 @@ public abstract class Troop implements Actor {
     public boolean act(float delta) {
         move = true;
         Vector3 dest = new Vector3(1e9f, 1e9f, 1e9f);
+        if(player == null) dest = game.getPlayer().getHomeStar().getLocation();
         for(Star a : game.getStars()){
             if (a.getPlayer()==player) continue;
             if(myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
@@ -71,6 +72,9 @@ public abstract class Troop implements Actor {
                 a.setHealth(a.getHealth() - damage * delta);
 //                System.out.println(damage * delta);
             }
+        }
+        if(player == null && game.getPlayer().getHomeStar().getLocation().dst(myLoc) <= range) {
+            game.getPlayer().getHomeStar().setNewHealth(game.getPlayer().getHomeStar().getHealth() - damage * delta);
         }
         move(dest, delta);
 
@@ -116,7 +120,7 @@ public abstract class Troop implements Actor {
      */
     public void death() {
         game.screen.sceneManager.removeScene(getScene());
-        System.out.println("died " + this);
+//        System.out.println("died " + this);
     }
 
     /**
