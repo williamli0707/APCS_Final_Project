@@ -9,7 +9,7 @@ public class Player {
 	private SinglePlayerGame game;
 	private ArrayList<Troop> troops;
 	private ArrayList<Star> stars;
-	private int resources;
+	private float resources;
 
 	private Mothership mothership;
 	private HomeStar homeStar;
@@ -62,11 +62,11 @@ public class Player {
 
 	public Mothership getMothership() {return mothership;}
 
-	public int getResources() {
+	public float getResources() {
 		return resources;
 	}
 
-	public void addResources(int amount){
+	public void addResources(float amount){
 		resources += amount;
 	}
 
