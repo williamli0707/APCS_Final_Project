@@ -38,7 +38,7 @@ public class GameScreen implements Screen, InputProcessor {
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile;
+    private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, aegisMarker;
     private final NinePatch hpBorderPatch, hpBarPatch;
     private Stage stage;
     private float mapFactor = 1;
@@ -117,7 +117,7 @@ public class GameScreen implements Screen, InputProcessor {
         playerMinimapRegion = new Texture(Gdx.files.internal("circle_yellow.png"));
         starHostile = new Texture(Gdx.files.internal("circle_red.png"));
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
-
+        aegisMarker = new Texture(Gdx.files.internal("aegis_marker.png"));
 
         //UI
         stage = new Stage(new ScreenViewport());
@@ -226,6 +226,11 @@ public class GameScreen implements Screen, InputProcessor {
                     spriteBatch.draw(starHostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10 * fac, 10 * fac);
                 else
                     spriteBatch.draw(starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 12 * fac, 12 * fac);
+            }
+            for(Troop troop: game.getTroops()) {
+                if(troop instanceof Mothership) continue;
+                loc = troop.getLocation();
+                spriteBatch.draw(aegisMarker, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 60, 60);
             }
             spriteBatch.end();
         }

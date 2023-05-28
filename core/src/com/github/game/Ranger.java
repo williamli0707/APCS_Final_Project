@@ -8,7 +8,7 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class Ranger extends Troop {
 
-	public static final float HEALTH = 50.0f, DAMAGE = 35.0f, SPEED = 5.0f, RANGE = 3.0f, COST = 150;
+	public static final float HEALTH = 50.0f, DAMAGE = 35.0f, SPEED = 5.0f, RANGE = 5.0f, COST = 150;
 
 	public Ranger(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);

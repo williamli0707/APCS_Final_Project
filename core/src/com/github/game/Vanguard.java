@@ -18,6 +18,6 @@ public class Vanguard extends Troop {
 	}
 
 	public static void init() {
-		assetVanguard = new GLBLoader().load(Gdx.files.internal("gltfTest/vanguard/vanguard.glb"));
+		assetVanguard = new GLBLoader().load(Gdx.files.internal("gltfTest/vanguard2/vanguard.glb"));
 	}
 }
