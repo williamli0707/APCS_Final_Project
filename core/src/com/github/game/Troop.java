@@ -1,8 +1,10 @@
 package com.github.game;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.github.GameScreen;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
@@ -18,7 +20,8 @@ public abstract class Troop implements Actor {
     private Vector2 axis = Vector2.X;
     private SinglePlayerGame game;
     private boolean move = true;
-    private int tick;
+    public float angle = 0;
+    public Sprite sprite;
 
     public Troop(float health, float damage, float speed, double range, float cost, SinglePlayerGame game, Vector3 loc, Player p) {
         this.health = health;
@@ -55,17 +58,12 @@ public abstract class Troop implements Actor {
         Vector3 dest = new Vector3(1e9f, 1e9f, 1e9f);
         if(player == null) dest = game.getPlayer().getHomeStar().getLocation();
         for(Star a : game.getStars()){
-            if (a.getPlayer()==player) continue;
+            if (a.getPlayer() == player) continue;
             if(myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
             if (a.getLocation().dst(myLoc) <= range) move = false;
         }
-        if (health <= 0) {
-            death();
-            return false;
-            //dead
-        }
         for (Troop a : game.getTroops()){
-            if (a.getPlayer()==player) continue;
+            if (a.getPlayer() == player) continue;
             if(myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
             if (a.getLocation().dst(myLoc) <= range){
                 move = false;
@@ -82,7 +80,12 @@ public abstract class Troop implements Actor {
     }
 
     private void move(Vector3 dest, float delta) {
+//        move = false;
+        sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+        sprite.setRotation(-angle);
+        sprite.setBounds(-myLoc.x * 2.5f + GameScreen.horizontalOffset, myLoc.z * 2.5f + GameScreen.verticalOffset, 12, 12);
         Vector3 move = dest.cpy().sub(myLoc).nor();
+        angle = new Vector2(move.x, move.z).angleDeg();
         if(!dest.equals(myLoc)) scene.modelInstance.transform.idt().rotateTowardDirection(move, Vector3.Y).trn(myLoc);
         if(!this.move) return;
         scene.modelInstance.transform.trn(move.x * speed * delta, 0, move.z * speed * delta);
@@ -119,6 +122,7 @@ public abstract class Troop implements Actor {
      * removes the troop from the game
      */
     public void death() {
+        System.out.println("died");
         game.screen.sceneManager.removeScene(getScene());
 //        System.out.println("died " + this);
     }
@@ -146,5 +150,9 @@ public abstract class Troop implements Actor {
         assetRanger.dispose();
         assetVanguard.dispose();
         assetAegis.dispose();
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 }

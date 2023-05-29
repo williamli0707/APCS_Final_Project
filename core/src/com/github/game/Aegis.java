@@ -1,6 +1,7 @@
 package com.github.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
@@ -15,6 +16,8 @@ public class Aegis extends Troop {
 		scene = new Scene(assetAegis.scene);
 		scene.modelInstance.transform.trn(v);
 		game.screen.sceneManager.addScene(scene);
+		sprite = new Sprite(p == null ? game.screen.a_hostile : game.screen.a_friendly);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
 	public static void init() {

@@ -38,13 +38,13 @@ public class GameScreen implements Screen, InputProcessor {
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    private final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, aegisMarker;
+    public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile;
     private final NinePatch hpBorderPatch, hpBarPatch;
     private Stage stage;
     private float mapFactor = 1;
     private boolean zoomMinimap = false, showMinimap = true, showMap = false;
-    private static final int verticalOffset = 100, horizontalOffset = 0;
-    private Label healthText, starHealthText, resourcesText;
+    public static final int verticalOffset = 100, horizontalOffset = 0;
+    private Label healthText, starHealthText, resourcesText, gameStatusText;
     private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
     private int mode = 0;
 
@@ -117,19 +117,27 @@ public class GameScreen implements Screen, InputProcessor {
         playerMinimapRegion = new Texture(Gdx.files.internal("circle_yellow.png"));
         starHostile = new Texture(Gdx.files.internal("circle_red.png"));
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
-        aegisMarker = new Texture(Gdx.files.internal("aegis_marker.png"));
+        r_friendly = new Texture(Gdx.files.internal("r_friendly.png"));
+        r_hostile = new Texture(Gdx.files.internal("r_hostile.png"));
+        v_friendly = new Texture(Gdx.files.internal("v_friendly.png"));
+        v_hostile = new Texture(Gdx.files.internal("v_hostile.png"));
+        a_friendly = new Texture(Gdx.files.internal("a_friendly.png"));
+        a_hostile = new Texture(Gdx.files.internal("a_hostile.png"));
 
         //UI
         stage = new Stage(new ScreenViewport());
         healthText = new Label("Health", VisUI.getSkin());
         starHealthText = new Label("Home Star Health", VisUI.getSkin());
         resourcesText = new Label("Resources", VisUI.getSkin());
+        gameStatusText = new Label("", VisUI.getSkin());
         healthText.setPosition(Gdx.graphics.getWidth() / 3f, 20, Align.center);
         starHealthText.setPosition(2 * Gdx.graphics.getWidth() / 3f, 20, Align.center);
         resourcesText.setPosition(Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 160, Align.center);
+        gameStatusText.setPosition(30, Gdx.graphics.getHeight() - 30, Align.center);
         stage.addActor(healthText);
         stage.addActor(starHealthText);
         stage.addActor(resourcesText);
+        stage.addActor(gameStatusText);
         hpBorderPatch = new NinePatch(new Texture(Gdx.files.internal("hp_border.png")), 10, 10, 10, 10);
         hpBarPatch = new NinePatch(new Texture(Gdx.files.internal("hp_bar.png")), 0, 0, 0, 0);
 
@@ -229,8 +237,15 @@ public class GameScreen implements Screen, InputProcessor {
             }
             for(Troop troop: game.getTroops()) {
                 if(troop instanceof Mothership) continue;
-                loc = troop.getLocation();
-                spriteBatch.draw(aegisMarker, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 60, 60);
+//                loc = troop.getLocation();
+//                if(troop instanceof Ranger) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? r_friendly : r_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
+//                else if(troop instanceof Vanguard) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? v_friendly : v_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
+//                else if(troop instanceof Aegis) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? a_friendly : a_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
+////                System.out.println((loc.x * 2.5f + horizontalOffset) + " " + (loc.z * 2.5f + verticalOffset));
+//                if(troop instanceof Ranger) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? r_friendly : r_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 15, 15);
+//                else if(troop instanceof Vanguard) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? v_friendly : v_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 15, 15);
+//                else if(troop instanceof Aegis) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? starFriendly:starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10, 10);
+                troop.getSprite().draw(spriteBatch);
             }
             spriteBatch.end();
         }
@@ -244,6 +259,7 @@ public class GameScreen implements Screen, InputProcessor {
         healthText.setPosition(width / 3f, 20, Align.center);
         starHealthText.setPosition(2 * width / 3f, 20, Align.center);
         resourcesText.setPosition(width - 100, height - 160, Align.center);
+        gameStatusText.setPosition(30, height - 30, Align.center);
 
         miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
         mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
@@ -313,6 +329,7 @@ public class GameScreen implements Screen, InputProcessor {
             showMinimap = false;
             showMap = true;
             mode = 0;
+            gameStatusText.setText("Press 1 to spawn a new Ranger, 2 for a new Vanguard, or 3 for a new Aegis. Drag a rectangular region to move your troops. ");
         }
         return true;
     }
@@ -326,6 +343,7 @@ public class GameScreen implements Screen, InputProcessor {
         if(keycode == 61) {
             showMinimap = true;
             showMap = false;
+            gameStatusText.setText("");
         }
         return true;
     }
@@ -334,17 +352,19 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
         if(character == '1') {
-            //TODO add ui changes to notif user that they can spawn troops
+            gameStatusText.setText("Now placing a new Ranger. Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 1");
             if(mode == 1) mode = 0;
             else mode = 1;
         }
         if(character == '2') {
+            gameStatusText.setText("Now placing a new Vanguard. Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 2");
             if(mode == 2) mode = 0;
             else mode = 2;
         }
         if(character == '3') {
+            gameStatusText.setText("Now placing a new Aegis. Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 3");
             if(mode == 3) mode = 0;
             else mode = 3;

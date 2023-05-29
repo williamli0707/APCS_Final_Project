@@ -30,7 +30,7 @@ public class Player {
 		}
 		//1 = ranger, 2 = vanguard, 3 = aegis
 		for(Star a: game.getStars()) {
-			if(a.getLocation().dst(loc) <= 10 && a.getPlayer() == this) {
+			if(a.getLocation().dst(loc) <= 1000 && a.getPlayer() == this) {
 				Troop t;
 				if(type == 1) t = new Ranger(game, loc, this);
 				else if(type == 2) t = new Vanguard(game, loc, this);
