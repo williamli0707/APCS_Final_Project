@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -28,6 +29,8 @@ import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
+import java.util.HashSet;
+
 public class GameScreen implements Screen, InputProcessor {
     public SceneManager sceneManager;
     public Camera camera;
@@ -38,20 +41,24 @@ public class GameScreen implements Screen, InputProcessor {
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile;
-    private final NinePatch hpBorderPatch, hpBarPatch;
+    public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile, selectionRegion;
+    private NinePatchDrawable arrow;
+    private final NinePatch hpBorderPatch, hpBarPatch, arrowPatch;
     private Stage stage;
     private float mapFactor = 1;
-    private boolean zoomMinimap = false, showMinimap = true, showMap = false;
+    private boolean zoomMinimap = false, showMinimap = true, showMap = false, selection = false, showArrow = false;
     public static final int verticalOffset = 100, horizontalOffset = 0;
     private Label healthText, starHealthText, resourcesText, gameStatusText;
     private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
+    private Vector2 selectionStart = new Vector2(0, 0), selectionEnd = new Vector2(0, 0), arrowBegin = new Vector2(0, 0), arrowEnd = new Vector2(0, 0);
+    private HashSet<Troop> selectedTroops;
     private int mode = 0;
 
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
         this.main = main;
+        selectedTroops = new HashSet<>();
 
         //initializing - would like a progress bar in the future
         System.err.println("beginning initialization");
@@ -123,6 +130,9 @@ public class GameScreen implements Screen, InputProcessor {
         v_hostile = new Texture(Gdx.files.internal("v_hostile.png"));
         a_friendly = new Texture(Gdx.files.internal("a_friendly.png"));
         a_hostile = new Texture(Gdx.files.internal("a_hostile.png"));
+        selectionRegion = new Texture(Gdx.files.internal("selection_region.png"));
+        arrowPatch = new NinePatch(new Texture(Gdx.files.internal("arrow.png")), 10, 145, 81, 81);
+        arrow = new NinePatchDrawable(arrowPatch);
 
         //UI
         stage = new Stage(new ScreenViewport());
@@ -237,16 +247,10 @@ public class GameScreen implements Screen, InputProcessor {
             }
             for(Troop troop: game.getTroops()) {
                 if(troop instanceof Mothership) continue;
-//                loc = troop.getLocation();
-//                if(troop instanceof Ranger) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? r_friendly : r_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
-//                else if(troop instanceof Vanguard) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? v_friendly : v_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
-//                else if(troop instanceof Aegis) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? a_friendly : a_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 0, 0, 15, 15, 1f, 1f, troop.angle, 0, 0, 551, 582, false, false);
-////                System.out.println((loc.x * 2.5f + horizontalOffset) + " " + (loc.z * 2.5f + verticalOffset));
-//                if(troop instanceof Ranger) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? r_friendly : r_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 15, 15);
-//                else if(troop instanceof Vanguard) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? v_friendly : v_hostile, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 15, 15);
-//                else if(troop instanceof Aegis) spriteBatch.draw(troop.getPlayer() == game.getPlayer() ? starFriendly:starFriendly, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 10, 10);
                 troop.getSprite().draw(spriteBatch);
             }
+            if(selection) spriteBatch.draw(selectionRegion, selectionStart.x, selectionStart.y, selectionEnd.x - selectionStart.x, selectionEnd.y - selectionStart.y);
+            if(showArrow) arrow.draw(spriteBatch, arrowBegin.x, arrowBegin.y, 0, 0, (float) Math.sqrt(Math.pow(arrowEnd.x - arrowBegin.x, 2) + Math.pow(arrowEnd.y - arrowBegin.y, 2)) * 12.6f, 252, 0.079365f, 0.079365f, arrowEnd.cpy().sub(arrowBegin).angleDeg());
             spriteBatch.end();
         }
     }
@@ -343,6 +347,8 @@ public class GameScreen implements Screen, InputProcessor {
         if(keycode == 61) {
             showMinimap = true;
             showMap = false;
+            selection = false;
+            showArrow = false;
             gameStatusText.setText("");
         }
         return true;
@@ -386,13 +392,48 @@ public class GameScreen implements Screen, InputProcessor {
         if(button == Input.Buttons.LEFT) {
             game.getPlayer().getMothership().touchDown(screenX, screenY, pointer, button);
         }
+        Vector2 unp = mapViewport.unproject(new Vector2(screenX, screenY));
+        if(selection) {
+            if(unp.x < Math.min(selectionStart.x, selectionEnd.x) || unp.x > Math.max(selectionStart.x, selectionEnd.x) || unp.y < Math.min(selectionStart.y, selectionEnd.y) || unp.y > Math.max(selectionStart.y, selectionEnd.y)) selection = false;
+            else {
+                showArrow = true;
+                arrowBegin = unp;
+                arrowEnd = unp;
+            }
+        }
+        else if(showMap) {
+            if(unp.x < -300 || unp.x > 300 || unp.y < -300 || unp.y > 300) return true;
+            selection = true;
+            selectionStart = unp;
+            selectionEnd = unp;
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         game.getPlayer().getMothership().touchUp();
-        if(showMap && mode != 0) {
+        if(selectionEnd.cpy().sub(selectionStart).len() < 5) selection = false;
+        if(showArrow) {
+            showArrow = false;
+            selection = false;
+            gameStatusText.setText("Moving " + selectedTroops.size() + " troops to your selection. ");
+            for(Troop t : selectedTroops) {
+                t.setDestination(new Vector2(-(arrowEnd.x - GameScreen.horizontalOffset) / 2.5f, (arrowEnd.y - GameScreen.verticalOffset) / 2.5f));
+            }
+            selectedTroops.clear();
+        }
+        else if(selection) {
+            mode = 0;
+            gameStatusText.setText("Drag your selection where you would like the troops to go. ");
+            for(Troop t: game.getTroops()) {
+                Vector2 loc = new Vector2(-t.getLocation().x * 2.5f + GameScreen.horizontalOffset, t.getLocation().z * 2.5f + GameScreen.verticalOffset);
+                if(t.getPlayer() == game.getPlayer() && loc.x <= Math.max(selectionStart.x, selectionEnd.x) && loc.x >= Math.min(selectionStart.x, selectionEnd.x) && loc.y <= Math.max(selectionStart.y, selectionEnd.y) && loc.y >= Math.min(selectionStart.y, selectionEnd.y)) {
+                    selectedTroops.add(t);
+                }
+            }
+        }
+        else if(showMap && mode != 0) {
             Vector2 loc = mapViewport.unproject(new Vector2(screenX, screenY));
             loc.x -= horizontalOffset;
             loc.x = -loc.x;
@@ -406,7 +447,9 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        game.getPlayer().getMothership().touchDragged(screenX, screenY, pointer);
+        if(!selection) game.getPlayer().getMothership().touchDragged(screenX, screenY, pointer);
+        else if(!showArrow) selectionEnd = mapViewport.unproject(new Vector2(screenX, screenY));
+        else arrowEnd = mapViewport.unproject(new Vector2(screenX, screenY));
         return true;
     }
 

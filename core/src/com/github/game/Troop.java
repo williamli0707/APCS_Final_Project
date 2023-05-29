@@ -17,11 +17,12 @@ public abstract class Troop implements Actor {
     Scene scene;
 
     public Vector3 myLoc;
-    private Vector2 axis = Vector2.X;
     private SinglePlayerGame game;
     private boolean move = true;
     public float angle = 0;
     public Sprite sprite;
+    private boolean manualOverride = false;
+    private Vector3 manualDest;
 
     public Troop(float health, float damage, float speed, double range, float cost, SinglePlayerGame game, Vector3 loc, Player p) {
         this.health = health;
@@ -54,33 +55,41 @@ public abstract class Troop implements Actor {
      * Called each render frame to determine how a troop acts
      */
     public boolean act(float delta) {
-        move = true;
-        Vector3 dest = new Vector3(1e9f, 1e9f, 1e9f);
-        if(player == null) dest = game.getPlayer().getHomeStar().getLocation();
-        for(Star a : game.getStars()){
-            if (a.getPlayer() == player) continue;
-            if(myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
-            if (a.getLocation().dst(myLoc) <= range) move = false;
-        }
-        for (Troop a : game.getTroops()){
-            if (a.getPlayer() == player) continue;
-            if(myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
-            if (a.getLocation().dst(myLoc) <= range){
-                move = false;
-                a.setHealth(a.getHealth() - damage * delta);
-//                System.out.println(damage * delta);
+        if(manualOverride) {
+            for (Troop a : game.getTroops()) {
+                if (a.getPlayer() == player) continue;
+                if (a.getLocation().dst(myLoc) <= range) a.setHealth(a.getHealth() - damage * delta);
             }
+            if (player == null && game.getPlayer().getHomeStar().getLocation().dst(myLoc) <= range) {
+                game.getPlayer().getHomeStar().setNewHealth(game.getPlayer().getHomeStar().getHealth() - damage * delta);
+            }
+            move(manualDest, delta);
         }
-        if(player == null && game.getPlayer().getHomeStar().getLocation().dst(myLoc) <= range) {
-            game.getPlayer().getHomeStar().setNewHealth(game.getPlayer().getHomeStar().getHealth() - damage * delta);
+        else {
+            Vector3 dest = new Vector3(1e9f, 1e9f, 1e9f);
+            if (player == null) dest = game.getPlayer().getHomeStar().getLocation();
+            for (Star a : game.getStars()) {
+                if (a.getPlayer() == player) continue;
+                if (myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
+            }
+            for (Troop a : game.getTroops()) {
+                if (a.getPlayer() == player) continue;
+                if (myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
+                if (a.getLocation().dst(myLoc) <= range) {
+                    a.setHealth(a.getHealth() - damage * delta);
+//                System.out.println(damage * delta);
+                }
+            }
+            if (player == null && game.getPlayer().getHomeStar().getLocation().dst(myLoc) <= range) {
+                game.getPlayer().getHomeStar().setNewHealth(game.getPlayer().getHomeStar().getHealth() - damage * delta);
+            }
+            move(dest, delta);
         }
-        move(dest, delta);
-
         return true;
     }
 
     private void move(Vector3 dest, float delta) {
-//        move = false;
+        move = myLoc.dst(dest) > range;
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
         sprite.setRotation(-angle);
         sprite.setBounds(-myLoc.x * 2.5f + GameScreen.horizontalOffset, myLoc.z * 2.5f + GameScreen.verticalOffset, 12, 12);
@@ -154,5 +163,10 @@ public abstract class Troop implements Actor {
 
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public void setDestination(Vector2 destination) {
+        manualOverride = true;
+        manualDest = new Vector3(destination.x, 0, destination.y);
     }
 }
