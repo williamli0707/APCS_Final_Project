@@ -41,7 +41,7 @@ public class GameScreen implements Screen, InputProcessor {
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile, selectionRegion;
+    public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile, selectionRegion, r_friendly_outline, v_friendly_outline, a_friendly_outline;
     private NinePatchDrawable arrow;
     private final NinePatch hpBorderPatch, hpBarPatch, arrowPatch;
     private Stage stage;
@@ -107,7 +107,7 @@ public class GameScreen implements Screen, InputProcessor {
         SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
 
-        sceneManager.setShaderProvider(new CustomPBRShaderProvider(game));
+//        sceneManager.setShaderProvider(new CustomPBRShaderProvider(game));
 
 
         //Minimap and Map textures
@@ -128,10 +128,13 @@ public class GameScreen implements Screen, InputProcessor {
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
         r_friendly = new Texture(Gdx.files.internal("r_friendly.png"));
         r_hostile = new Texture(Gdx.files.internal("r_hostile.png"));
+        r_friendly_outline = new Texture(Gdx.files.internal("r_friendly_outline.png"));
         v_friendly = new Texture(Gdx.files.internal("v_friendly.png"));
         v_hostile = new Texture(Gdx.files.internal("v_hostile.png"));
+        v_friendly_outline = new Texture(Gdx.files.internal("v_friendly_outline.png"));
         a_friendly = new Texture(Gdx.files.internal("a_friendly.png"));
         a_hostile = new Texture(Gdx.files.internal("a_hostile.png"));
+        a_friendly_outline = new Texture(Gdx.files.internal("a_friendly_outline.png"));
         selectionRegion = new Texture(Gdx.files.internal("selection_region.png"));
         arrowPatch = new NinePatch(new Texture(Gdx.files.internal("arrow.png")), 10, 145, 81, 81);
         arrow = new NinePatchDrawable(arrowPatch);
@@ -250,7 +253,13 @@ public class GameScreen implements Screen, InputProcessor {
             }
             for(Troop troop: game.getTroops()) {
                 if(troop instanceof Mothership) continue;
-                troop.getSprite().draw(spriteBatch);
+                if(!selectedTroops.contains(troop)) troop.getSprite().draw(spriteBatch);
+                else {
+                    loc = troop.getLocation();
+                    if(troop instanceof Ranger) spriteBatch.draw(r_friendly_outline, -loc.x * 2.5f + GameScreen.horizontalOffset, loc.z * 2.5f + GameScreen.verticalOffset, 6, 6, 12, 12, 1, 1, -troop.angle, 0, 0, r_friendly_outline.getWidth(), r_friendly_outline.getHeight(), false, false);
+                    else if(troop instanceof Vanguard) spriteBatch.draw(v_friendly_outline, -loc.x * 2.5f + GameScreen.horizontalOffset, loc.z * 2.5f + GameScreen.verticalOffset, 6, 6, 12, 12, 1, 1, -troop.angle, 0, 0, v_friendly_outline.getWidth(), v_friendly_outline.getHeight(), false, false);
+                    else if(troop instanceof Aegis) spriteBatch.draw(a_friendly_outline, -loc.x * 2.5f + GameScreen.horizontalOffset, loc.z * 2.5f + GameScreen.verticalOffset, 6, 6, 12, 12, 1, 1, -troop.angle, 0, 0, a_friendly_outline.getWidth(), a_friendly_outline.getHeight(), false, false);
+                }
             }
             if(selection) spriteBatch.draw(selectionRegion, selectionStart.x, selectionStart.y, selectionEnd.x - selectionStart.x, selectionEnd.y - selectionStart.y);
             if(showArrow) arrow.draw(spriteBatch, arrowBegin.x, arrowBegin.y, 0, 0, (float) Math.sqrt(Math.pow(arrowEnd.x - arrowBegin.x, 2) + Math.pow(arrowEnd.y - arrowBegin.y, 2)) * 12.6f, 252, 0.079365f, 0.079365f, arrowEnd.cpy().sub(arrowBegin).angleDeg());

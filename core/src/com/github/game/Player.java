@@ -19,7 +19,7 @@ public class Player {
 		troops = new ArrayList<>();
 		stars = new ArrayList<>();
 		mothership = new Mothership(game, 0, 0, 0, this, game.screen);
-		resources = 0;//TODO
+		resources = 100000000;//TODO
 	}
 
 	public void placeTroop(int type, Vector3 loc) {
@@ -38,6 +38,7 @@ public class Player {
 				else t = new Aegis(game, loc, this);
 				addTroop(t);
 				game.addTroop(t);
+				addResources(-t.getCost());
 				return;
 			}
 		}

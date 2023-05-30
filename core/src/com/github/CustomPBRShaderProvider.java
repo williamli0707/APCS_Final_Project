@@ -17,13 +17,14 @@ import net.mgsx.gltf.scene3d.shaders.PBRShader;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltf.scene3d.utils.LightUtils;
+import net.mgsx.gltf.scene3d.utils.ShaderParser;
 
 public class CustomPBRShaderProvider extends PBRShaderProvider {
     private SinglePlayerGame game;
     private static final LightUtils.LightsInfo lightsInfo = new LightUtils.LightsInfo();
     public CustomPBRShaderProvider(SinglePlayerGame game) {
-//        super(buildPBRShaderConfig(Math.max(Troop.assetRanger.maxBones, Math.max(Troop.assetVanguard.maxBones, Troop.assetAegis.maxBones))));
-        super(PBRShaderProvider.createDefaultConfig());
+        super(buildPBRShaderConfig());
+//        super(PBRShaderProvider.createDefaultConfig());
         this.game = game;
     }
 
@@ -32,18 +33,31 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
 //        if (renderable.userData == game.getPlayer())
 //            return createGreenOutlineShader(renderable);
 //        else return new DefaultShader(renderable, config);
-        return createRedOutlineShader(renderable);
+//        return createDefaultShader(renderable);
+        return createGreenOutlineShader(renderable);
     }
 
     private Shader createGreenOutlineShader(Renderable renderable) {
-//        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
+        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
 //        shader.init(new ShaderProgram(Gdx.files.internal("shaders/outline.vert.glsl"), Gdx.files.internal("shaders/outline.frag.glsl")), renderable);
-        return new DefaultShader(renderable, config);
+        return shader;
+//        return new DefaultShader(renderable, config);
     }
 
-    private Shader createRedOutlineShader(Renderable renderable) {
+    private Shader createDefaultShader(Renderable renderable) {
 //        return new WaterShader(renderable, config);
 //        return new DefaultShader(renderable, config);
+        PBRShader shader = createShader(renderable, (PBRShaderConfig) config, genPrefix(renderable));
+        checkShaderCompilation(shader.program);
+
+        // prevent infinite loop (TODO remove this for libgdx 1.9.12+)
+        if(!shader.canRender(renderable)){
+            throw new GdxRuntimeException("cannot render with this shader");
+        }
+        return shader;
+    }
+
+    public String genPrefix(Renderable renderable) {
         PBRShaderConfig config = (PBRShaderConfig)this.config;
 
         String prefix = createPrefixBase(renderable, config);
@@ -343,30 +357,15 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
                 Gdx.app.error(TAG, "unknow type lights not supported.");
             }
         }
+        return prefix;
 
-        PBRShader shader = createShader(renderable, config, prefix);
-        checkShaderCompilation(shader.program);
-
-        // prevent infinite loop (TODO remove this for libgdx 1.9.12+)
-        if(!shader.canRender(renderable)){
-            throw new GdxRuntimeException("cannot render with this shader");
-        }
-
-        return shader;
     }
 
-    public static PBRShaderConfig buildPBRShaderConfig(int numBones) {
+    public static PBRShaderConfig buildPBRShaderConfig() {
         // Create and initialize PBR config
         PBRShaderConfig config = new PBRShaderConfig();
-        config.numDirectionalLights = 1;
-        config.numBones = numBones;
-        // Disabled on gdx-gltf 2.1.0 upgrade for now as to not change current visuals, to support gamma correction properly
-        // I believe we would need to also update the other shaders to use gamma correction as well.
-        // or apply in post-process
-        config.manualGammaCorrection = false;
-        config.defaultCullFace = GL20.GL_BACK;
-        config.vertexShader = Gdx.files.internal("shaders/outline.vert.glsl").readString();
-        config.fragmentShader = Gdx.files.internal("shaders/outline.frag.glsl").readString();
+        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
+        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
         return config;
     }
 }
