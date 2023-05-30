@@ -10,8 +10,8 @@ import com.github.SinglePlayerGame;
 
 public class Star implements Actor {
 
-	static Model hostileModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-hostile.g3dj"));
-	static Model friendlyModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-friendly.g3dj"));
+	public static Model hostileModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-hostile.g3dj"));
+	public static Model friendlyModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("star-friendly.g3dj"));
 	SinglePlayerGame game;
 	private Vector3 loc;
 	private Player player=null;

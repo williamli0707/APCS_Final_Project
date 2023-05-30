@@ -19,7 +19,7 @@ public class Player {
 		troops = new ArrayList<>();
 		stars = new ArrayList<>();
 		mothership = new Mothership(game, 0, 0, 0, this, game.screen);
-		resources = 1000000000;//TODO
+		resources = 0;//TODO
 	}
 
 	public void placeTroop(int type, Vector3 loc) {
@@ -27,6 +27,7 @@ public class Player {
 		float cost = type == 1 ? Ranger.COST : type == 2 ? Vanguard.COST : Aegis.COST;
 		if(getResources() < cost) {
 			receiveMessage("You do not have enough resources! ");
+			return;
 		}
 		//1 = ranger, 2 = vanguard, 3 = aegis
 		for(Star a: game.getStars()) {
@@ -45,7 +46,7 @@ public class Player {
 
 	public void receiveMessage(String string){
 		System.out.println(string);
-		//TODO
+		game.screen.setStatus(string);
 	}
 
 	public ArrayList<Troop> getTroops() {

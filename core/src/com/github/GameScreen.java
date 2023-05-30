@@ -107,6 +107,8 @@ public class GameScreen implements Screen, InputProcessor {
         SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
 
+        sceneManager.setShaderProvider(new CustomPBRShaderProvider(game));
+
 
         //Minimap and Map textures
         spriteBatch = new SpriteBatch();
@@ -142,7 +144,7 @@ public class GameScreen implements Screen, InputProcessor {
         gameStatusText = new Label("", VisUI.getSkin());
         healthText.setPosition(Gdx.graphics.getWidth() / 3f, 20, Align.center);
         starHealthText.setPosition(2 * Gdx.graphics.getWidth() / 3f, 20, Align.center);
-        resourcesText.setPosition(Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 160, Align.center);
+        resourcesText.setPosition(50, 30, Align.center);
         gameStatusText.setPosition(30, Gdx.graphics.getHeight() - 30, Align.center);
         stage.addActor(healthText);
         stage.addActor(starHealthText);
@@ -203,6 +205,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         hpMothershipBar.setWidth(300 * (Math.max(0, game.getPlayer().getMothership().getHealth()) / Mothership.health));
         hpStarBar.setWidth(300 * (Math.max(0, ((HomeStar) game.getStars()[0]).getHealth()) / SinglePlayerGame.HOME_STAR_HEALTH));
+        resourcesText.setText("Resources: " + game.getPlayer().getResources());
 
         stage.draw();
 
@@ -262,7 +265,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.getViewport().update(width, height);
         healthText.setPosition(width / 3f, 20, Align.center);
         starHealthText.setPosition(2 * width / 3f, 20, Align.center);
-        resourcesText.setPosition(width - 100, height - 160, Align.center);
+        resourcesText.setPosition(50, 30, Align.center);
         gameStatusText.setPosition(30, height - 30, Align.center);
 
         miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
@@ -322,6 +325,9 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    public void setStatus (String stat) {
+        gameStatusText.setText(stat);
+    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -358,19 +364,19 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
         if(character == '1') {
-            gameStatusText.setText("Now placing a new Ranger. Click on the map, near a star, where you want to place the troop. ");
+            gameStatusText.setText("Now placing a new Ranger (Cost: " + Ranger.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 1");
             if(mode == 1) mode = 0;
             else mode = 1;
         }
         if(character == '2') {
-            gameStatusText.setText("Now placing a new Vanguard. Click on the map, near a star, where you want to place the troop. ");
+            gameStatusText.setText("Now placing a new Vanguard (Cost: " + Vanguard.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 2");
             if(mode == 2) mode = 0;
             else mode = 2;
         }
         if(character == '3') {
-            gameStatusText.setText("Now placing a new Aegis. Click on the map, near a star, where you want to place the troop. ");
+            gameStatusText.setText("Now placing a new Aegis (Cost: " + Aegis.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
             System.out.println("switched to mode 3");
             if(mode == 3) mode = 0;
             else mode = 3;
@@ -462,4 +468,6 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
+
 }

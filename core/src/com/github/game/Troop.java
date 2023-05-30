@@ -13,7 +13,7 @@ public abstract class Troop implements Actor {
     private float health, damage, speed, cost;
     private Player player;
     private double range;
-    static SceneAsset assetAegis, assetVanguard, assetRanger;
+    public static SceneAsset assetAegis, assetVanguard, assetRanger;
     Scene scene;
 
     public Vector3 myLoc;
