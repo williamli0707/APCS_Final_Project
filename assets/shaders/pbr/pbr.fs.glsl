@@ -1,78 +1,3 @@
-#define positionFlag
-#define tangentFlag
-#define normalFlag
-#define lightingFlag
-#define ambientCubemapFlag
-#define numPointLights 5
-#define numSpotLights 0
-#define texCoord0Flag
-#define diffuseTextureFlag
-#define diffuseTextureCoord texCoord0
-#define normalTextureFlag
-#define normalTextureCoord texCoord0
-#define baseColorFactorFlag
-#define metallicRoughnessTextureFlag
-#define diffuseSpecularEnvSeparateFlag
-#define USE_IBL
-#define brdfLUTTexture
-#define ambientLightFlag
-#define MANUAL_SRGB
-#define GAMMA_CORRECTION 2.2
-#define TS_MANUAL_SRGB
-#define MS_MANUAL_SRGB
-#define v_diffuseUV v_texCoord0
-#define v_normalUV v_texCoord0
-#define v_metallicRoughnessUV v_texCoord0
-#define textureFlag
-#ifdef GL_ES
-precision mediump float;
-precision mediump int;
-#endif
-
-uniform sampler2D u_texture;
-
-// The inverse of the viewport dimensions along X and Y
-uniform vec2 u_viewportInverse;
-
-// Color of the outline
-uniform vec3 u_color;
-
-// Thickness of the outline
-uniform float u_offset;
-
-// Step to check for neighbors
-uniform float u_step;
-
-varying vec4 v_color;
-varying vec2 v_texCoord;
-
-#define ALPHA_VALUE_BORDER 0.5
-
-void main() {
-    vec2 T = v_texCoord.xy;
-
-    float alpha = 0.0;
-    bool allin = true;
-    for( float ix = -u_offset; ix < u_offset; ix += u_step )
-    {
-        for( float iy = -u_offset; iy < u_offset; iy += u_step )
-        {
-            float newAlpha = texture2D(u_texture, T + vec2(ix, iy) * u_viewportInverse).a;
-            allin = allin && newAlpha > ALPHA_VALUE_BORDER;
-            if (newAlpha > ALPHA_VALUE_BORDER && newAlpha >= alpha)
-            {
-                alpha = newAlpha;
-            }
-        }
-    }
-    if (allin)
-    {
-        alpha = 0.0;
-    }
-
-    gl_FragColor = vec4(u_color,alpha);
-}
-
 #line 1
 
 #include <compat.fs.glsl>
@@ -94,7 +19,7 @@ void main() {
 
 void main() {
 	vec4 baseColor = getBaseColor();
-
+    
     vec3 color = baseColor.rgb;
 
     // final frag color
@@ -120,7 +45,7 @@ void main() {
 #else
 
 void main() {
-
+	
     // Metallic and Roughness material properties are packed together
     // In glTF, these factors can be specified by fixed scalar values
     // or from a metallic-roughness map
@@ -140,7 +65,7 @@ void main() {
     float alphaRoughness = perceptualRoughness * perceptualRoughness;
 
     vec4 baseColor = getBaseColor();
-
+    
 #ifdef iorFlag
     vec3 f0 = vec3(pow(( u_ior - 1.0) /  (u_ior + 1.0), 2.0));
 #else
@@ -309,14 +234,14 @@ void main() {
     color += emissive;
 #endif
 
-
+    
     // final frag color
 #ifdef GAMMA_CORRECTION
     out_FragColor = vec4(pow(color,vec3(1.0/GAMMA_CORRECTION)), baseColor.a);
 #else
     out_FragColor = vec4(color, baseColor.a);
 #endif
-
+    
 #ifdef fogFlag
 #ifdef fogEquationFlag
     float fog = (eyeDistance - u_fogEquation.x) / (u_fogEquation.y - u_fogEquation.x);

@@ -17,7 +17,6 @@ import net.mgsx.gltf.scene3d.shaders.PBRShader;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltf.scene3d.utils.LightUtils;
-import net.mgsx.gltf.scene3d.utils.ShaderParser;
 
 public class CustomPBRShaderProvider extends PBRShaderProvider {
     private SinglePlayerGame game;
@@ -364,8 +363,10 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
     public static PBRShaderConfig buildPBRShaderConfig() {
         // Create and initialize PBR config
         PBRShaderConfig config = new PBRShaderConfig();
-        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
-        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
+//        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
+//        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
+        config.vertexShader = getDefaultVertexShader();
+        config.fragmentShader = getDefaultFragmentShader();
         return config;
     }
 }

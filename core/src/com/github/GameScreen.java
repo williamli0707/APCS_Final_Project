@@ -242,6 +242,7 @@ public class GameScreen implements Screen, InputProcessor {
             spriteBatch.draw(minimapOutline, -(250) - 30 + horizontalOffset, -(250) - 30 + verticalOffset, 500 + 60, 500 + 60);
             spriteBatch.draw(minimapRegion, -(250) + horizontalOffset, -(250) + verticalOffset, 500, 500);
             Vector3 loc = game.getPlayer().getMothership().getLocation();
+            if(selection) spriteBatch.draw(selectionRegion, selectionStart.x, selectionStart.y, selectionEnd.x - selectionStart.x, selectionEnd.y - selectionStart.y);
             spriteBatch.draw(playerMinimapRegion, -loc.x * 2.5f + horizontalOffset, loc.z * 2.5f + verticalOffset, 20, 20);
             for (Star star : game.getStars()) {
                 float fac = star instanceof HomeStar ? 1.5f : 1;
@@ -261,7 +262,6 @@ public class GameScreen implements Screen, InputProcessor {
                     else if(troop instanceof Aegis) spriteBatch.draw(a_friendly_outline, -loc.x * 2.5f + GameScreen.horizontalOffset, loc.z * 2.5f + GameScreen.verticalOffset, 6, 6, 12, 12, 1, 1, -troop.angle, 0, 0, a_friendly_outline.getWidth(), a_friendly_outline.getHeight(), false, false);
                 }
             }
-            if(selection) spriteBatch.draw(selectionRegion, selectionStart.x, selectionStart.y, selectionEnd.x - selectionStart.x, selectionEnd.y - selectionStart.y);
             if(showArrow) arrow.draw(spriteBatch, arrowBegin.x, arrowBegin.y, 0, 0, (float) Math.sqrt(Math.pow(arrowEnd.x - arrowBegin.x, 2) + Math.pow(arrowEnd.y - arrowBegin.y, 2)) * 12.6f, 252, 0.079365f, 0.079365f, arrowEnd.cpy().sub(arrowBegin).angleDeg());
             spriteBatch.end();
         }
