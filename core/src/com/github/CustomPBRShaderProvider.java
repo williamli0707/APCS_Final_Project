@@ -17,13 +17,14 @@ import net.mgsx.gltf.scene3d.shaders.PBRShader;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltf.scene3d.utils.LightUtils;
+import net.mgsx.gltf.scene3d.utils.ShaderParser;
 
 public class CustomPBRShaderProvider extends PBRShaderProvider {
     private SinglePlayerGame game;
     private static final LightUtils.LightsInfo lightsInfo = new LightUtils.LightsInfo();
     public CustomPBRShaderProvider(SinglePlayerGame game) {
-        super(buildPBRShaderConfig());
-//        super(PBRShaderProvider.createDefaultConfig());
+//        super(buildPBRShaderConfig());
+        super(PBRShaderProvider.createDefaultConfig());
         this.game = game;
     }
 
@@ -32,8 +33,8 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
 //        if (renderable.userData == game.getPlayer())
 //            return createGreenOutlineShader(renderable);
 //        else return new DefaultShader(renderable, config);
-//        return createDefaultShader(renderable);
-        return createGreenOutlineShader(renderable);
+        return createDefaultShader(renderable);
+//        return createGreenOutlineShader(renderable);
     }
 
     private Shader createGreenOutlineShader(Renderable renderable) {
@@ -46,6 +47,10 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
     private Shader createDefaultShader(Renderable renderable) {
 //        return new WaterShader(renderable, config);
 //        return new DefaultShader(renderable, config);
+//        config.vertexShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.vs.glsl"));
+//        config.fragmentShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.fs.glsl"));
+        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
+        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
         PBRShader shader = createShader(renderable, (PBRShaderConfig) config, genPrefix(renderable));
         checkShaderCompilation(shader.program);
 

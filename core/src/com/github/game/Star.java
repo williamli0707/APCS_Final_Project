@@ -67,6 +67,7 @@ public class Star implements Actor {
 		player = mothership.getPlayer();
 		getPlayer().getStars().add(this);
 		instance = new ModelInstance(friendlyModel, loc);
+		if(getPlayer().getStars().size() == game.getStars().length) game.screen.main.victory();
 	}
 
 	/**

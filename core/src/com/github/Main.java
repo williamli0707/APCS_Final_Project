@@ -19,9 +19,10 @@ public class Main extends com.badlogic.gdx.Game {
 		environment = new Environment();
 		font = new BitmapFont();
 //		GLTFTestScreen screen = new GLTFTestScreen();
-		gameScreen();
+//		gameScreen();
 //		loginScreen();
 //		menuScreen();
+		defeat();
 	}
 
 	@Override
@@ -48,16 +49,27 @@ public class Main extends com.badlogic.gdx.Game {
 	public void resume() { }
 
 	public void loginScreen() {
-		this.setScreen(new LoginScreen(this));
+		if(getScreen() != null) getScreen().dispose();
+		setScreen(new LoginScreen(this));
 	}
 
 	public void menuScreen() {
-		this.setScreen(new MainMenuScreen(this));
+		if(getScreen() != null) getScreen().dispose();
+		setScreen(new MainMenuScreen(this));
 	}
 
 	public void gameScreen() {
+		if(getScreen() != null) getScreen().dispose();
 		GameScreen screen = new GameScreen(this);
 		this.setScreen(screen);
 		Gdx.input.setInputProcessor(screen);
+	}
+	public void victory() {
+		if(getScreen() != null) getScreen().dispose();
+		setScreen(new VictoryScreen(this));
+	}
+	public void defeat() {
+		if(getScreen() != null) getScreen().dispose();
+		setScreen(new DefeatScreen(this));
 	}
 }

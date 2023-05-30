@@ -34,10 +34,9 @@ import java.util.HashSet;
 public class GameScreen implements Screen, InputProcessor {
     public SceneManager sceneManager;
     public Camera camera;
-
     private final ModelBatch batch;
     private final SpriteBatch spriteBatch;
-    final Main main;
+    public final Main main;
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
@@ -209,6 +208,8 @@ public class GameScreen implements Screen, InputProcessor {
         hpMothershipBar.setWidth(300 * (Math.max(0, game.getPlayer().getMothership().getHealth()) / Mothership.health));
         hpStarBar.setWidth(300 * (Math.max(0, ((HomeStar) game.getStars()[0]).getHealth()) / SinglePlayerGame.HOME_STAR_HEALTH));
         resourcesText.setText("Resources: " + game.getPlayer().getResources());
+
+        if(game.getPlayer().getMothership().getHealth() <= 0 || ((HomeStar) game.getStars()[0]).getHealth() <= 0) game.screen.main.defeat();
 
         stage.draw();
 
@@ -447,6 +448,7 @@ public class GameScreen implements Screen, InputProcessor {
                     selectedTroops.add(t);
                 }
             }
+            if(selectedTroops.size() == 0) selection = false;
         }
         else if(showMap && mode != 0) {
             Vector2 loc = mapViewport.unproject(new Vector2(screenX, screenY));

@@ -1,78 +1,3 @@
-#define positionFlag
-#define tangentFlag
-#define normalFlag
-#define lightingFlag
-#define ambientCubemapFlag
-#define numPointLights 5
-#define numSpotLights 0
-#define texCoord0Flag
-#define diffuseTextureFlag
-#define diffuseTextureCoord texCoord0
-#define normalTextureFlag
-#define normalTextureCoord texCoord0
-#define baseColorFactorFlag
-#define metallicRoughnessTextureFlag
-#define diffuseSpecularEnvSeparateFlag
-#define USE_IBL
-#define brdfLUTTexture
-#define ambientLightFlag
-#define MANUAL_SRGB
-#define GAMMA_CORRECTION 2.2
-#define TS_MANUAL_SRGB
-#define MS_MANUAL_SRGB
-#define v_diffuseUV v_texCoord0
-#define v_normalUV v_texCoord0
-#define v_metallicRoughnessUV v_texCoord0
-#define textureFlag
-#ifdef GL_ES
-precision mediump float;
-precision mediump int;
-#endif
-
-uniform sampler2D u_texture;
-
-// The inverse of the viewport dimensions along X and Y
-uniform vec2 u_viewportInverse;
-
-// Color of the outline
-uniform vec3 u_color;
-
-// Thickness of the outline
-uniform float u_offset;
-
-// Step to check for neighbors
-uniform float u_step;
-
-varying vec4 v_color;
-varying vec2 v_texCoord;
-
-#define ALPHA_VALUE_BORDER 0.5
-
-void main() {
-    vec2 T = v_texCoord.xy;
-
-    float alpha = 0.0;
-    bool allin = true;
-    for( float ix = -u_offset; ix < u_offset; ix += u_step )
-    {
-        for( float iy = -u_offset; iy < u_offset; iy += u_step )
-        {
-            float newAlpha = texture2D(u_texture, T + vec2(ix, iy) * u_viewportInverse).a;
-            allin = allin && newAlpha > ALPHA_VALUE_BORDER;
-            if (newAlpha > ALPHA_VALUE_BORDER && newAlpha >= alpha)
-            {
-                alpha = newAlpha;
-            }
-        }
-    }
-    if (allin)
-    {
-        alpha = 0.0;
-    }
-
-    gl_FragColor = vec4(u_color,alpha);
-}
-
 #line 1
 
 #include <compat.fs.glsl>
@@ -89,6 +14,10 @@ void main() {
 #ifdef USE_IBL
 #include <ibl.glsl>
 #endif
+
+const float offset = 1.0 / 128.0;
+varying vec2 v_texCoords;
+uniform sampler2D u_texture;
 
 #ifdef unlitFlag
 
@@ -120,6 +49,20 @@ void main() {
 #else
 
 void main() {
+
+    vec4 col = texture2D(u_texture, v_texCoords);
+    if (col.a > 0.5)
+        gl_FragColor = col;
+    else {
+        float a = texture2D(u_texture, vec2(v_texCoords.x + offset, v_texCoords.y)).a +
+            texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - offset)).a +
+            texture2D(u_texture, vec2(v_texCoords.x - offset, v_texCoords.y)).a +
+            texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + offset)).a;
+        if (col.a < 1.0 && a > 0.0)
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 0.8);
+        else
+            gl_FragColor = col;
+    }
 
     // Metallic and Roughness material properties are packed together
     // In glTF, these factors can be specified by fixed scalar values

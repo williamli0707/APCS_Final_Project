@@ -120,7 +120,6 @@ attribute vec4 a_tangent;
 
 
 #ifdef textureFlag
-attribute vec2 a_texCoord0;
 varying vec2 v_texCoord0;
 uniform mat3 u_texCoord0Transform;
 #endif // textureFlag
@@ -208,193 +207,187 @@ varying vec3 v_csmUVs[numCSM];
 #endif
 #endif //shadowMapFlag
 
-varying vec4 v_color;
-varying vec2 v_texCoord;
-
-#ifdef GL_ES
-#define LOWP lowp
-precision mediump float;
-#else
-#define LOWP
-#endif
-
-uniform vec2 u_viewportInverse;
+attribute vec4 a_position_o;
+attribute vec2 a_texCoord0;
+varying vec2 v_texCoords;
 
 void main() {
-    gl_Position = u_projTrans * a_position;
-    v_texCoord = a_texCoord0;
-    v_color = a_color;
-    #ifdef textureFlag
-    		v_texCoord0 = (u_texCoord0Transform * vec3(a_texCoord0, 1.0)).xy;
-    	#endif
 
-    	#ifdef textureCoord1Flag
-    		v_texCoord1 = (u_texCoord1Transform * vec3(a_texCoord1, 1.0)).xy;
-    	#endif
+    v_texCoords = a_texCoord0;
+    gl_Position =  u_projViewTrans * a_position_o;
 
-    	#if defined(colorFlag)
-    		v_color = a_color;
-    	#endif // colorFlag
+	#ifdef textureFlag
+		v_texCoord0 = (u_texCoord0Transform * vec3(a_texCoord0, 1.0)).xy;
+	#endif
 
-    	#ifdef skinningFlag
-    		mat4 skinning = mat4(0.0);
-    		#ifdef boneWeight0Flag
-    			skinning += (a_boneWeight0.y) * u_bones[int(a_boneWeight0.x)];
-    		#endif //boneWeight0Flag
-    		#ifdef boneWeight1Flag
-    			skinning += (a_boneWeight1.y) * u_bones[int(a_boneWeight1.x)];
-    		#endif //boneWeight1Flag
-    		#ifdef boneWeight2Flag
-    			skinning += (a_boneWeight2.y) * u_bones[int(a_boneWeight2.x)];
-    		#endif //boneWeight2Flag
-    		#ifdef boneWeight3Flag
-    			skinning += (a_boneWeight3.y) * u_bones[int(a_boneWeight3.x)];
-    		#endif //boneWeight3Flag
-    		#ifdef boneWeight4Flag
-    			skinning += (a_boneWeight4.y) * u_bones[int(a_boneWeight4.x)];
-    		#endif //boneWeight4Flag
-    		#ifdef boneWeight5Flag
-    			skinning += (a_boneWeight5.y) * u_bones[int(a_boneWeight5.x)];
-    		#endif //boneWeight5Flag
-    		#ifdef boneWeight6Flag
-    			skinning += (a_boneWeight6.y) * u_bones[int(a_boneWeight6.x)];
-    		#endif //boneWeight6Flag
-    		#ifdef boneWeight7Flag
-    			skinning += (a_boneWeight7.y) * u_bones[int(a_boneWeight7.x)];
-    		#endif //boneWeight7Flag
-    	#endif //skinningFlag
+	#ifdef textureCoord1Flag
+		v_texCoord1 = (u_texCoord1Transform * vec3(a_texCoord1, 1.0)).xy;
+	#endif
 
-    	#ifdef morphTargetsFlag
-    		vec3 morph_pos = a_position;
-    		#ifdef position0Flag
-    			morph_pos += a_position0 * u_morphTargets1.x;
-    		#endif
-    		#ifdef position1Flag
-    			morph_pos += a_position1 * u_morphTargets1.y;
-    		#endif
-    		#ifdef position2Flag
-    			morph_pos += a_position2 * u_morphTargets1.z;
-    		#endif
-    		#ifdef position3Flag
-    			morph_pos += a_position3 * u_morphTargets1.w;
-    		#endif
-    		#ifdef position4Flag
-    			morph_pos += a_position4 * u_morphTargets2.x;
-    		#endif
-    		#ifdef position5Flag
-    			morph_pos += a_position5 * u_morphTargets2.y;
-    		#endif
-    		#ifdef position6Flag
-    			morph_pos += a_position6 * u_morphTargets2.z;
-    		#endif
-    		#ifdef position7Flag
-    			morph_pos += a_position7 * u_morphTargets2.w;
-    		#endif
-    	#else
-    		vec3 morph_pos = a_position;
-    	#endif
+	#if defined(colorFlag)
+		v_color = a_color;
+	#endif // colorFlag
 
-    	#ifdef skinningFlag
-    		vec4 pos = u_worldTrans * skinning * vec4(morph_pos, 1.0);
-    	#else
-    		vec4 pos = u_worldTrans * vec4(morph_pos, 1.0);
-    	#endif
+	#ifdef skinningFlag
+		mat4 skinning = mat4(0.0);
+		#ifdef boneWeight0Flag
+			skinning += (a_boneWeight0.y) * u_bones[int(a_boneWeight0.x)];
+		#endif //boneWeight0Flag
+		#ifdef boneWeight1Flag
+			skinning += (a_boneWeight1.y) * u_bones[int(a_boneWeight1.x)];
+		#endif //boneWeight1Flag
+		#ifdef boneWeight2Flag
+			skinning += (a_boneWeight2.y) * u_bones[int(a_boneWeight2.x)];
+		#endif //boneWeight2Flag
+		#ifdef boneWeight3Flag
+			skinning += (a_boneWeight3.y) * u_bones[int(a_boneWeight3.x)];
+		#endif //boneWeight3Flag
+		#ifdef boneWeight4Flag
+			skinning += (a_boneWeight4.y) * u_bones[int(a_boneWeight4.x)];
+		#endif //boneWeight4Flag
+		#ifdef boneWeight5Flag
+			skinning += (a_boneWeight5.y) * u_bones[int(a_boneWeight5.x)];
+		#endif //boneWeight5Flag
+		#ifdef boneWeight6Flag
+			skinning += (a_boneWeight6.y) * u_bones[int(a_boneWeight6.x)];
+		#endif //boneWeight6Flag
+		#ifdef boneWeight7Flag
+			skinning += (a_boneWeight7.y) * u_bones[int(a_boneWeight7.x)];
+		#endif //boneWeight7Flag
+	#endif //skinningFlag
 
-    	v_position = vec3(pos.xyz) / pos.w;
-    	gl_Position = u_projViewTrans * pos;
+	#ifdef morphTargetsFlag
+		vec3 morph_pos = a_position;
+		#ifdef position0Flag
+			morph_pos += a_position0 * u_morphTargets1.x;
+		#endif
+		#ifdef position1Flag
+			morph_pos += a_position1 * u_morphTargets1.y;
+		#endif
+		#ifdef position2Flag
+			morph_pos += a_position2 * u_morphTargets1.z;
+		#endif
+		#ifdef position3Flag
+			morph_pos += a_position3 * u_morphTargets1.w;
+		#endif
+		#ifdef position4Flag
+			morph_pos += a_position4 * u_morphTargets2.x;
+		#endif
+		#ifdef position5Flag
+			morph_pos += a_position5 * u_morphTargets2.y;
+		#endif
+		#ifdef position6Flag
+			morph_pos += a_position6 * u_morphTargets2.z;
+		#endif
+		#ifdef position7Flag
+			morph_pos += a_position7 * u_morphTargets2.w;
+		#endif
+	#else
+		vec3 morph_pos = a_position;
+	#endif
 
-    	#ifdef shadowMapFlag
-    		vec4 spos = u_shadowMapProjViewTrans * pos;
-    		v_shadowMapUv.xyz = (spos.xyz / spos.w) * 0.5 + 0.5;
-    		v_shadowMapUv.z = min(v_shadowMapUv.z, 0.998);
-    		#ifdef numCSM
-    		for(int i=0 ; i<numCSM ; i++){
-    			vec4 csmPos = u_csmTransforms[i] * pos;
-    			v_csmUVs[i].xyz = (csmPos.xyz / csmPos.w) * 0.5 + 0.5;
-    		}
-    		#endif
-    	#endif //shadowMapFlag
+	#ifdef skinningFlag
+		vec4 pos = u_worldTrans * skinning * vec4(morph_pos, 1.0);
+	#else
+		vec4 pos = u_worldTrans * vec4(morph_pos, 1.0);
+	#endif
 
-    	#if defined(normalFlag)
+	v_position = vec3(pos.xyz) / pos.w;
+	gl_Position = u_projViewTrans * pos;
 
-    		vec3 morph_nor = a_normal;
-    		#ifdef morphTargetsFlag
-    			#ifdef normal0Flag
-    				morph_nor += a_normal0 * u_morphTargets1.x;
-    			#endif
-    			#ifdef normal1Flag
-    				morph_nor += a_normal1 * u_morphTargets1.y;
-    			#endif
-    			#ifdef normal2Flag
-    				morph_nor += a_normal2 * u_morphTargets1.z;
-    			#endif
-    			#ifdef normal3Flag
-    				morph_nor += a_normal3 * u_morphTargets1.w;
-    			#endif
-    			#ifdef normal4Flag
-    				morph_nor += a_normal4 * u_morphTargets2.x;
-    			#endif
-    			#ifdef normal5Flag
-    				morph_nor += a_normal5 * u_morphTargets2.y;
-    			#endif
-    			#ifdef normal6Flag
-    				morph_nor += a_normal6 * u_morphTargets2.z;
-    			#endif
-    			#ifdef normal7Flag
-    				morph_nor += a_normal7 * u_morphTargets2.w;
-    			#endif
-    		#endif
+	#ifdef shadowMapFlag
+		vec4 spos = u_shadowMapProjViewTrans * pos;
+		v_shadowMapUv.xyz = (spos.xyz / spos.w) * 0.5 + 0.5;
+		v_shadowMapUv.z = min(v_shadowMapUv.z, 0.998);
+		#ifdef numCSM
+		for(int i=0 ; i<numCSM ; i++){
+			vec4 csmPos = u_csmTransforms[i] * pos;
+			v_csmUVs[i].xyz = (csmPos.xyz / csmPos.w) * 0.5 + 0.5;
+		}
+		#endif
+	#endif //shadowMapFlag
 
-    		#if defined(skinningFlag)
-    			vec3 normal = (skinning * vec4(morph_nor, 0.0)).xyz;
-    		#else
-    			vec3 normal = morph_nor;
-    		#endif
+	#if defined(normalFlag)
 
-    		// normal new
-    		#ifdef tangentFlag
+		vec3 morph_nor = a_normal;
+		#ifdef morphTargetsFlag
+			#ifdef normal0Flag
+				morph_nor += a_normal0 * u_morphTargets1.x;
+			#endif
+			#ifdef normal1Flag
+				morph_nor += a_normal1 * u_morphTargets1.y;
+			#endif
+			#ifdef normal2Flag
+				morph_nor += a_normal2 * u_morphTargets1.z;
+			#endif
+			#ifdef normal3Flag
+				morph_nor += a_normal3 * u_morphTargets1.w;
+			#endif
+			#ifdef normal4Flag
+				morph_nor += a_normal4 * u_morphTargets2.x;
+			#endif
+			#ifdef normal5Flag
+				morph_nor += a_normal5 * u_morphTargets2.y;
+			#endif
+			#ifdef normal6Flag
+				morph_nor += a_normal6 * u_morphTargets2.z;
+			#endif
+			#ifdef normal7Flag
+				morph_nor += a_normal7 * u_morphTargets2.w;
+			#endif
+		#endif
 
-    			vec3 morph_tan = a_tangent.xyz;
-    			#ifdef morphTargetsFlag
-    				#ifdef tangent0Flag
-    					morph_tan += a_tangent0 * u_morphTargets1.x;
-    				#endif
-    				#ifdef tangent1Flag
-    					morph_tan += a_tangent1 * u_morphTargets1.y;
-    				#endif
-    				#ifdef tangent2Flag
-    					morph_tan += a_tangent2 * u_morphTargets1.z;
-    				#endif
-    				#ifdef tangent3Flag
-    					morph_tan += a_tangent3 * u_morphTargets1.w;
-    				#endif
-    				#ifdef tangent4Flag
-    					morph_tan += a_tangent4 * u_morphTargets2.x;
-    				#endif
-    				#ifdef tangent5Flag
-    					morph_tan += a_tangent5 * u_morphTargets2.y;
-    				#endif
-    				#ifdef tangent6Flag
-    					morph_tan += a_tangent6 * u_morphTargets2.z;
-    				#endif
-    				#ifdef tangent7Flag
-    					morph_tan += a_tangent7 * u_morphTargets2.w;
-    				#endif
-    			#endif
+		#if defined(skinningFlag)
+			vec3 normal = (skinning * vec4(morph_nor, 0.0)).xyz;
+		#else
+			vec3 normal = morph_nor;
+		#endif
 
-    			#if defined(skinningFlag)
-    				vec3 tangent = (skinning * vec4(morph_tan, 0.0)).xyz;
-    			#else
-    				vec3 tangent = morph_tan;
-    			#endif
+		// normal new
+		#ifdef tangentFlag
+
+			vec3 morph_tan = a_tangent.xyz;
+			#ifdef morphTargetsFlag
+				#ifdef tangent0Flag
+					morph_tan += a_tangent0 * u_morphTargets1.x;
+				#endif
+				#ifdef tangent1Flag
+					morph_tan += a_tangent1 * u_morphTargets1.y;
+				#endif
+				#ifdef tangent2Flag
+					morph_tan += a_tangent2 * u_morphTargets1.z;
+				#endif
+				#ifdef tangent3Flag
+					morph_tan += a_tangent3 * u_morphTargets1.w;
+				#endif
+				#ifdef tangent4Flag
+					morph_tan += a_tangent4 * u_morphTargets2.x;
+				#endif
+				#ifdef tangent5Flag
+					morph_tan += a_tangent5 * u_morphTargets2.y;
+				#endif
+				#ifdef tangent6Flag
+					morph_tan += a_tangent6 * u_morphTargets2.z;
+				#endif
+				#ifdef tangent7Flag
+					morph_tan += a_tangent7 * u_morphTargets2.w;
+				#endif
+			#endif
+
+			#if defined(skinningFlag)
+				vec3 tangent = (skinning * vec4(morph_tan, 0.0)).xyz;
+			#else
+				vec3 tangent = morph_tan;
+			#endif
 
 
-    			vec3 normalW = normalize(vec3(u_normalMatrix * normal.xyz));
-    			vec3 tangentW = normalize(vec3(u_worldTrans * vec4(tangent, 0.0)));
-    			vec3 bitangentW = cross(normalW, tangentW) * a_tangent.w;
-    			v_TBN = mat3(tangentW, bitangentW, normalW);
-    		#else // tangentFlag != 1
-    			v_normal = normalize(vec3(u_normalMatrix * normal.xyz));
-    		#endif
-    	#endif // normalFlag
+			vec3 normalW = normalize(vec3(u_normalMatrix * normal.xyz));
+			vec3 tangentW = normalize(vec3(u_worldTrans * vec4(tangent, 0.0)));
+			vec3 bitangentW = cross(normalW, tangentW) * a_tangent.w;
+			v_TBN = mat3(tangentW, bitangentW, normalW);
+		#else // tangentFlag != 1
+			v_normal = normalize(vec3(u_normalMatrix * normal.xyz));
+		#endif
+	#endif // normalFlag
+
 }
