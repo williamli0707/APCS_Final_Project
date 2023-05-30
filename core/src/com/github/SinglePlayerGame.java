@@ -28,6 +28,7 @@ public class SinglePlayerGame {
 		genStars();
 		getPlayer().getStars().add(stars[0]);
 		troops.add(player.getMothership());
+		PlayerData.add(0, 0, 1);
 	}
 
 	public void genStars() {

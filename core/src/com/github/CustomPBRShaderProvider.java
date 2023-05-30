@@ -38,19 +38,17 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
     }
 
     private Shader createGreenOutlineShader(Renderable renderable) {
-        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
+//        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
 //        shader.init(new ShaderProgram(Gdx.files.internal("shaders/outline.vert.glsl"), Gdx.files.internal("shaders/outline.frag.glsl")), renderable);
-        return shader;
-//        return new DefaultShader(renderable, config);
+//        return shader;
+        return new DefaultShader(renderable, config);
     }
 
     private Shader createDefaultShader(Renderable renderable) {
 //        return new WaterShader(renderable, config);
 //        return new DefaultShader(renderable, config);
-//        config.vertexShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.vs.glsl"));
-//        config.fragmentShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.fs.glsl"));
-        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
-        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
+        config.vertexShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.vs.glsl"));
+        config.fragmentShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.fs.glsl"));
         PBRShader shader = createShader(renderable, (PBRShaderConfig) config, genPrefix(renderable));
         checkShaderCompilation(shader.program);
 

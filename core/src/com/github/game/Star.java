@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
+import com.github.PlayerData;
 import com.github.SinglePlayerGame;
 
 public class Star implements Actor {
@@ -67,7 +68,8 @@ public class Star implements Actor {
 		player = mothership.getPlayer();
 		getPlayer().getStars().add(this);
 		instance = new ModelInstance(friendlyModel, loc);
-		if(getPlayer().getStars().size() == game.getStars().length) game.screen.main.victory();
+		PlayerData.add(0, 1, 0);
+		if(getPlayer().getStars().size() == game.getStars().length + 1) game.screen.main.victory(); // oops i think this is a bug, player stars might have added home star twice?
 	}
 
 	/**

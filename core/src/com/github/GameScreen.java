@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.game.*;
 import com.kotcrab.vis.ui.VisUI;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
@@ -139,13 +138,13 @@ public class GameScreen implements Screen, InputProcessor {
         arrow = new NinePatchDrawable(arrowPatch);
 
         //UI
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(1280, 720));
         healthText = new Label("Health", VisUI.getSkin());
         starHealthText = new Label("Home Star Health", VisUI.getSkin());
         resourcesText = new Label("Resources", VisUI.getSkin());
         gameStatusText = new Label("", VisUI.getSkin());
-        healthText.setPosition(Gdx.graphics.getWidth() / 3f, 20, Align.center);
-        starHealthText.setPosition(2 * Gdx.graphics.getWidth() / 3f, 20, Align.center);
+        healthText.setPosition(426.667f, 20, Align.center);
+        starHealthText.setPosition(853.333f, 20, Align.center);
         resourcesText.setPosition(50, 30, Align.center);
         gameStatusText.setPosition(30, Gdx.graphics.getHeight() - 30, Align.center);
         stage.addActor(healthText);
@@ -161,8 +160,8 @@ public class GameScreen implements Screen, InputProcessor {
         hpMothershipBorder.setHeight(30);
         hpMothershipBar.setWidth(300);
         hpMothershipBar.setHeight(25);
-        hpMothershipBorder.setPosition(Gdx.graphics.getWidth() / 3f, 50, Align.center);
-        hpMothershipBar.setPosition(Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        hpMothershipBorder.setPosition(426.667f, 50, Align.center);
+        hpMothershipBar.setPosition(426.667f, 50, Align.center);
         stage.addActor(hpMothershipBorder);
         stage.addActor(hpMothershipBar);
 
@@ -172,8 +171,8 @@ public class GameScreen implements Screen, InputProcessor {
         hpStarBorder.setHeight(30);
         hpStarBar.setWidth(300);
         hpStarBar.setHeight(25);
-        hpStarBorder.setPosition(2 * Gdx.graphics.getWidth() / 3f, 50, Align.center);
-        hpStarBar.setPosition(2 * Gdx.graphics.getWidth() / 3f, 50, Align.center);
+        hpStarBorder.setPosition(853.333f, 50, Align.center);
+        hpStarBar.setPosition(853.333f, 50, Align.center);
         stage.addActor(hpStarBorder);
         stage.addActor(hpStarBar);
     }
@@ -183,8 +182,6 @@ public class GameScreen implements Screen, InputProcessor {
         //3D
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2); // * 2 because ??
-
-        sceneManager.updateViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         sceneManager.update(delta);
         sceneManager.render();
@@ -207,7 +204,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         hpMothershipBar.setWidth(300 * (Math.max(0, game.getPlayer().getMothership().getHealth()) / Mothership.health));
         hpStarBar.setWidth(300 * (Math.max(0, ((HomeStar) game.getStars()[0]).getHealth()) / SinglePlayerGame.HOME_STAR_HEALTH));
-        resourcesText.setText("Resources: " + game.getPlayer().getResources());
+        resourcesText.setText("Resources: " + Math.round(game.getPlayer().getResources()));
 
         if(game.getPlayer().getMothership().getHealth() <= 0 || ((HomeStar) game.getStars()[0]).getHealth() <= 0) game.screen.main.defeat();
 
@@ -273,10 +270,10 @@ public class GameScreen implements Screen, InputProcessor {
         sceneManager.updateViewport(width, height);
 
         stage.getViewport().update(width, height);
-        healthText.setPosition(width / 3f, 20, Align.center);
-        starHealthText.setPosition(2 * width / 3f, 20, Align.center);
+        healthText.setPosition(426.667f, 20, Align.center);
+        starHealthText.setPosition(853.333f, 20, Align.center);
         resourcesText.setPosition(50, 30, Align.center);
-        gameStatusText.setPosition(30, height - 30, Align.center);
+        gameStatusText.setPosition(30, 690, Align.center);
 
         miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
         mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
@@ -304,9 +301,7 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         //dispose of all resources
-        Ranger.dispose();
-        Vanguard.dispose();
-        Aegis.dispose();
+        Troop.dispose();
         VisUI.dispose();
     }
 

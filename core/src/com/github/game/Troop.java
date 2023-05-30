@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.GameScreen;
+import com.github.PlayerData;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
@@ -14,7 +15,7 @@ public abstract class Troop implements Actor {
     private Player player;
     private double range;
     public static SceneAsset assetAegis, assetVanguard, assetRanger;
-    Scene scene;
+    public Scene scene;
 
     public Vector3 myLoc;
     private SinglePlayerGame game;
@@ -85,7 +86,7 @@ public abstract class Troop implements Actor {
             }
             move(dest, delta);
         }
-        return true;
+        return checkDeath();
     }
 
     private void move(Vector3 dest, float delta) {
@@ -132,7 +133,10 @@ public abstract class Troop implements Actor {
      */
     public void death() {
         System.out.println("died");
-        game.screen.sceneManager.removeScene(getScene());
+        scene.modelInstance.userData = 0;
+        game.screen.sceneManager.removeScene(scene);
+        if(player == null) PlayerData.add(1, 0, 0);
+        System.out.println(game.screen.sceneManager.getRenderableProviders().contains(scene, true));
 //        System.out.println("died " + this);
     }
 

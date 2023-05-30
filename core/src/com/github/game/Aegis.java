@@ -15,7 +15,6 @@ public class Aegis extends Troop {
 //		instance = new ModelInstance(model, v.x, v.y, v.z);
 		scene = new Scene(assetAegis.scene);
 		scene.modelInstance.transform.trn(v);
-		game.screen.sceneManager.addScene(scene);
 		sprite = new Sprite(p == null ? game.screen.a_hostile : game.screen.a_friendly);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}

@@ -21,6 +21,11 @@ public class PlayerData {
         PlayerData.kills += kills;
         PlayerData.stars += stars;
         PlayerData.games += games;
+        try {
+            req(kills, stars, games);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void req(int kills, int stars, int games) throws IOException {

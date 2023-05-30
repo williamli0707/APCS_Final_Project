@@ -29,8 +29,7 @@ public class LoginValidator extends VisWindow {
         defaults().padLeft(1);
         columnDefaults(0).left();
 
-        VisTextButton cancelButton = new VisTextButton("cancel");
-        VisTextButton acceptButton = new VisTextButton("accept");
+        VisTextButton acceptButton = new VisTextButton("login");
         final VisCheckBox termsCheckbox = new VisCheckBox("create a new account");
 
         final VisValidatableTextField user = new VisValidatableTextField();
@@ -80,14 +79,24 @@ public class LoginValidator extends VisWindow {
                     PlayerData.init(user.getText(), res.getInt("kills"), res.getInt("stars"), res.getInt("games"));
                     game.menuScreen();
                 } else {
-                    Dialogs.showOKDialog(getStage(), "message", "failed!");
+                    String expl;
+                    //-3 for username already exists, 0 for account created + data follow
+                    //-2 for username does not exist, -1 for wrong password
+                    switch (status) {
+                        case -3:
+                            expl = "This username already exists! Try another one. ";
+                            break;
+                        case -2:
+                            expl = "This username does not exist. ";
+                            break;
+                        case -1:
+                            expl = "Incorrect password. Try again. ";
+                            break;
+                        default:
+                            expl = "Unknown error: Error code " + status;
+                    }
+                    Dialogs.showOKDialog(getStage(), "Login Failed", expl);
                 }
-            }
-        });
-        cancelButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Dialogs.showOKDialog(getStage(), "message", "you can't escape this!");
             }
         });
 
@@ -132,7 +141,7 @@ public class LoginValidator extends VisWindow {
         in.close();
         con.disconnect();
         System.out.println(content);
-        return content.toString();
+        return status > 299 ? null : content.toString();
     }
 
     public void resize(int width, int height) {
