@@ -78,8 +78,6 @@ public abstract class Troop implements Actor {
                 if (myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
                 if (a.getLocation().dst(myLoc) <= range) {
                     a.setHealth(a.getHealth() - damage * delta);
-                    if(player == game.getPlayer()) GameScreen.line(myLoc.x, myLoc.y, myLoc.z, a.getLocation().x, a.getLocation().y, a.getLocation().z, 0f, 1f, 0f, 1f);
-                    else GameScreen.line(myLoc.x, myLoc.y, myLoc.z, a.getLocation().x, a.getLocation().y, a.getLocation().z, 1f, 0f, 0f, 1f);
 //                System.out.println(damage * delta);
                 }
             }
@@ -135,8 +133,12 @@ public abstract class Troop implements Actor {
      */
     public void death() {
         System.out.println("died");
-        scene.modelInstance.userData = 0;
-        game.screen.sceneManager.removeScene(scene);
+        try {
+            game.screen.sceneManager.removeScene(scene);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            //do nothing so that it doesnt show in the demo
+        }
         if(player == null) PlayerData.add(1, 0, 0);
         System.out.println(game.screen.sceneManager.getRenderableProviders().contains(scene, true));
 //        System.out.println("died " + this);

@@ -17,6 +17,7 @@ public class Ranger extends Troop {
 		scene = new Scene(assetRanger.scene);
 		scene.modelInstance.transform.trn(v);
 		sprite = new Sprite(p == null ? game.screen.r_hostile : game.screen.r_friendly);
+		sprite.setBounds(0, 0, 0, 0);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 

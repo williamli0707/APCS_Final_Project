@@ -16,6 +16,7 @@ public class Vanguard extends Troop {
 		scene = new Scene(assetVanguard.scene);
 		scene.modelInstance.transform.trn(v);
 		sprite = new Sprite(p == null ? game.screen.v_hostile : game.screen.v_friendly);
+		sprite.setBounds(0, 0, 0, 0);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 

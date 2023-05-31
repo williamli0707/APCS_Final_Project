@@ -21,9 +21,9 @@ public class Aegis extends Troop {
 	public static final float HEALTH = 225.0f, DAMAGE = 40.0f, SPEED = 3.5f, RANGE = 15.0f, COST = 1000;
 	/**
 	 * constructor for the class
-	 * @param SinglePlayerGame game the game 
-	 * @param Vector3 v the location
-	 * @param Player p the player that owns this unit
+	 * @param game the game
+	 * @param v the location
+	 * @param p the player that owns this unit
 	 */
 	public Aegis(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);
@@ -31,6 +31,7 @@ public class Aegis extends Troop {
 		scene = new Scene(assetAegis.scene);
 		scene.modelInstance.transform.trn(v);
 		sprite = new Sprite(p == null ? game.screen.a_hostile : game.screen.a_friendly);
+		sprite.setBounds(0, 0, 0, 0);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
