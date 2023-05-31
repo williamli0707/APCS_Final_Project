@@ -11,6 +11,13 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
+/**
+ * represents the player controlled mothership in game
+ * @author Leo Jiang, William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources: None
+ */
 public class Mothership extends Troop {
 	static {
 //		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
