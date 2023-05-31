@@ -16,8 +16,8 @@ public class Mothership extends Troop {
 //		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
 	}
 
-	public static final float health = 10000000f /*should be 1 later*/, damage = 0f, speed = 2.5f, range = 2f;
-	private static SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
+	public static final float health = 50f /*should be 1 later*/, damage = 0f, speed = 2.5f, range = 2f;
+	private static final SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;
 	private GameScreen screen;
 	private Vector3 vel, curLoc;

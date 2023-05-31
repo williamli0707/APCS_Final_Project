@@ -44,17 +44,17 @@ public class Star implements Actor {
 			player.addResources(RESOURCES_PER_SECOND * delta);
 		} else {
 //
-//			if(Math.random() < 0.00016) {
-//				double randomNum = Math.random();
-//				System.out.println("spawning");
-//				if (randomNum < 0.15) {
-//					game.addTroop(new Aegis(game, loc, null));
-//				} else if (randomNum < 0.50) {
-//					game.addTroop(new Ranger(game, loc, null));
-//				} else {
-//					game.addTroop(new Vanguard(game, loc, null));
-//				}
-//			}
+			if(Math.random() < 0.00016) {
+				double randomNum = Math.random();
+				System.out.println("spawning");
+				if (randomNum < 0.15) {
+					game.addTroop(new Aegis(game, loc, null));
+				} else if (randomNum < 0.50) {
+					game.addTroop(new Ranger(game, loc, null));
+				} else {
+					game.addTroop(new Vanguard(game, loc, null));
+				}
+			}
 		}
 	}
 

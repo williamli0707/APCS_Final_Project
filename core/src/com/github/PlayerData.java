@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerData {
-    public static String user;
-    public static int kills, stars, games;
+    public static String user = "";
+    public static int kills = 0, stars = 0, games = 0;
     public static void init(String user, int kills, int stars, int games) {
         PlayerData.user = user;
         PlayerData.kills = kills;
@@ -45,11 +45,5 @@ public class PlayerData {
         out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         out.flush();
         out.close();
-        int status = con.getResponseCode();
-
-        Reader streamReader;
-        if (status > 299) {
-            streamReader = new InputStreamReader(con.getErrorStream());
-        }
     }
 }
