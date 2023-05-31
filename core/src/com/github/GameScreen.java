@@ -31,20 +31,35 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 import java.util.HashSet;
 
 public class GameScreen implements Screen, InputProcessor {
+    /**
+     * Manages all of the models in the game
+     */
     public SceneManager sceneManager;
+    /**
+     * The main 3D camera
+     */
     public Camera camera;
     private final ModelBatch batch;
     private final SpriteBatch spriteBatch;
+    /**
+     * Used to changing screens
+     */
     public final Main main;
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
+    /**
+     * Textures on the map
+     */
     public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile, selectionRegion, r_friendly_outline, v_friendly_outline, a_friendly_outline;
     private NinePatchDrawable arrow;
     private final NinePatch hpBorderPatch, hpBarPatch, arrowPatch;
     private Stage stage;
     private float mapFactor = 1;
     private boolean zoomMinimap = false, showMinimap = true, showMap = false, selection = false, showArrow = false;
+    /**
+     * The offset of the minimap used for calculating position
+     */
     public static final int verticalOffset = 100, horizontalOffset = 0;
     private Label healthText, starHealthText, resourcesText, gameStatusText;
     private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
@@ -52,6 +67,10 @@ public class GameScreen implements Screen, InputProcessor {
     private HashSet<Troop> selectedTroops;
     private int mode = 0;
 
+    /**
+     * Constructor for GameScreen. Initializes a game, all textures, the environment, and the camera.
+     * @param main
+     */
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
@@ -305,6 +324,19 @@ public class GameScreen implements Screen, InputProcessor {
         VisUI.dispose();
     }
 
+    /**
+     * Draws a line in 3D space from (x1, y1, z1) to (x2, y2, z2) with the given color.
+     * @param x1 x coordinate of start
+     * @param y1 y coordinate of start
+     * @param z1 x coordinate of start
+     * @param x2 x coordinate of end
+     * @param y2 y coordinate of end
+     * @param z2 z coordinate of end
+     * @param r R value in RGB
+     * @param g G value in RGB
+     * @param b B value in RGB
+     * @param a alpha value
+     */
     public static void line(float x1, float y1, float z1,
                             float x2, float y2, float z2,
                             float r, float g, float b, float a) {
@@ -314,6 +346,13 @@ public class GameScreen implements Screen, InputProcessor {
         lineRenderer.vertex(x2, y2, z2);
     }
 
+    /**
+     * Draws a grid in 3D space with in increments of 1 from (x1, y1) to (x2, y2)
+     * @param x1 x coordinate of start
+     * @param x2 x coordinate of end
+     * @param y1 y coordinate of start
+     * @param y2 y coordinate of end
+     */
     public static void grid(int x1, int x2, int y1, int y2) {
         for (int x = x1; x <= x2; x++) {
             // draw vertical
@@ -330,6 +369,10 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    /**
+     * Sets the status of the gameStatusText.
+     * @param stat the status to set it to
+     */
     public void setStatus (String stat) {
         gameStatusText.setText(stat);
     }
@@ -368,23 +411,25 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         game.getPlayer().getMothership().keyTyped(character);
-        if(character == '1') {
-            gameStatusText.setText("Now placing a new Ranger (Cost: " + Ranger.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
-            System.out.println("switched to mode 1");
-            if(mode == 1) mode = 0;
-            else mode = 1;
-        }
-        if(character == '2') {
-            gameStatusText.setText("Now placing a new Vanguard (Cost: " + Vanguard.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
-            System.out.println("switched to mode 2");
-            if(mode == 2) mode = 0;
-            else mode = 2;
-        }
-        if(character == '3') {
-            gameStatusText.setText("Now placing a new Aegis (Cost: " + Aegis.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
-            System.out.println("switched to mode 3");
-            if(mode == 3) mode = 0;
-            else mode = 3;
+        if(showMap) {
+            if (character == '1') {
+                gameStatusText.setText("Now placing a new Ranger (Cost: " + Ranger.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
+                System.out.println("switched to mode 1");
+                if (mode == 1) mode = 0;
+                else mode = 1;
+            }
+            if (character == '2') {
+                gameStatusText.setText("Now placing a new Vanguard (Cost: " + Vanguard.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
+                System.out.println("switched to mode 2");
+                if (mode == 2) mode = 0;
+                else mode = 2;
+            }
+            if (character == '3') {
+                gameStatusText.setText("Now placing a new Aegis (Cost: " + Aegis.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
+                System.out.println("switched to mode 3");
+                if (mode == 3) mode = 0;
+                else mode = 3;
+            }
         }
         if(character == '4') {
             game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation().cpy(), null));

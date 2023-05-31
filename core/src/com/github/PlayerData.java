@@ -1,6 +1,8 @@
 package com.github;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class PlayerData {
         PlayerData.kills += kills;
         PlayerData.stars += stars;
         PlayerData.games += games;
+        System.out.println("adding " + kills + " kills, " + stars + " stars, " + games + " games");
         try {
             req(kills, stars, games);
         } catch (IOException e) {
@@ -31,7 +34,7 @@ public class PlayerData {
     public static void req(int kills, int stars, int games) throws IOException {
         URL url = new URL("http://192.9.249.213:3000");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
+        con.setRequestMethod("GET");
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put("stat", "2");
@@ -45,5 +48,10 @@ public class PlayerData {
         out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         out.flush();
         out.close();
+
+        int status = con.getResponseCode();
+        con.disconnect();
+
+        if(status > 299) throw new ConnectException();
     }
 }
