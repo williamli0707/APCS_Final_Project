@@ -39,7 +39,8 @@ public class MainMenuScreen implements Screen {
         stats = new Label("Stats: \n" +
                 "Troops Killed: " + PlayerData.kills + "\n" +
                 "Stars Conquered: " + PlayerData.stars + "\n" +
-                "Games Played: " + PlayerData.games, VisUI.getSkin());
+                "Games Played: " + PlayerData.games + "\n" +
+                "Games Won: " + PlayerData.wins, VisUI.getSkin());
         bg = new Image(new Texture(Gdx.files.internal("nebula_background.jpg")));
 
         newSinglePlayerGameButton.setBounds(640 - 150, 360 - 25, 300, 50);
