@@ -13,9 +13,9 @@ public class SinglePlayerGame {
 	Player player;
 
 	public GameScreen screen;
-	private static int NUM_STARS = 10;
+	private static final int NUM_STARS = 10;
 	public static float HOME_STAR_HEALTH = 1000f;
-	private static boolean DEMO = false;
+	private static final boolean DEMO = false;
 
 	public SinglePlayerGame(GameScreen screen) {
 		troops = new HashSet<>();
@@ -29,7 +29,7 @@ public class SinglePlayerGame {
 		troops.add(player.getMothership());
 		PlayerData.add(0, 0, 1, 0);
 
-		if(DEMO) for(int i = -100;i < -80;i++) for(int j = -100;j < 100;j++) addTroop(new Aegis(this, new Vector3(i, 0, j), player));
+		if(DEMO) for(int i = -100;i < -80;i++) for(int j = -100;j < 100;j++) addTroop(new Vanguard(this, new Vector3(i, 0, j), player));
 	}
 
 	public void genStars() {
@@ -64,17 +64,20 @@ public class SinglePlayerGame {
 	}
 
 	public void act(float delta) {
-		Queue<Troop> toRemove = new ArrayDeque<>();
-		for(Troop troop : troops) {
-			if(!troop.act(delta)) {
-				toRemove.add(troop);
+		if(DEMO) player.getMothership().act(delta);
+		else {
+			Queue<Troop> toRemove = new ArrayDeque<>();
+			for (Troop troop : troops) {
+				if (!troop.act(delta)) {
+					toRemove.add(troop);
+				}
 			}
-		}
-		while(!toRemove.isEmpty()) {
-			troops.remove(toRemove.remove());
-		}
-		for(Star star : stars) {
-			star.act(delta);
+			while (!toRemove.isEmpty()) {
+				troops.remove(toRemove.remove());
+			}
+			for (Star star : stars) {
+				star.act(delta);
+			}
 		}
 	}
 
