@@ -29,7 +29,7 @@ public class SinglePlayerGame {
 		troops.add(player.getMothership());
 		PlayerData.add(0, 0, 1, 0);
 
-		if(DEMO) for(int i = -100;i < -97;i++) for(int j = -100;j < 100;j++) addTroop(new Aegis(this, new Vector3(i, 0, j), null));
+		if(DEMO) for(int i = -100;i < -80;i++) for(int j = -100;j < 100;j++) addTroop(new Aegis(this, new Vector3(i, 0, j), player));
 	}
 
 	public void genStars() {

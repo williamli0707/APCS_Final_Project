@@ -133,6 +133,7 @@ public abstract class Troop implements Actor {
      * removes the troop from the game
      */
     public void death() {
+        game.screen.entities--;
         System.out.println("died");
         try {
             game.screen.sceneManager.removeScene(scene);
