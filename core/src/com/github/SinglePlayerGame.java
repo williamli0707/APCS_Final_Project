@@ -64,8 +64,6 @@ public class SinglePlayerGame {
 	}
 
 	public void act(float delta) {
-		player.getMothership().act(delta);
-		player.getMothership().act(delta);
 		Queue<Troop> toRemove = new ArrayDeque<>();
 		for(Troop troop : troops) {
 			if(!troop.act(delta)) {
