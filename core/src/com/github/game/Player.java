@@ -13,13 +13,14 @@ public class Player {
 
 	private Mothership mothership;
 	private HomeStar homeStar;
+	public static int RESOURCE_START = 150;
 
 	public Player(SinglePlayerGame game) {
 		this.game = game;
 		troops = new ArrayList<>();
 		stars = new ArrayList<>();
 		mothership = new Mothership(game, 0, 0, 0, this, game.screen);
-		resources = 100;//TODO
+		resources = RESOURCE_START;//TODO
 	}
 
 	public void placeTroop(int type, Vector3 loc) {

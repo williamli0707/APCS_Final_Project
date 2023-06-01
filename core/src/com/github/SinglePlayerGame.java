@@ -1,9 +1,7 @@
 package com.github;
 
-import com.github.game.HomeStar;
-import com.github.game.Player;
-import com.github.game.Star;
-import com.github.game.Troop;
+import com.badlogic.gdx.math.Vector3;
+import com.github.game.*;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -17,6 +15,7 @@ public class SinglePlayerGame {
 	public GameScreen screen;
 	private static int NUM_STARS = 10;
 	public static float HOME_STAR_HEALTH = 1000f;
+	private static boolean DEMO = false;
 
 	public SinglePlayerGame(GameScreen screen) {
 		troops = new HashSet<>();
@@ -29,6 +28,8 @@ public class SinglePlayerGame {
 		getPlayer().getStars().add(stars[0]);
 		troops.add(player.getMothership());
 		PlayerData.add(0, 0, 1);
+
+		if(DEMO) for(int i = -100;i < -97;i++) for(int j = -100;j < 100;j++) addTroop(new Aegis(this, new Vector3(i, 0, j), null));
 	}
 
 	public void genStars() {

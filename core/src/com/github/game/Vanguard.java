@@ -8,7 +8,7 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class Vanguard extends Troop {
-	public static final float HEALTH = 125.0f, DAMAGE = 15.0f, SPEED = 4f, RANGE = 10.0f, COST = 375;
+	public static float HEALTH = 125.0f, DAMAGE = 15.0f, SPEED = 4f, RANGE = 10.0f, COST = 375;
 
 	public Vanguard(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);

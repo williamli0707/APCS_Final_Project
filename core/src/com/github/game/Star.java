@@ -23,6 +23,7 @@ public class Star implements Actor {
 		this.game = game;
 		loc = new Vector3(x, 0, z);
 		instance = new ModelInstance(hostileModel, x,0f, z);
+		game.screen.entities++;
 	}
 
 	@Override

@@ -35,6 +35,7 @@ public abstract class Troop implements Actor {
         myLoc = new Vector3(loc.x, loc.y, loc.z);
         player = p;
         System.out.println("new troop: health = " + health + ", damage = " + damage + ", speed = " + speed + ", location = " + loc);
+        game.screen.entities++;
     }
 
     /**

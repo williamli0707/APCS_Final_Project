@@ -61,11 +61,12 @@ public class GameScreen implements Screen, InputProcessor {
      * The offset of the minimap used for calculating position
      */
     public static final int verticalOffset = 100, horizontalOffset = 0;
-    private Label healthText, starHealthText, resourcesText, gameStatusText;
+    private Label healthText, starHealthText, resourcesText, gameStatusText, fpsCount, entityCount;
     private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
     private Vector2 selectionStart = new Vector2(0, 0), selectionEnd = new Vector2(0, 0), arrowBegin = new Vector2(0, 0), arrowEnd = new Vector2(0, 0);
     private HashSet<Troop> selectedTroops;
-    private int mode = 0;
+    private int mode = 0, tick = 0, fpsAvg = 0;
+    public int entities = 0;
 
     /**
      * Constructor for GameScreen. Initializes a game, all textures, the environment, and the camera.
@@ -90,7 +91,6 @@ public class GameScreen implements Screen, InputProcessor {
         //3D setup
         sceneManager = new SceneManager();
 
-        this.game = new SinglePlayerGame(this);
         camera = new PerspectiveCamera(70f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         camera.position.set(0f, 3f, -5);
@@ -143,15 +143,15 @@ public class GameScreen implements Screen, InputProcessor {
         playerMinimapRegion = new Texture(Gdx.files.internal("circle_yellow.png"));
         starHostile = new Texture(Gdx.files.internal("circle_red.png"));
         starFriendly = new Texture(Gdx.files.internal("circle_blue.png"));
-        r_friendly = new Texture(Gdx.files.internal("r_friendly.png"));
-        r_hostile = new Texture(Gdx.files.internal("r_hostile.png"));
-        r_friendly_outline = new Texture(Gdx.files.internal("r_friendly_outline.png"));
-        v_friendly = new Texture(Gdx.files.internal("v_friendly.png"));
-        v_hostile = new Texture(Gdx.files.internal("v_hostile.png"));
-        v_friendly_outline = new Texture(Gdx.files.internal("v_friendly_outline.png"));
-        a_friendly = new Texture(Gdx.files.internal("a_friendly.png"));
-        a_hostile = new Texture(Gdx.files.internal("a_hostile.png"));
-        a_friendly_outline = new Texture(Gdx.files.internal("a_friendly_outline.png"));
+        r_friendly = new Texture(Gdx.files.internal("R_friendly.png"));
+        r_hostile = new Texture(Gdx.files.internal("R_hostile.png"));
+        r_friendly_outline = new Texture(Gdx.files.internal("R_friendly_outline.png"));
+        v_friendly = new Texture(Gdx.files.internal("V_friendly.png"));
+        v_hostile = new Texture(Gdx.files.internal("V_hostile.png"));
+        v_friendly_outline = new Texture(Gdx.files.internal("V_friendly_outline.png"));
+        a_friendly = new Texture(Gdx.files.internal("A_friendly.png"));
+        a_hostile = new Texture(Gdx.files.internal("A_hostile.png"));
+        a_friendly_outline = new Texture(Gdx.files.internal("A_friendly_outline.png"));
         selectionRegion = new Texture(Gdx.files.internal("selection_region.png"));
         arrowPatch = new NinePatch(new Texture(Gdx.files.internal("arrow.png")), 10, 145, 81, 81);
         arrow = new NinePatchDrawable(arrowPatch);
@@ -162,14 +162,20 @@ public class GameScreen implements Screen, InputProcessor {
         starHealthText = new Label("Home Star Health", VisUI.getSkin());
         resourcesText = new Label("Resources", VisUI.getSkin());
         gameStatusText = new Label("", VisUI.getSkin());
+        fpsCount = new Label("FPS: 60", VisUI.getSkin());
+        entityCount = new Label("Entity Count: ", VisUI.getSkin());
         healthText.setPosition(426.667f, 20, Align.center);
         starHealthText.setPosition(853.333f, 20, Align.center);
         resourcesText.setPosition(50, 30, Align.center);
-        gameStatusText.setPosition(30, Gdx.graphics.getHeight() - 30, Align.center);
+        gameStatusText.setPosition(30, 690, Align.center);
+        fpsCount.setPosition(1180, 690, Align.center);
+        entityCount.setPosition(1180, 660, Align.center);
         stage.addActor(healthText);
         stage.addActor(starHealthText);
         stage.addActor(resourcesText);
         stage.addActor(gameStatusText);
+        stage.addActor(fpsCount);
+        stage.addActor(entityCount);
         hpBorderPatch = new NinePatch(new Texture(Gdx.files.internal("hp_border.png")), 10, 10, 10, 10);
         hpBarPatch = new NinePatch(new Texture(Gdx.files.internal("hp_bar.png")), 0, 0, 0, 0);
 
@@ -194,10 +200,16 @@ public class GameScreen implements Screen, InputProcessor {
         hpStarBar.setPosition(853.333f, 50, Align.center);
         stage.addActor(hpStarBorder);
         stage.addActor(hpStarBar);
+
+
+        this.game = new SinglePlayerGame(this);
     }
 
     @Override
     public void render(float delta) {
+        tick++;
+        fpsAvg += Math.round(1 / delta);
+
         //3D
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2); // * 2 because ??
@@ -224,6 +236,11 @@ public class GameScreen implements Screen, InputProcessor {
         hpMothershipBar.setWidth(300 * (Math.max(0, game.getPlayer().getMothership().getHealth()) / Mothership.health));
         hpStarBar.setWidth(300 * (Math.max(0, ((HomeStar) game.getStars()[0]).getHealth()) / SinglePlayerGame.HOME_STAR_HEALTH));
         resourcesText.setText("Resources: " + Math.round(game.getPlayer().getResources()));
+        if(tick % 100 == 0) {
+            fpsCount.setText("FPS: " + Math.round(fpsAvg / 100f));
+            fpsAvg = 0;
+        }
+        entityCount.setText("Entity Count: " + entities);
 
         if(game.getPlayer().getMothership().getHealth() <= 0 || ((HomeStar) game.getStars()[0]).getHealth() <= 0) game.screen.main.defeat();
 
@@ -282,6 +299,7 @@ public class GameScreen implements Screen, InputProcessor {
             if(showArrow) arrow.draw(spriteBatch, arrowBegin.x, arrowBegin.y, 0, 0, (float) Math.sqrt(Math.pow(arrowEnd.x - arrowBegin.x, 2) + Math.pow(arrowEnd.y - arrowBegin.y, 2)) * 12.6f, 252, 0.079365f, 0.079365f, arrowEnd.cpy().sub(arrowBegin).angleDeg());
             spriteBatch.end();
         }
+
     }
 
     @Override
@@ -293,6 +311,8 @@ public class GameScreen implements Screen, InputProcessor {
         starHealthText.setPosition(853.333f, 20, Align.center);
         resourcesText.setPosition(50, 30, Align.center);
         gameStatusText.setPosition(30, 690, Align.center);
+        fpsCount.setPosition(1180, 690, Align.center);
+        entityCount.setPosition(1180, 660, Align.center);
 
         miniMapViewport.setScreenBounds(width - 200, 0, 200, 200);
         mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
