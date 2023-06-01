@@ -2,6 +2,8 @@ package com.github.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
@@ -18,6 +20,9 @@ public class Vanguard extends Troop {
 		sprite = new Sprite(p == null ? game.screen.v_hostile : game.screen.v_friendly);
 		sprite.setBounds(0, 0, 0, 0);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+
+		if(p == game.getPlayer()) for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.05f,  0.1f, 0.05f, 0.5f));
+		else for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.1f, 0.05f, 0.05f, 0.5f));
 	}
 
 	public static void init() {

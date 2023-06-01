@@ -2,6 +2,8 @@ package com.github.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
@@ -19,6 +21,7 @@ public class Aegis extends Troop {
 	 * decides the health, damage, speed, range, and cost of each aegis unit
 	 */
 	public static float HEALTH = 225.0f, DAMAGE = 40.0f, SPEED = 3.5f, RANGE = 15.0f, COST = 1000;
+
 	/**
 	 * constructor for the class
 	 * @param game the game
@@ -33,6 +36,9 @@ public class Aegis extends Troop {
 		sprite = new Sprite(p == null ? game.screen.a_hostile : game.screen.a_friendly);
 		sprite.setBounds(0, 0, 0, 0);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+
+		if(p == game.getPlayer()) for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.3f, 0.5f, 0.3f, 0.5f));
+		else for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.5f, 0.3f, 0.3f, 0.5f));
 	}
 
 	/**

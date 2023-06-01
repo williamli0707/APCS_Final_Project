@@ -212,7 +212,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         //3D
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // * 2 because ??
+        Gdx.gl.glViewport(0, 0, 1280, 720); // * 2 because ??
 
         sceneManager.update(delta);
         sceneManager.render();
@@ -512,6 +512,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
         else if(showMap && mode != 0) {
             Vector2 loc = mapViewport.unproject(new Vector2(screenX, screenY));
+            if(loc.x < -300 || loc.x > 300 || loc.y < -300 || loc.y > 300) return true;
             loc.x -= horizontalOffset;
             loc.x = -loc.x;
             loc.y -= verticalOffset;
