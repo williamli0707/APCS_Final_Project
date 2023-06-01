@@ -76,7 +76,7 @@ public class LoginValidator extends VisWindow {
                 }
                 if (status == 0) {
                     Dialogs.showOKDialog(getStage(), "message", "success!");
-                    PlayerData.init(user.getText(), res.getInt("kills"), res.getInt("stars"), res.getInt("games"));
+                    PlayerData.init(user.getText(), res.getInt("kills"), res.getInt("stars"), res.getInt("games"), res.getInt("wins"));
                     game.menuScreen();
                 } else {
                     String expl;

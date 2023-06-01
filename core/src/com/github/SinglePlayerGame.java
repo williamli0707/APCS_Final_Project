@@ -25,7 +25,7 @@ public class SinglePlayerGame {
 		genStars();
 		getPlayer().getStars().add(stars[0]);
 		troops.add(player.getMothership());
-		PlayerData.add(0, 0, 1);
+		PlayerData.add(0, 0, 1, 0);
 
 		if(DEMO) for(int i = -100;i < -97;i++) for(int j = -100;j < 100;j++) addTroop(new Aegis(this, new Vector3(i, 0, j), null));
 	}
@@ -78,7 +78,4 @@ public class SinglePlayerGame {
 //		}
 	}
 
-	public void onGameEnd() {
-		PlayerData.add(0, getPlayer().getStars().size(), 1);
-	}
 }

@@ -140,7 +140,7 @@ public abstract class Troop implements Actor {
 //            e.printStackTrace();
             //do nothing so that it doesnt show in the demo
         }
-        if(player == null) PlayerData.add(1, 0, 0);
+        if(player == null) PlayerData.add(1, 0, 0, 0);
         System.out.println(game.screen.sceneManager.getRenderableProviders().contains(scene, true));
 //        System.out.println("died " + this);
     }

@@ -105,6 +105,7 @@ public class Main extends com.badlogic.gdx.Game {
 
 	public void victory() {
 		if(getScreen() != null) getScreen().dispose();
+		PlayerData.add(0, 0, 0, 1);
 		setScreen(new VictoryScreen(this));
 	}
 
