@@ -23,7 +23,7 @@ public class SinglePlayerGame {
 	public GameScreen screen;
 	private static final int NUM_STARS = 10;
 	public static float HOME_STAR_HEALTH = 1000f;
-	private static final boolean DEMO = false;
+	private static final boolean DEMO = false;//
 
 	/**
 	 * Constructor for the SinglePlayerGame. Initializes the troops and stars.
