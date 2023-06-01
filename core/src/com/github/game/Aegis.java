@@ -23,7 +23,7 @@ public class Aegis extends Troop {
 	public static float HEALTH = 225.0f, DAMAGE = 40.0f, SPEED = 3.5f, RANGE = 15.0f, COST = 1000;
 
 	/**
-	 * constructor for the class
+	 * constructor for the Aegis troop
 	 * @param game the game
 	 * @param v the location
 	 * @param p the player that owns this unit

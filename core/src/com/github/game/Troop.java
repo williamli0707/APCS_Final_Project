@@ -9,22 +9,49 @@ import com.github.PlayerData;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
-
+/**
+ * represents the Parent Troop class
+ * @author Leo Jiang, William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public abstract class Troop implements Actor {
+    /**required health, damage, speed, cost for each troop */
     private float health, damage, speed, cost;
+    /**required player */
     private Player player;
+    /**required range */
     private double range;
+    /**loads aegis, vanguard, ranger assets */
     public static SceneAsset assetAegis, assetVanguard, assetRanger;
+    /**required scene for each troop */
     public Scene scene;
-
+    /**required location */
     public Vector3 myLoc;
+    /**the game troop is in */
     private SinglePlayerGame game;
+    /**whether to move or not */
     private boolean move = true;
+    /**angle to turn */
     public float angle = 0;
+    /**asset/sprite to load */
     public Sprite sprite;
+    /**whether to move the troop based on player command */
     private boolean manualOverride = false;
+    /**location based on player command  */
     private Vector3 manualDest;
-
+    /**
+     * constructor, makes a troop object
+     * @param health health of troop
+     * @param damage damage of troop
+     * @param speed speed of troop
+     * @param range range of troop
+     * @param cost cost of troop
+     * @param game game troop is in
+     * @param loc location of troop
+     * @param p player troop belongs to
+     */
     public Troop(float health, float damage, float speed, double range, float cost, SinglePlayerGame game, Vector3 loc, Player p) {
         this.health = health;
         this.damage = damage;
@@ -55,6 +82,8 @@ public abstract class Troop implements Actor {
     }
     /**
      * Called each render frame to determine how a troop acts
+     * @param float delta each tick
+     * @return boolean whether the troop is dead or not
      */
     public boolean act(float delta) {
         if(manualOverride) {
@@ -89,7 +118,11 @@ public abstract class Troop implements Actor {
         }
         return checkDeath();
     }
-
+    /**
+     * determines movement of the troop
+     * @param dest destination of the move
+     * @param delta each tick
+     */
     private void move(Vector3 dest, float delta) {
         move = myLoc.dst(dest) > range;
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
@@ -110,7 +143,10 @@ public abstract class Troop implements Actor {
     public float getHealth(){
         return health;
     }
-
+    /**
+     * checks if troop is dead
+     * @return boolean yes/no on troop death
+     */
     public boolean checkDeath() {
         if (health <= 0){
             death();
@@ -153,28 +189,59 @@ public abstract class Troop implements Actor {
     public float getDamage(){
         return damage;
     }
-
+    /**
+     * returns speed
+     * @return float the speed
+     */
     public float getSpeed(){
         return speed;
     }
-
+    /**
+     * returns game 
+     * @return SinglePlayerGame the game
+     */
     public SinglePlayerGame getGame(){return game;}
+    /**
+     * returns the player
+     * @return Player the player
+     */
     public Player getPlayer(){return player;}
+    /**
+     * returns the range
+     * @return double the range
+     */
     public double getRange(){
         return range;
     }
+    /**
+     * returns the asset/model
+     * @return ModelInstance the model
+     */
     public ModelInstance getInstance() { return scene.modelInstance; }
+    /**
+     * returns the scene
+     * @return Scene the scene
+     */
     public Scene getScene(){return scene;}
+    /**
+     * discards assets
+     */
     public static void dispose() {
         assetRanger.dispose();
         assetVanguard.dispose();
         assetAegis.dispose();
     }
-
+    /**
+     * returns the sprite of a troop
+     * @return Sprite the sprite
+     */
     public Sprite getSprite() {
         return sprite;
     }
-
+    /**
+     * sets destination of troop for manual movement
+     * @param destination the destination
+     */
     public void setDestination(Vector2 destination) {
         manualOverride = true;
         manualDest = new Vector3(destination.x, 0, destination.y);
