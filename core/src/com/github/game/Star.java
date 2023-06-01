@@ -16,7 +16,7 @@ public class Star implements Actor {
 	SinglePlayerGame game;
 	private Vector3 loc;
 	private Player player=null;
-	public static float RESOURCES_PER_SECOND = 5;
+	public static float RESOURCES_PER_SECOND = 10;
 	private long tick = 1800;
 	ModelInstance instance;
 
@@ -53,9 +53,9 @@ public class Star implements Actor {
 				if (randomNum < 0.15) {
 					game.addTroop(new Aegis(game, loc, null));
 				} else if (randomNum < 0.50) {
-					game.addTroop(new Ranger(game, loc, null));
-				} else {
 					game.addTroop(new Vanguard(game, loc, null));
+				} else {
+					game.addTroop(new Ranger(game, loc, null));
 				}
 			}
 		}

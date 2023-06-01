@@ -11,7 +11,7 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class Ranger extends Troop {
 
-	public static float HEALTH = 50.0f, DAMAGE = 30.0f, SPEED = 5.0f, RANGE = 7.5f, COST = 150;
+	public static float HEALTH = 75.0f, DAMAGE = 30.0f, SPEED = 5.0f, RANGE = 7.5f, COST = 150;
 
 	public Ranger(SinglePlayerGame game, Vector3 v, Player p) {
 		super(HEALTH, DAMAGE, SPEED, RANGE, COST, game, v, p);
