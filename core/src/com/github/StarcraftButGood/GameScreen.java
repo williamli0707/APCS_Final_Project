@@ -492,15 +492,15 @@ public class GameScreen implements Screen, InputProcessor {
                 else mode = 3;
             }
         }
-        if(character == '4') {
-            game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation().cpy(), null));
-        }
-        if(character == '5') {
-            game.addTroop(new Vanguard(game, game.getPlayer().getMothership().getLocation().cpy(), null));
-        }
-        if(character == '6') {
-            game.addTroop(new Aegis(game, game.getPlayer().getMothership().getLocation().cpy(), null));
-        }
+//        if(character == '4') {
+//            game.addTroop(new Ranger(game, game.getPlayer().getMothership().getLocation().cpy(), null));
+//        }
+//        if(character == '5') {
+//            game.addTroop(new Vanguard(game, game.getPlayer().getMothership().getLocation().cpy(), null));
+//        }
+//        if(character == '6') {
+//            game.addTroop(new Aegis(game, game.getPlayer().getMothership().getLocation().cpy(), null));
+//        }
         return true;
     }
 
