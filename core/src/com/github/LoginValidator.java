@@ -16,9 +16,22 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The login widget displayed in the LoginScreen.
+ * @author William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class LoginValidator extends VisWindow {
     private Main game;
 
+    /**
+     * Constructs the widget.
+     * @param width the width of the screen
+     * @param height the height of the screen
+     * @param game the main class
+     */
     public LoginValidator(int width, int height, final Main game) {
         super("Login");
 
@@ -105,6 +118,14 @@ public class LoginValidator extends VisWindow {
         setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
     }
 
+    /**
+     * Sends a request to a remote server for a login request. Receives and processes the response.
+     * @param username the username to sign in with
+     * @param password the password to sign in with
+     * @param signUp whether the user is signing up (new account)
+     * @return the JSON response from the server
+     * @throws IOException on response reading failed
+     */
     public String login(String username, String password, boolean signUp) throws IOException {
         URL url = new URL("http://192.9.249.213:3000");
 //        URL url = new URL("http://localhost:3000");
@@ -144,12 +165,30 @@ public class LoginValidator extends VisWindow {
         return status > 299 ? null : content.toString();
     }
 
+    /**
+     * Relocate the widget to be in the center when the window is resized.
+     * @param width the new width of the screen
+     * @param height the new height of the screen
+     */
     public void resize(int width, int height) {
         setPosition((width / 2f) - (getWidth() / 2), height / 2f - getHeight() / 2);
     }
 }
 
+/**
+ * The helper class to add parameters to the HTTP request.
+ * @author William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 class ParameterStringBuilder {
+    /**
+     * Creates a prameter string from a map.
+     * @param params the map of parameters to be included in the HTTP request
+     * @return a String of the parameters in correct HTTP format
+     * @throws UnsupportedEncodingException possible exception I have no clue what this does
+     */
     public static String getParamsString(Map<String, String> params)
             throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();

@@ -10,6 +10,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * The screen to be displayed on login.
+ * @author William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class LoginScreen implements Screen {
 
     final Main game;
@@ -18,6 +25,10 @@ public class LoginScreen implements Screen {
     private Viewport viewport;
     private Image bg;
 
+    /**
+     * Constructor. Creates UI, textures, etc.
+     * @param game the game this screen is part of
+     */
     public LoginScreen(Main game) {
         this.game = game;
         stage = new Stage();
@@ -32,6 +43,10 @@ public class LoginScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Renders the screen.
+     * @param delta the time since the last render
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -39,30 +54,50 @@ public class LoginScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * Called when the window is resized.
+     * @param width the new width
+     * @param height the new height
+     */
     @Override
     public void resize(int width, int height) {
         loginValidator.resize(width, height);
         viewport.update(width, height, true);
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void show() {
         //when screen is shown
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void pause() {
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void resume() {
     }
 
+    /**
+     * Called when the screen is disposed.
+     */
     @Override
     public void dispose() {
         VisUI.dispose();

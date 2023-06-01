@@ -8,18 +8,20 @@ import com.badlogic.gdx.math.Vector3;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
+
 /**
- * represents the Ranger Troop in troops
+ * Represents the Ranger Troop in troops
  * @author Leo Jiang, William Li
- * @version 6/7/23
+ * @version 6/1/23
  * @author Period 5
  * @author Sources - None
  */
 public class Ranger extends Troop {
-	/**health, damage, speed, range, cost of each Ranger */
+	/** decides the health, damage, speed, range, and cost of each Ranger unit */
 	public static float HEALTH = 75.0f, DAMAGE = 30.0f, SPEED = 5.0f, RANGE = 7.5f, COST = 150;
+
 	/**
-	 * constructor for the Ranger class, creates a ranger
+	 * Constructor for the Ranger class.
 	 * @param game the game the ranger is in
 	 * @param v the location
 	 * @param p the player that the ranger belongs to
@@ -36,6 +38,7 @@ public class Ranger extends Troop {
 		if(p == game.getPlayer()) for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.4f, 1, 0.4f, 0.5f));
 		else for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(1, 0.4f, 0.4f, 0.5f));
 	}
+
 	/**loads the asset */
 	public static void init() {
 		assetRanger = new GLBLoader().load(Gdx.files.internal("gltfTest/ranger/ranger.glb"));

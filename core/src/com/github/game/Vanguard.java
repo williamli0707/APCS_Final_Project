@@ -9,16 +9,17 @@ import com.github.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 /**
- * represents the Vanguard Troop in troops
+ * Represents the Vanguard Troop in troops.
  * @author Leo Jiang, William Li
  * @version 6/7/23
  * @author Period 5
  * @author Sources - None
  */
 public class Vanguard extends Troop {
+	/** decides the health, damage, speed, range, and cost of each Vanguard unit */
 	public static float HEALTH = 125.0f, DAMAGE = 20.0f, SPEED = 4f, RANGE = 10.0f, COST = 400;
 	/**
-	 * constructor for the Vanguard Troop
+	 * Constructor for the Vanguard Troop.
 	 * @param game the game
 	 * @param v the location
 	 * @param p the player that owns this unit
@@ -35,7 +36,7 @@ public class Vanguard extends Troop {
 		if(p == game.getPlayer()) for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.05f,  0.1f, 0.05f, 0.5f));
 		else for(Material m: scene.modelInstance.materials) m.set(ColorAttribute.createEmissive(0.1f, 0.05f, 0.05f, 0.5f));
 	}
-	/**loads the asset/model */
+	/**loads the asset model */
 	public static void init() {
 		assetVanguard = new GLBLoader().load(Gdx.files.internal("gltfTest/vanguard2/vanguard.glb"));
 	}

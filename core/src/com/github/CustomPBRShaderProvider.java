@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import net.mgsx.gltf.scene3d.attributes.*;
 import net.mgsx.gltf.scene3d.shaders.PBRCommon;
@@ -19,6 +20,14 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltf.scene3d.utils.LightUtils;
 import net.mgsx.gltf.scene3d.utils.ShaderParser;
 
+/**
+ * A custom shader provider for outlining troops. Not used in current state of game, and currently
+ * not functional.
+ * @author William Li
+ * @version 6/1/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class CustomPBRShaderProvider extends PBRShaderProvider {
     private SinglePlayerGame game;
     private static final LightUtils.LightsInfo lightsInfo = new LightUtils.LightsInfo();
@@ -30,23 +39,18 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
 
     @Override
     protected Shader createShader(Renderable renderable) {
-//        if (renderable.userData == game.getPlayer())
-//            return createGreenOutlineShader(renderable);
-//        else return new DefaultShader(renderable, config);
-        return createDefaultShader(renderable);
-//        return createGreenOutlineShader(renderable);
+        if (renderable.userData == game.getPlayer())
+            return createGreenOutlineShader(renderable);
+        else return new DefaultShader(renderable, config);
     }
 
     private Shader createGreenOutlineShader(Renderable renderable) {
-//        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
-//        shader.init(new ShaderProgram(Gdx.files.internal("shaders/outline.vert.glsl"), Gdx.files.internal("shaders/outline.frag.glsl")), renderable);
-//        return shader;
-        return new DefaultShader(renderable, config);
+        PBRShader shader = new PBRShader(renderable, config, DefaultShader.createPrefix(renderable, config));
+        shader.init(new ShaderProgram(Gdx.files.internal("shaders/outline.vert.glsl"), Gdx.files.internal("shaders/outline.frag.glsl")), renderable);
+        return shader;
     }
 
     private Shader createDefaultShader(Renderable renderable) {
-//        return new WaterShader(renderable, config);
-//        return new DefaultShader(renderable, config);
         config.vertexShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.vs.glsl"));
         config.fragmentShader = ShaderParser.parse(Gdx.files.classpath("net/mgsx/gltf/shaders/pbr/pbr.fs.glsl"));
         PBRShader shader = createShader(renderable, (PBRShaderConfig) config, genPrefix(renderable));
@@ -361,15 +365,5 @@ public class CustomPBRShaderProvider extends PBRShaderProvider {
         }
         return prefix;
 
-    }
-
-    public static PBRShaderConfig buildPBRShaderConfig() {
-        // Create and initialize PBR config
-        PBRShaderConfig config = new PBRShaderConfig();
-//        config.vertexShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.vert.glsl"));
-//        config.fragmentShader = ShaderParser.parse(Gdx.files.internal("shaders/outline.frag.glsl"));
-        config.vertexShader = getDefaultVertexShader();
-        config.fragmentShader = getDefaultFragmentShader();
-        return config;
     }
 }

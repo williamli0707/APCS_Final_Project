@@ -12,16 +12,13 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 /**
- * represents the player controlled mothership in game
+ * Represents the player-controlled mothership in game
  * @author Leo Jiang, William Li
- * @version 6/7/23
+ * @version 6/1/23
  * @author Period 5
  * @author Sources: None
  */
 public class Mothership extends Troop {
-	static {
-//		model = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("placeholder.g3dj"));
-	}
 	/**
 	 * health, damage, speed, and range of the mothership
 	 */
@@ -43,7 +40,7 @@ public class Mothership extends Troop {
 	/**pathfinding angle */
 	private float angle = 0;
 	/**
-	 * constructor for mothership, creates a unique mothership for each player
+	 * Constructor for mothership with the given game, location, player and screen.
 	 * @param game the specific game
 	 * @param x starting x coordinate
 	 * @param y starting y coordinate
@@ -62,9 +59,9 @@ public class Mothership extends Troop {
 	}
 
 	/**
-	 * how each mothership acts per tick
-	 * @param float delta each tick
-	 * @return boolean whether the mothership has died or not
+	 * How each mothership acts per tick.
+	 * @param delta time, in seconds, since last tick
+	 * @return whether the mothership has died or not
 	 */
 	@Override
 	public boolean act(float delta){
@@ -80,8 +77,8 @@ public class Mothership extends Troop {
 	}
 
 	/**
-	 * how each mothership moves
-	 * @param delta each tick
+	 * How each mothership moves.
+	 * @param delta time, in seconds, since last tick
 	 */
 	private void move(float delta) {
 		Vector3 orig = new Vector3(vel.x, vel.y, vel.z), dir = vel.nor().rotate(Vector3.Y, angle);
@@ -93,21 +90,21 @@ public class Mothership extends Troop {
 		vel = orig;
 	}
 	/**
-	 * returns the asset
-	 * @return ModelInstance the model
+	 * Returns the 3D instance of this object.
+	 * @return the model
 	 */
 	public ModelInstance getInstance() {
 		return scene.modelInstance;
 	}
 	/**
-	 * returns the scene
-	 * @return Scene the scene
+	 * Returns the scene object.
+	 * @return the scene
 	 */
 	public Scene getScene() {
 		return scene;
 	}
 	/**
-	 * determines movement
+	 * Determines movement.
 	 * @param keycode the keypress
 	 */
 	public void keyDown(int keycode) {
@@ -117,7 +114,7 @@ public class Mothership extends Troop {
 		if(keycode == 32) vel.x --;
 	}
 	/**
-	 * determines movement
+	 * Determines movement.
 	 * @param keycode keypress
 	 */
 	public void keyUp(int keycode) {
@@ -126,36 +123,22 @@ public class Mothership extends Troop {
 		if(keycode == 29) vel.x --;
 		if(keycode == 32) vel.x ++;
 	}
+
 	/**
-	 * determines keypresses
-	 * @param character the keypress
-	 */
-	public void keyTyped(char character) {
-//		System.out.println("keyTyped");
-		if(character == 'p') System.out.println(curLoc);
-		if(character == 'l') {
-			for(Troop i: getPlayer().getTroops()) {
-				System.out.println(i.getClass() + " " + i.myLoc);
-			}
-		}
-	}
-	/**
-	 * helps determine movement via finding when the last keypress was
+	 * Helps determine movement via finding when the last keypress was.
 	 * @param screenX x coordinate on screen
 	 * @param screenY y coordinate on screen
-	 * @param pointer location pointer
-	 * @param button the keypress
+	 * @param pointer the pointer
+	 * @param button the button pressed
 	 */
 	public void touchDown(int screenX, int screenY, int pointer, int button) {
 		if(button == Input.Buttons.LEFT) {
 			lastTouch.set(screenX, screenY);
 		}
 	}
-	/**temporary test class */
-	public void touchUp() {
-	}
+
 	/**
-	 * used in determining how far to rotate screen when changing camera angles
+	 * Used in determining how far to rotate screen when changing camera angles.
 	 * @param screenX x coordinate on screen
 	 * @param screenY y coordinate on screen
 	 * @param pointer location dragged to
@@ -168,7 +151,7 @@ public class Mothership extends Troop {
 		lastTouch.set(screenX, screenY);
 	}
 	/**
-	 * returns location of the mothership
+	 * Returns the current location of the mothership.
 	 * @return Vector3 curLoc the location
 	 */
 	public Vector3 getLocation() {

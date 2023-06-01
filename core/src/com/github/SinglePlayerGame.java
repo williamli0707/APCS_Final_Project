@@ -7,16 +7,28 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 
+/**
+ * Stores statistics of the player.
+ * @author William Li, Johnathan Kao, Leo Jiang
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class SinglePlayerGame {
-	HashSet<Troop> troops;
-	Star[] stars;
-	Player player;
+	private HashSet<Troop> troops;
+	private Star[] stars;
+	private Player player;
+	/** screen displaying this game */
 
 	public GameScreen screen;
 	private static final int NUM_STARS = 10;
 	public static float HOME_STAR_HEALTH = 1000f;
 	private static final boolean DEMO = false;
 
+	/**
+	 * Constructor for the SinglePlayerGame. Initializes the troops and stars.
+	 * @param screen the screen displaying this game
+	 */
 	public SinglePlayerGame(GameScreen screen) {
 		troops = new HashSet<>();
 		stars = new Star[NUM_STARS];
@@ -32,6 +44,9 @@ public class SinglePlayerGame {
 		if(DEMO) for(int i = -100;i < -80;i++) for(int j = -100;j < 100;j++) addTroop(new Vanguard(this, new Vector3(i, 0, j), player));
 	}
 
+	/**
+	 * Generates the stars for the game.
+	 */
 	public void genStars() {
 		stars[0] = new HomeStar(this, 0, 0, HOME_STAR_HEALTH);
 		stars[0].getConquered(player.getMothership());
@@ -42,27 +57,43 @@ public class SinglePlayerGame {
 		}
 	}
 
-	public void addActor(Troop actor) {
-		troops.add(actor);
-	}
-
+	/**
+	 * Adds a troop to the troop list.
+	 * @param troop the troop to add
+	 */
 	public void addTroop(Troop troop) {
-		addActor(troop);
+		troops.add(troop);
 		screen.sceneManager.addScene(troop.getScene());
 	}
 
+	/**
+	 * Returns the troop list.
+	 * @return the troop list
+	 */
 	public HashSet<Troop> getTroops() {
 		return troops;
 	}
 
+	/**
+	 * Returns the player.
+	 * @return the player
+	 */
 	public Player getPlayer() {
 		return player;
 	}
 
+	/**
+	 * Returns the list of stars.
+	 * @return the list of stars
+	 */
 	public Star[] getStars() {
 		return stars;
 	}
 
+	/**
+	 * Acts every tick. Calls each troop's act method and each star's act method.
+	 * @param delta the time, in seconds, since the last tick
+	 */
 	public void act(float delta) {
 		if(DEMO) player.getMothership().act(delta);
 		else {

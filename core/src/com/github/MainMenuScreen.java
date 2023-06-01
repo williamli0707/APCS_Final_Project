@@ -15,6 +15,13 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * The main menu screen.
+ * @author William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class MainMenuScreen implements Screen {
 
     final Main game;
@@ -23,6 +30,10 @@ public class MainMenuScreen implements Screen {
     private Label stats;
     private Image logo, bg;
 
+    /**
+     * Constructor. Initializes the main menu screen with textures, UI, etc.
+     * @param game
+     */
     public MainMenuScreen(final Main game) {
         //constructor - get Game, initialize stuff
         //load textures, sounds
@@ -69,6 +80,10 @@ public class MainMenuScreen implements Screen {
 //        stage.addActor(test);
     }
 
+    /**
+     * renders the screen.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -76,29 +91,49 @@ public class MainMenuScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * called on resize.
+     * @param width the new width of the screen
+     * @param height the new height of the screen
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void show() {
         //when screen is shown
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void pause() {
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void resume() {
     }
 
+    /**
+     * disposes of resources.
+     */
     @Override
     public void dispose() {
         //dispose of all resources

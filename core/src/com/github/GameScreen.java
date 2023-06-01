@@ -30,47 +30,47 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.HashSet;
 
+/**
+ * The screen to be displayed when the player loses the game.
+ * @author William Li
+ * @version 6/7/23
+ * @author Period 5
+ * @author Sources - None
+ */
 public class GameScreen implements Screen, InputProcessor {
     /**
      * Manages all of the models in the game
      */
     public SceneManager sceneManager;
-    /**
-     * The main 3D camera
-     */
+    /** The main 3D camera */
     public Camera camera;
     private final ModelBatch batch;
     private final SpriteBatch spriteBatch;
-    /**
-     * Used to changing screens
-     */
+    /** Used to change screens */
     public final Main main;
     private final SinglePlayerGame game;
     private final FitViewport miniMapViewport, mapViewport;
     private static final ImmediateModeRenderer20 lineRenderer = new ImmediateModeRenderer20(false, true, 0);
-    /**
-     * Textures on the map
-     */
+    /** Textures on the map */
     public final Texture playerMinimapRegion, minimapRegion, minimapOutline, starFriendly, starHostile, r_friendly, r_hostile, v_friendly, v_hostile, a_friendly, a_hostile, selectionRegion, r_friendly_outline, v_friendly_outline, a_friendly_outline;
     private NinePatchDrawable arrow;
     private final NinePatch hpBorderPatch, hpBarPatch, arrowPatch;
     private Stage stage;
     private float mapFactor = 1;
     private boolean zoomMinimap = false, showMinimap = true, showMap = false, selection = false, showArrow = false;
-    /**
-     * The offset of the minimap used for calculating position
-     */
+    /** The offset of the minimap used for calculating positions */
     public static final int verticalOffset = 100, horizontalOffset = 0;
     private Label healthText, starHealthText, resourcesText, gameStatusText, fpsCount, entityCount;
     private Image hpMothershipBorder, hpMothershipBar, hpStarBorder, hpStarBar;
     private Vector2 selectionStart = new Vector2(0, 0), selectionEnd = new Vector2(0, 0), arrowBegin = new Vector2(0, 0), arrowEnd = new Vector2(0, 0);
     private HashSet<Troop> selectedTroops;
     private int mode = 0, tick = 0, fpsAvg = 0;
+    /** number of entities on the screen */
     public int entities = 0;
 
     /**
      * Constructor for GameScreen. Initializes a game, all textures, the environment, and the camera.
-     * @param main
+     * @param main the main class. 
      */
     public GameScreen(Main main) {
         //constructor - get Game, initialize stuff
@@ -205,6 +205,10 @@ public class GameScreen implements Screen, InputProcessor {
         this.game = new SinglePlayerGame(this);
     }
 
+    /**
+     * Called when the screen should render itself. Renders the map or minimap, the UI, and the 3D models. 
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         tick++;
@@ -303,6 +307,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     }
 
+    /**
+     * Called when the screen is resized. 
+     * @param width the new width of the window
+     * @param height the new height of the window
+     */
     @Override
     public void resize(int width, int height) {
         sceneManager.updateViewport(width, height);
@@ -319,25 +328,41 @@ public class GameScreen implements Screen, InputProcessor {
         mapViewport.setScreenBounds(width / 2 - 350, height / 2 - 350, 700, 700);
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void show() {
         //when screen is shown
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     * default library required method
+     */
     @Override
     public void resume() {
+
     }
 
+    /**
+     * Disposes of all resources for memory optimization.
+     */
     @Override
     public void dispose() {
         //dispose of all resources
@@ -398,6 +423,11 @@ public class GameScreen implements Screen, InputProcessor {
         gameStatusText.setText(stat);
     }
 
+    /**
+     * called when a key is pressed.
+     * @param keycode one of the constants in {@link Input.Keys}
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyDown(int keycode) {
         game.getPlayer().getMothership().keyDown(keycode);
@@ -413,6 +443,11 @@ public class GameScreen implements Screen, InputProcessor {
         return true;
     }
 
+    /**
+     * called when a key is released.
+     * @param keycode one of the constants in {@link Input.Keys}
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyUp(int keycode) {
         game.getPlayer().getMothership().keyUp(keycode);
@@ -430,9 +465,13 @@ public class GameScreen implements Screen, InputProcessor {
         return true;
     }
 
+    /**
+     * called when a key was typed.
+     * @param character The character
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyTyped(char character) {
-        game.getPlayer().getMothership().keyTyped(character);
         if(showMap) {
             if (character == '1') {
                 gameStatusText.setText("Now placing a new Ranger (Cost: " + Ranger.COST + " resources). Click on the map, near a star, where you want to place the troop. ");
@@ -465,6 +504,14 @@ public class GameScreen implements Screen, InputProcessor {
         return true;
     }
 
+    /**
+     * called when a mouse button was pressed.
+     * @param screenX The x coordinate, origin is in the upper left corner
+     * @param screenY The y coordinate, origin is in the upper left corner
+     * @param pointer the pointer for the event.
+     * @param button the button
+     * @return whether the input was processed
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == Input.Buttons.LEFT) {
@@ -488,9 +535,16 @@ public class GameScreen implements Screen, InputProcessor {
         return false;
     }
 
+    /**
+     * called when a mouse button was released.
+     * @param screenX The x coordinate, origin is in the upper left corner
+     * @param screenY The y coordinate, origin is in the upper left corner
+     * @param pointer the pointer for the event.
+     * @param button the button
+     * @return whether the input was processed
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        game.getPlayer().getMothership().touchUp();
         if(selectionEnd.cpy().sub(selectionStart).len() < 5) selection = false;
         if(showArrow) {
             showArrow = false;
@@ -525,6 +579,13 @@ public class GameScreen implements Screen, InputProcessor {
         return true;
     }
 
+    /**
+     * called when the mouse was dragged.
+     * @param screenX The x coordinate, origin is in the upper left corner
+     * @param screenY The y coordinate, origin is in the upper left corner
+     * @param pointer the pointer for the event.
+     * @return whether the input was processed
+     */
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if(!selection) game.getPlayer().getMothership().touchDragged(screenX, screenY, pointer);
@@ -533,11 +594,23 @@ public class GameScreen implements Screen, InputProcessor {
         return true;
     }
 
+    /**
+     * called when the mouse movws
+     * @param screenX The x coordinate, origin is in the upper left corner
+     * @param screenY The y coordinate, origin is in the upper left corner
+     * @return whether the input was processed
+     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
+    /**
+     * called when the mouse wheel was scrolled.
+     * @param amountX the horizontal scroll amount, negative or positive depending on the direction the wheel was scrolled.
+     * @param amountY the vertical scroll amount, negative or positive depending on the direction the wheel was scrolled.
+     * @return whether the input was processed
+     */
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;

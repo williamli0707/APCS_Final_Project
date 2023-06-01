@@ -9,10 +9,11 @@ import com.github.PlayerData;
 import com.github.SinglePlayerGame;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
+
 /**
- * represents the Parent Troop class
+ * Represents the parent Troop class.
  * @author Leo Jiang, William Li
- * @version 6/7/23
+ * @version 6/1/23
  * @author Period 5
  * @author Sources - None
  */
@@ -42,7 +43,7 @@ public abstract class Troop implements Actor {
     /**location based on player command  */
     private Vector3 manualDest;
     /**
-     * constructor, makes a troop object
+     * Constructor, makes a troop object.
      * @param health health of troop
      * @param damage damage of troop
      * @param speed speed of troop
@@ -66,7 +67,7 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     * allows for other methods to access the cost of the troop
+     * Allows for other methods to access the cost of the troop.
      * @return the cost of the troop
      */
     public float getCost() {
@@ -74,16 +75,16 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     * is called to give the location of the troop
+     * This is called to give the location of the troop.
      * @return a Vector3 with the location
      */
     public Vector3 getLocation() {
         return myLoc;
     }
     /**
-     * Called each render frame to determine how a troop acts
-     * @param float delta each tick
-     * @return boolean whether the troop is dead or not
+     * Called each render frame to determine how a troop acts.
+     * @param delta the time, in seconds, since the last tick
+     * @return whether the troop is dead or not
      */
     public boolean act(float delta) {
         if(manualOverride) {
@@ -118,10 +119,11 @@ public abstract class Troop implements Actor {
         }
         return checkDeath();
     }
+
     /**
-     * determines movement of the troop
+     * Determines movement of the troop.
      * @param dest destination of the move
-     * @param delta each tick
+     * @param delta the time, in seconds, since the last tick
      */
     private void move(Vector3 dest, float delta) {
         move = myLoc.dst(dest) > range;
@@ -137,15 +139,16 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     * returns the health of the troop
+     * Returns the health of the troop.
      * @return health of the troop
      */
     public float getHealth(){
         return health;
     }
+
     /**
-     * checks if troop is dead
-     * @return boolean yes/no on troop death
+     * Checks if this troop is dead.
+     * @return boolean true/false on troop death
      */
     public boolean checkDeath() {
         if (health <= 0){
@@ -157,7 +160,7 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     *sets a new health for the troop
+     * Sets a new health for the troop.
      * @param newHealth the new value that health is set to
      */
     public void setHealth(float newHealth) {
@@ -166,7 +169,7 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     * removes the troop from the game
+     * Removes the troop from the game.
      */
     public void death() {
         game.screen.entities--;
@@ -183,7 +186,7 @@ public abstract class Troop implements Actor {
     }
 
     /**
-     * returns the damage that the troop deals
+     * Returns the damage that the troop deals.
      * @return the value of the damage that the troop deals
      */
     public float getDamage(){
@@ -191,7 +194,7 @@ public abstract class Troop implements Actor {
     }
     /**
      * returns speed
-     * @return float the speed
+     * @return the speed
      */
     public float getSpeed(){
         return speed;
@@ -203,24 +206,24 @@ public abstract class Troop implements Actor {
     public SinglePlayerGame getGame(){return game;}
     /**
      * returns the player
-     * @return Player the player
+     * @return the player
      */
     public Player getPlayer(){return player;}
     /**
      * returns the range
-     * @return double the range
+     * @return the range
      */
     public double getRange(){
         return range;
     }
     /**
      * returns the asset/model
-     * @return ModelInstance the model
+     * @return the model
      */
     public ModelInstance getInstance() { return scene.modelInstance; }
     /**
      * returns the scene
-     * @return Scene the scene
+     * @return the scene
      */
     public Scene getScene(){return scene;}
     /**

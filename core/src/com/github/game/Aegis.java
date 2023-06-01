@@ -10,16 +10,14 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 
 /**
- * represents the Aegis Troop in troops
+ * Represents the Aegis Troop in troops
  * @author Leo Jiang, William Li
- * @version 6/7/23
+ * @version 6/1/23
  * @author Period 5
  * @author Sources - None
  */
 public class Aegis extends Troop {
-	/**
-	 * decides the health, damage, speed, range, and cost of each aegis unit
-	 */
+	/** decides the health, damage, speed, range, and cost of each Aegis unit */
 	public static float HEALTH = 225.0f, DAMAGE = 40.0f, SPEED = 3.5f, RANGE = 15.0f, COST = 1000;
 
 	/**
