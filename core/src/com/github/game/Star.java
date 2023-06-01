@@ -17,6 +17,7 @@ public class Star implements Actor {
 	private Vector3 loc;
 	private Player player=null;
 	public static float RESOURCES_PER_SECOND = 5;
+	private long tick = 1800;
 	ModelInstance instance;
 
 	public Star(SinglePlayerGame game, float x, float z) {
@@ -41,11 +42,12 @@ public class Star implements Actor {
 	}
 
 	public void act(float delta) {
+		tick++;
 		if (player != null){
 			player.addResources(RESOURCES_PER_SECOND * delta);
 		} else {
 //
-			if(Math.random() < 0.00016) {
+			if(Math.random() < 0.00016 * (tick / 1800f)) {
 				double randomNum = Math.random();
 				System.out.println("spawning");
 				if (randomNum < 0.15) {
