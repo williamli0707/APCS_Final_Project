@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Queue;
 
 /**
- * Stores statistics of the player.
+ * Represents a game. Keeps track of troops, stars, and the player.
  * @author William Li, Johnathan Kao, Leo Jiang
  * @version 6/7/23
  * @author Period 5
