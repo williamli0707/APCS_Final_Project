@@ -13,7 +13,7 @@ public class Player {
 
 	private Mothership mothership;
 	private HomeStar homeStar;
-	public static int RESOURCE_START = 150000;
+	public static int RESOURCE_START = 150;
 
 	public Player(SinglePlayerGame game) {
 		this.game = game;

@@ -25,7 +25,7 @@ public class Mothership extends Troop {
 	/**
 	 * health, damage, speed, and range of the mothership
 	 */
-	public static float health = 1000000f , damage = 0f, speed = 2.5f, range = 2f;
+	public static float health = 100f , damage = 0f, speed = 2.5f, range = 2f;
 
 	private static final SceneAsset asset = new GLBLoader().load(Gdx.files.internal("gltfTest/mothership/mothership.glb"));
 	private Scene scene;

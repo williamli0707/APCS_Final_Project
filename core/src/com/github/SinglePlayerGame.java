@@ -3,7 +3,9 @@ package com.github;
 import com.badlogic.gdx.math.Vector3;
 import com.github.game.*;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 
 public class SinglePlayerGame {
 	HashSet<Troop> troops;
@@ -12,7 +14,7 @@ public class SinglePlayerGame {
 
 	public GameScreen screen;
 	private static int NUM_STARS = 10;
-	public static float HOME_STAR_HEALTH = 1000000f;
+	public static float HOME_STAR_HEALTH = 1000f;
 	private static boolean DEMO = false;
 
 	public SinglePlayerGame(GameScreen screen) {
@@ -64,18 +66,18 @@ public class SinglePlayerGame {
 	public void act(float delta) {
 		player.getMothership().act(delta);
 		player.getMothership().act(delta);
-//		Queue<Troop> toRemove = new ArrayDeque<>();
-//		for(Troop troop : troops) {
-//			if(!troop.act(delta)) {
-//				toRemove.add(troop);
-//			}
-//		}
-//		while(!toRemove.isEmpty()) {
-//			troops.remove(toRemove.remove());
-//		}
-//		for(Star star : stars) {
-//			star.act(delta);
-//		}
+		Queue<Troop> toRemove = new ArrayDeque<>();
+		for(Troop troop : troops) {
+			if(!troop.act(delta)) {
+				toRemove.add(troop);
+			}
+		}
+		while(!toRemove.isEmpty()) {
+			troops.remove(toRemove.remove());
+		}
+		for(Star star : stars) {
+			star.act(delta);
+		}
 	}
 
 }
