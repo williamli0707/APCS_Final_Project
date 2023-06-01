@@ -1,4 +1,4 @@
-package com.github;
+package com.github.StarcraftButGood;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;

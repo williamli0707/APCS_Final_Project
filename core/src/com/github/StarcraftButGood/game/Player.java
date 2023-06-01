@@ -1,7 +1,7 @@
-package com.github.game;
+package com.github.StarcraftButGood.game;
 
 import com.badlogic.gdx.math.Vector3;
-import com.github.SinglePlayerGame;
+import com.github.StarcraftButGood.SinglePlayerGame;
 
 import java.util.ArrayList;
 

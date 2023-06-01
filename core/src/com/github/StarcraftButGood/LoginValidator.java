@@ -1,4 +1,4 @@
-package com.github;
+package com.github.StarcraftButGood;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;

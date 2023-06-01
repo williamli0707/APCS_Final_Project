@@ -1,4 +1,4 @@
-package com.github;
+package com.github.StarcraftButGood;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,7 +1,7 @@
-package com.github;
+package com.github.StarcraftButGood;
 
 import com.badlogic.gdx.math.Vector3;
-import com.github.game.*;
+import com.github.StarcraftButGood.game.*;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;

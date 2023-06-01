@@ -1,12 +1,12 @@
-package com.github.game;
+package com.github.StarcraftButGood.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.github.GameScreen;
-import com.github.SinglePlayerGame;
+import com.github.StarcraftButGood.GameScreen;
+import com.github.StarcraftButGood.SinglePlayerGame;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;

@@ -1,4 +1,4 @@
-package com.github.game;
+package com.github.StarcraftButGood.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
-import com.github.PlayerData;
-import com.github.SinglePlayerGame;
+import com.github.StarcraftButGood.PlayerData;
+import com.github.StarcraftButGood.SinglePlayerGame;
 
 /**
  * Represents a Star. Keeps track of a 3D instance, player controlling it, and its status.

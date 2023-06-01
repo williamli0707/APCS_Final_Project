@@ -1,6 +1,6 @@
-package com.github.game;
+package com.github.StarcraftButGood.game;
 
-import com.github.SinglePlayerGame;
+import com.github.StarcraftButGood.SinglePlayerGame;
 
 /**
  * Represents the Home Star of the player.
