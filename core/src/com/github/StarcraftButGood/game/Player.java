@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class Player {
 	private SinglePlayerGame game;
-	private ArrayList<Troop> troops;
 	private ArrayList<Star> stars;
 	private float resources;
 
@@ -31,7 +30,6 @@ public class Player {
 	 */
 	public Player(SinglePlayerGame game) {
 		this.game = game;
-		troops = new ArrayList<>();
 		stars = new ArrayList<>();
 		mothership = new Mothership(game, 0, 0, 0, this, game.screen);
 		resources = RESOURCE_START;//TODO
@@ -57,7 +55,6 @@ public class Player {
 				if(type == 1) t = new Ranger(game, loc, this);
 				else if(type == 2) t = new Vanguard(game, loc, this);
 				else t = new Aegis(game, loc, this);
-				troops.add(t);
 				game.addTroop(t);
 				addResources(-t.getCost());
 				return;
@@ -73,14 +70,6 @@ public class Player {
 	public void receiveMessage(String string){
 		System.out.println(string);
 		game.screen.setStatus(string);
-	}
-
-	/**
-	 * Returns the list of troops the player has.
-	 * @return the list of troops the player has
-	 */
-	public ArrayList<Troop> getTroops() {
-		return troops;
 	}
 
 	public ArrayList<Star> getStars() {
