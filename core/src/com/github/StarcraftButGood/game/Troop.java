@@ -42,6 +42,7 @@ public abstract class Troop implements Actor {
     private boolean manualOverride = false;
     /**location based on player command  */
     private Vector3 manualDest;
+    private static final int RESOURCE_DRAIN = 5;
     /**
      * Constructor, makes a troop object.
      * @param health health of troop
@@ -88,6 +89,11 @@ public abstract class Troop implements Actor {
      */
     public boolean act(float delta) {
         if(manualOverride) {
+            for (Star a : game.getStars()) {
+                if (a.getPlayer() != player && a.getLocation().dst(myLoc) <= range) {
+                    a.getPlayer().addResources(-RESOURCE_DRAIN * delta);
+                }
+            }
             for (Troop a : game.getTroops()) {
                 if (a.getPlayer() == player) continue;
                 if (a.getLocation().dst(myLoc) <= range) a.setHealth(a.getHealth() - damage * delta);
@@ -103,6 +109,9 @@ public abstract class Troop implements Actor {
             for (Star a : game.getStars()) {
                 if (a.getPlayer() == player) continue;
                 if (myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
+                if (a.getLocation().dst(myLoc) <= range) {
+                    a.getPlayer().addResources(-RESOURCE_DRAIN * delta);
+                }
             }
             for (Troop a : game.getTroops()) {
                 if (a.getPlayer() == player) continue;

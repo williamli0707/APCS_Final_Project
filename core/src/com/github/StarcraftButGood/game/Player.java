@@ -107,6 +107,7 @@ public class Player {
 	 */
 	public void addResources(float amount){
 		resources += amount;
+		resources = Math.max(0, resources);
 	}
 
 	/**
