@@ -90,7 +90,7 @@ public abstract class Troop implements Actor {
     public boolean act(float delta) {
         if(manualOverride) {
             for (Star a : game.getStars()) {
-                if (a.getPlayer() != player && a.getLocation().dst(myLoc) <= range) {
+                if (a.getPlayer() != null && a.getPlayer() != player && a.getLocation().dst(myLoc) <= range) {
                     a.getPlayer().addResources(-RESOURCE_DRAIN * delta);
                 }
             }
@@ -109,7 +109,7 @@ public abstract class Troop implements Actor {
             for (Star a : game.getStars()) {
                 if (a.getPlayer() == player) continue;
                 if (myLoc.dst(dest) > myLoc.dst(a.getLocation())) dest = a.getLocation();
-                if (a.getLocation().dst(myLoc) <= range) {
+                if (a.getPlayer() != null && a.getLocation().dst(myLoc) <= range) {
                     a.getPlayer().addResources(-RESOURCE_DRAIN * delta);
                 }
             }
