@@ -18,12 +18,12 @@ public class SinglePlayerGame {
 	private HashSet<Troop> troops;
 	private Star[] stars;
 	private Player player;
+	private Queue<Troop> toRemove;
 	/** screen displaying this game */
-
 	public GameScreen screen;
 	private static final int NUM_STARS = 10;
 	public static float HOME_STAR_HEALTH = 1000f;
-	public static final boolean DEMO = false;//
+	public static final boolean DEMO = true;//
 
 	/**
 	 * Constructor for the SinglePlayerGame. Initializes the troops and stars.
@@ -41,7 +41,9 @@ public class SinglePlayerGame {
 		troops.add(player.getMothership());
 		PlayerData.add(0, 0, 1, 0);
 
-		if(DEMO) for(int i = -100;i < -95;i++) for(int j = -100;j < 100;j++) addTroop(new Vanguard(this, new Vector3(i, 0, j), player));
+		toRemove = new ArrayDeque<>();
+
+		if(DEMO) for(int i = -100;i < -85;i++) for(int j = -100;j < 100;j++) addTroop(new Vanguard(this, new Vector3(i, 0, j), player));
 	}
 
 	/**
@@ -97,7 +99,6 @@ public class SinglePlayerGame {
 	public void act(float delta) {
 		if(DEMO) player.getMothership().act(delta);
 		else {
-			Queue<Troop> toRemove = new ArrayDeque<>();
 			for (Troop troop : troops) {
 				if (!troop.act(delta)) {
 					toRemove.add(troop);
